@@ -1,0 +1,164 @@
+html,body {
+	height:100%;
+	margin: 0px;
+}
+
+#login_bg {
+	/*background: url('//cdn365.goutonghui.com/v4/bg1800.jpg');*/
+	background: url('../img/bg1800.jpg');
+	background-size: cover !important;
+	width: 100%;
+	height: 100%;
+	padding-top: 8%;
+	position:relative;
+	box-sizing:border-box;
+}
+
+.login-body {
+	width:450px;
+	background: rgba(255,255,255,0.8);
+	border: 0px solid #eee;
+	background-color: #fff;
+	box-shadow: 0 5px 10px rgba(0, 0, 0, .15);
+	border-radius: 4px !important;
+	text-align: center;
+	margin:0 auto;
+	position: relative;
+}
+
+.login .logo {
+     padding: 15px;
+     padding-bottom: 6px;
+     padding-top: 28px;
+}
+
+/*.login .icon {
+	color: gray;
+}*/
+
+.form-control {
+	display: block;
+	width: 100%;
+	height: 40px;
+	padding: 6px 12px;
+	font-size: 12px;
+	line-height: 1.42857143;
+	color: #555;
+	background-color: #fff;
+	background-image: none;
+	border: 1px solid #ccc;
+	border-radius: 2px;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	-webkit-transition: border-color ease-in-out .15s, box-shadow
+		ease-in-out .15s;
+	transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+	margin: 10px 0px;
+	box-sizing:border-box;
+}
+
+.input-icon {
+  position: relative;
+  padding: 0px 30px;
+}
+
+
+.input-icon input {
+   padding-left: 33px !important;
+}
+
+.input-icon i {
+  color: #ccc;
+  display: block;
+  position: absolute;
+  margin: 12px 2px 4px 10px;
+  width: 16px;
+  height: 16px;
+  font-size: 16px;
+  text-align: center;
+}
+
+#login_btn {
+	width: 40%;
+	height: 35px;
+	margin-bottom: 10px;
+	margin-top: 10px;
+}
+
+#forget-password {
+	margin-top: 10px;
+	padding-bottom: 30px;
+}
+
+#forget-password a{
+	color: gray;
+	font-size: 15px;
+}
+
+.colorBtn {
+	background-color: #0089ee !important;
+	/*background:#27303f;*/
+	border-radius: 2px !important;
+	border: 0 none;
+	width:115px;
+	height:40px;
+	color:#ffffff;
+	
+	font-size: 14px;
+}
+
+
+
+.login-info {
+	margin:0 auto;
+	width:500px;
+	margin-top:15px;
+	color:#fff;
+	text-align: center;
+	font-size: 13px;
+}
+.login-info a{
+	color:#FFFFFF;
+	margin-right:15px;
+}
+
+
+.login-info a:link,.login-info a:visited{
+ text-decoration:none;  /*超链接无下划线*/
+}
+.login-info a:hover{
+ text-decoration:underline;  /*鼠标放上去有下划线*/
+}
+
+
+.getCodeInput {
+	width: 70%;
+	padding: 6px 0px;
+}
+
+.getCodeBtn {
+	background-color: #0089ee !important;
+	/*background:#27303f;*/
+	border-radius: 2px !important;
+	border: 0 none;
+	height:36px;
+	color:#ffffff;
+	font-size: 14px;
+	text-align: center;
+	
+	
+	
+	float: left;
+	width: 18%;
+	margin-top: 12px;
+	margin-left: 6px;
+}
+
+.web-font {
+	margin:0;
+	font-size:26px;
+	margin-bottom:9px;
+	font-weight: 100;
+    color: #333;
+}
+

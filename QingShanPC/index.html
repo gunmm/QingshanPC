@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title>登陆 - 庆山云平台</title>
+		<link rel="icon" href="img/logo2.ico" type="img/x-ico" />
+
+		<link rel="stylesheet" href="css/login.css">
+		<link rel="stylesheet" href="css/iconfont.css">
+		<link rel="stylesheet" href="css/loading.css">
+		<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.js"></script>
+		<script type="text/javascript" src="js/config.js"></script>
+		<script type="text/javascript" src="js/md5.js"></script>
+
+	</head>
+
+	<body class="login">
+		<div id="login_bg">
+			<div class="login-body">
+				<div class="logo">
+					<a href="#" title="集团网站" target="_blank" style="display:inline-block;height:60px;">
+						<img src="img/qsBigLogo.PNG" alt="庆山logo" style="height:60px;">
+					</a>
+				</div>
+				<form>
+					<div class="form-group">
+						<div class="input-icon">
+							<i class="iconfont icon">&#xe6c0;</i>
+							<input class="form-control"type="text" autocomplete="off" placeholder="手机号码" title="手机号码" name="emailMobilePhone" id="emailMobilePhone">
+						</div>
+					</div>
+					<div class="form-group" style="position:relative">
+						<div class="input-icon">
+							<i class="iconfont icon">&#xe69f;</i>
+							<input class="form-control"  type="password" id="password" autocomplete="off" placeholder="密码" title="密码" name="password">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<input type="button" class="colorBtn" id="login_btn" value="登录" data-loading-text="登录中">
+					</div>
+
+					<div id="forget-password">
+						<a href="getPassword.html">忘记密码</a>
+					</div>
+
+				</form>
+			</div>
+
+			<div class="login-info">
+				<a href="#" target="_blank">
+					<i class="iconfont" style="margin-right:3px">&#xe63d;</i>安卓</a>
+				<a href="#" class="download" target="_blank">
+					<i class="iconfont" style="margin-right:3px">&#xe631;</i>苹果</a>
+			</div>
+		</div>
+
+	</body>
+	
+	<script>
+		$('#login_btn').click(function(){
+			var number = $("#emailMobilePhone").val();
+			if(number.length == 0){
+				myAlert("手机号码不能为空！");
+				return;
+			}
+			
+			if(!checkTel(number)){
+				myAlert("手机号格式不正确!");
+				return;
+			}
+			
+			if($("#password").val().length == 0){
+				myAlert("密码不能为空！");
+				return;
+			}
+			
+		
+			var data = {"phoneNumber" : $("#emailMobilePhone").val(),
+			            "password" : hexMD5($("#password").val()),
+			            "plateform" : "PC"};
+			postLogin("login", data, function(data){
+				myAlert("登陆成功！");
+//				window.location.replace('index.html');
+			}, function() {
+				
+			})
+			
+			
+		})
+	</script>
+
+</html>

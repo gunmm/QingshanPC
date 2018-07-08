@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+
+		<link rel="stylesheet" href="../css/iconfont.css">
+		<link rel="stylesheet" href="../css/loading.css">
+		<link rel="stylesheet" href="../css/navHead.css">
+
+		<link rel="stylesheet" href="../css/easyui/easyui.css" />
+		<link rel="stylesheet" href="../css/pagination.css" />
+
+		<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.js"></script>
+		<script type="text/javascript" src="../js/jquery.easing.1.3.js"></script>
+		<script type="text/javascript" src="../js/jquery.kwicks-1.5.1.pack.js"></script>
+
+		<script type="text/javascript" src="../js/config.js"></script>
+		<script type="text/javascript" src="../js/vue.min.js"></script>
+
+		<script type="text/javascript" src="../js/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="../js/jquery.pagination.js"></script>
+
+		<script type="text/javascript">
+			$(function() {
+				$('.nav').kwicks({
+					max: 120,
+					isVertical: false,
+					sticky: false,
+					defaultKwick: 0,
+					event: 'mouseover',
+					spacing: 0,
+					duration: 500
+				});
+			});
+
+			function selectNav(index) {
+				$("#navBar1").removeClass("on");
+				$("#navBar2").removeClass("on");
+				$("#navBar3").removeClass("on");
+				$("#navBar4").removeClass("on");
+
+				var idStr = "#navBar" + index;
+				$(idStr).addClass("on");
+			}
+		</script>
+		<style>
+			
+		</style>
+	</head>
+
+	<body bgcolor="red">
+		<div class="header">
+			<div class="logoDiv"></div>
+			<ul class="nav">
+				<li>
+					<a id="navBar1" class="on" href="javascript:selectNav('1')">站点列表</a>
+				</li>
+				<li>
+					<a id="navBar2" href="javascript:selectNav('2')">司机列表</a>
+				</li>
+				<li>
+					<a id="navBar3" href="javascript:selectNav('3')">货源方列表</a>
+				</li>
+				<li>
+					<a id="navBar4" href="javascript:selectNav('4')">地图展示</a>
+				</li>
+
+			</ul>
+		</div>
+		<div id="app" class="content" hidden>
+			<div class="oprationToolBar">
+				<div id="add_btn" class="addDiv">
+					<input type="button" class="colorBtn" value="添加">
+					<i class="iconfont">&#xe636;</i>
+				</div>
+			</div>
+			<div class="bigContent">
+				<div class="listContent">
+
+					<table class="hovertable" title="">
+						<thead>
+							<tr>
+								<th>站点名称</th>
+								<th>站点类型</th>
+								<th>地址</th>
+								<th>审核状态</th>
+								<th>法人姓名</th>
+								<th>创建时间</th>
+								<th>更新时间</th>
+								<th>子站点个数</th>
+								<th>操作</th>
+							</tr>
+
+						</thead>
+
+						<tr v-for="item in datalist" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+							<td>{{item.siteName}}</td>
+							<td>{{item.siteType == 1 ? "一级站点" : "子站点"}}</td>
+							<td>{{item.siteProvince}}{{item.siteCity}}{{item.siteArea}}{{item.address}}</td>
+							<td>{{item.siteCheckStatus}}</td>
+							<td>{{item.lawsManName}}</td>
+							<td>{{datetransform(item.createTime)}}</td>
+							<td>{{datetransform(item.updateTime)}}</td>
+							<td>0</td>
+							<td>
+								<div class="oprateDiv">
+									<a href="javascript:editItem()">编辑</a>
+									<a href="javascript:deleteItem()">删除</a>
+								</div>
+
+							</td>
+						</tr>
+
+					</table>
+
+				</div>
+				<div class="hrDiv"></div>
+				<div class="countDiv">
+					<div class="f-l hejiDiv">合计</div>
+					<div class="f-l julushuDiv">记录数：</div>
+					<div class="f-l jiluCountDiv">15</div>
+				</div>
+				<div class="pages">
+					<div id="Pagination"></div>
+					<div class="searchPage">
+						<span class="page-sum">共<strong class="allPage">1</strong>页</span>
+						<span class="page-go">跳转<input type="text">页</span>
+						<a href="javascript:;" class="page-btn">GO</a>
+					</div>
+				</div>
+			</div>
+
+			<div id="addBigDiv" class="i none">
+				<div class="addContentDiv">
+					<div class="topBarDiv">
+						<i class="iconfont">&#xe608;</i>
+						<div class="titleDiv">新建站点</div>
+						<div class="closeDiv">
+							<i id="closeBtn" onclick="closeAddPage()" class="iconfont">&#xe607;</i>
+						</div>
+					</div>
+					
+					<div class="addPageLineDiv" style="margin-top: 20px;">
+					     <div class="addPageLineSmallDiv">
+					     	<div class="keyDiv">站点名称</div>
+					     	<input class="valueInput" type="text" placeholder="例：陕西西安站" title="站点名称">
+					     </div>
+					     <div class="addPageLineSmallDiv">
+					     	<div class="keyDiv">营业执照号</div>
+					     	<input class="valueInput" type="text" placeholder="" title="营业执照号">
+					     </div>
+					</div>
+					
+					<div class="addPageLineDiv">
+					     <div class="addPageLineSmallDiv">
+					     	<div class="keyDiv">省份、城市</div>
+					     	<select class="citySelect" onchange="selectprovince(this)" id="selectprovince">
+								<option v-for="item in province" :value="item.id">{{item.name}}</option>
+							</select>
+							<select class="citySelect" id="selectcity">
+								<option value="">请选择</option>
+								<option v-for="item in nowcity" :value="item.id">{{item.name}}</option>
+							</select>
+					     		
+					     </div>
+					     <div class="addPageLineSmallDiv">
+					     	<div class="keyDiv">详细地址</div>
+					     	<input class="valueInput" type="text" placeholder="从区开始写" title="法人身份证号">
+					     </div>
+					</div>
+					
+					<div class="addPageLineDiv">
+					     <div class="addPageLineSmallDiv">
+					     	<div class="keyDiv">法人姓名</div>
+					     	<input class="valueInput" type="text" placeholder="" title="法人姓名">
+					     </div>
+					     <div class="addPageLineSmallDiv">
+					     	<div class="keyDiv">法人身份证号</div>
+					     	<input class="valueInput" type="text" placeholder="" title="法人身份证号">
+					     </div>
+					</div>
+					
+					<div class="addPageLineDiv">
+					     <div class="addPageLineSmallDiv">
+					     	<div class="keyDiv">法人手机号</div>
+					     	<input class="valueInput" type="text" placeholder="请输入手机号" title="法人手机号">
+					     </div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</body>
+
+	<script>
+		
+		var province;
+		var city;
+		var nowcity;
+		getCity(function(p, c) {
+			province = p;
+			city = c;
+			nowcity = city['1'];
+			if(this.obj) {
+				selectProvinceAndCity();
+			}
+		});
+		
+		var vm = new Vue({
+			el: '#app',
+			data: {
+				province: province,
+				city: city,
+				nowcity: nowcity,
+				page: 0,
+				pageSize: 15,
+				datalist: [1, 2],
+			},
+			methods: {
+
+			}
+		})
+		postRegular('getSiteList', {
+			page: vm.page,
+			rows: vm.pageSize,
+		}, function(data) {
+			$('#app').show();
+			vm.datalist = data.object.siteList;
+			$('.allPage').html(Math.ceil(data.object.siteCount));
+			$("#Pagination").pagination(data.object.siteCount, {
+				callback: function(page) { // 回调函数
+					console.log(page);
+					postRegular('getSiteList', {
+						page: page,
+						rows: vm.pageSize,
+					}, function(data) {
+						vm.datalist = data.object.siteList;
+					})
+				}
+			});
+		}, function() {
+
+		})
+
+		//编辑
+		function editItem() {
+			console.log("编辑");
+		}
+
+		//删除
+		function deleteItem() {
+			console.log("删除");
+		}
+
+		//添加
+		$('#add_btn').click(function() {
+			$('#addBigDiv').removeClass("none");
+		})
+		
+		//关闭
+		function closeAddPage() {
+			$('#addBigDiv').addClass("none");
+		}
+		
+		
+		function selectprovince(obj) {
+			vm.nowcity = vm.city[obj.value];
+			$('#selectcity').val('');
+		}
+		
+	</script>
+
+</html>
