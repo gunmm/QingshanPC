@@ -99,7 +99,7 @@
 						<tr v-for="item in datalist" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
 							<td>{{item.siteName}}</td>
 							<td>{{item.siteType == 1 ? "一级站点" : "子站点"}}</td>
-							<td>{{item.siteProvince}}{{item.siteCity}}{{item.siteArea}}{{item.address}}</td>
+							<td>{{item.siteProvinceName}}{{item.siteCityName}}{{item.address}}</td>
 							<td>{{item.siteCheckStatus}}</td>
 							<td>{{item.lawsManName}}</td>
 							<td>{{datetransform(item.createTime)}}</td>
@@ -121,7 +121,7 @@
 				<div class="countDiv">
 					<div class="f-l hejiDiv">合计</div>
 					<div class="f-l julushuDiv">记录数：</div>
-					<div class="f-l jiluCountDiv">15</div>
+					<div class="f-l jiluCountDiv">{{itemCount}}</div>
 				</div>
 				<div class="pages">
 					<div id="Pagination"></div>
@@ -219,22 +219,22 @@
 						</div>
 
 					</div>
-					
+
 					<div class="operateBarDiv">
 						<div class="hrDiv" style="margin: 0px;"></div>
 						<div onclick="closeAddPage()" class="operateDiv">
-					        <input type="button" class="colorBtn" style="background: gray;" value="取消"/>
-					        <i class="iconfont">&#xe664;</i>
-				        </div>
-				        <div id="save_btn" class="operateDiv">
-					        <input type="button" class="colorBtn" value="保存"/>
-					        <i class="iconfont">&#xe611;</i>
-				        </div>
+							<input type="button" class="colorBtn" style="background: gray;" value="取消" />
+							<i class="iconfont">&#xe664;</i>
+						</div>
+						<div id="save_btn" class="operateDiv">
+							<input type="button" class="colorBtn" value="保存" />
+							<i class="iconfont">&#xe611;</i>
+						</div>
 					</div>
 				</div>
 
 			</div>
-			
+
 			<div id="show_img" class="i none">
 				<img class="i1 sel cursor-pointer" src="../img/ic_close.png" onclick="$('#show_img').addClass('none')" />
 				<img class="i2" src="" />
@@ -246,7 +246,7 @@
 				<img class="i1 sel cursor-pointer" src="../img/ic_close.png" onclick="$('#show_alone_img').addClass('none')" />
 				<img class="i2" src="" />
 			</div>
-			
+
 		</div>
 	</body>
 
@@ -271,87 +271,152 @@
 				nowcity: nowcity,
 				page: 0,
 				pageSize: 15,
+				itemCount: 0,
 				datalist: [],
 				lifePhotoImg: '',
 				heTongImageArray: [],
-				siteName: '' ,
-				businessLicenseNumber: '' ,
-				lawsManName: '' ,
-				lawsManIdCardNumber: '' ,
-				lawsManPhone: '' ,
-				address: '' ,
-				
+				siteName: '',
+				businessLicenseNumber: '',
+				lawsManName: '',
+				lawsManIdCardNumber: '',
+				lawsManPhone: '',
+				address: '',
+
 			},
 			methods: {
 
 			}
 		})
-		postRegular('getSiteList', {
-			page: vm.page,
-			rows: vm.pageSize,
-		}, function(data) {
-			$('#app').show();
-			vm.datalist = data.object.siteList;
-			$('.allPage').html(Math.ceil(data.object.siteCount));
-			$("#Pagination").pagination(data.object.siteCount, {
-				callback: function(page) { // 回调函数
-					console.log(page);
-					postRegular('getSiteList', {
-						page: page,
-						rows: vm.pageSize,
-					}, function(data) {
-						vm.datalist = data.object.siteList;
-					})
-				}
-			});
-		}, function() {
 
-		})
-		
-		//保存
-		$('#save_btn').click(function() {
-			
-			var contractPhotos = vm.heTongImageArray.join(',');
-			
-			postRegular('addSite', {
-			    siteName: vm.siteName,
-			    businessLicenseNumber: vm.businessLicenseNumber,
-			    businessLicensePhoto: vm.lifePhotoImg,
-			    lawsManName: vm.lawsManName,
-			    lawsManIdCardNumber: vm.lawsManIdCardNumber,
-			    lawsManPhone: vm.lawsManPhone,
-			    leaseContractPhoto: vm.siteName,
-			    siteProvince: $("#selectprovince").val(),
-			    siteCity: $("#selectcity").val(),
-			    address: vm.address,
-		    }, function(data) {
-			
+		function loadData(page) {
+			$("#Pagination").empty();
+			postRegular('getSiteList', {
+				page: page,
+				rows: vm.pageSize,
+			}, function(data) {
+				$('#app').show();
+				vm.datalist = data.object.siteList;
+				vm.itemCount = data.object.siteCount;
+				$('.allPage').html(Math.ceil(data.object.siteCount/vm.pageSize));
+				$("#Pagination").pagination(data.object.siteCount/vm.pageSize, {
+					callback: function(page) { // 回调函数
+						vm.page = page;
+						loadData(page);
+//						postRegular('getSiteList', {
+//							page: page,
+//							rows: vm.pageSize,
+//						}, function(data) {
+//							vm.datalist = data.object.siteList;
+//						})
+					}
+				});
 			}, function() {
 
-		    });
+			})
+		}
+		loadData(vm.page);
+
+		//保存
+		$('#save_btn').click(function() {
+			if(vm.siteName.length == 0) {
+				myAlert("站点名称不能为空！");
+				return;
+			}
+
+			if(vm.businessLicenseNumber.length == 0) {
+				myAlert("营业执照号不能为空！");
+				return;
+			}
+
+			if($("#selectcity").val().length == 0) {
+				myAlert("城市不能为空！");
+				return;
+			}
+
+			if(vm.address.length == 0) {
+				myAlert("详细地址不能为空！");
+				return;
+			}
+
+			if(vm.lawsManName.length == 0) {
+				myAlert("法人姓名不能为空！");
+				return;
+			}
+
+			if(vm.lawsManIdCardNumber.length == 0) {
+				myAlert("法人身份证号不能为空！");
+				return;
+			}
+
+			if(vm.lawsManPhone.length == 0) {
+				myAlert("法人电话不能为空！");
+				return;
+			}
+
+			if(vm.lifePhotoImg.length == 0) {
+				myAlert("营业执照照片未上传！");
+				return;
+			}
+
+			if(vm.heTongImageArray.length == 0) {
+				myAlert("场地租赁合同或土地证照片未上传！");
+				return;
+			}
+
+			var contractPhotos = vm.heTongImageArray.join(',');
+
+			postRegular('addSite', {
+				siteName: vm.siteName,
+				businessLicenseNumber: vm.businessLicenseNumber,
+				businessLicensePhoto: vm.lifePhotoImg,
+				lawsManName: vm.lawsManName,
+				lawsManIdCardNumber: vm.lawsManIdCardNumber,
+				lawsManPhone: vm.lawsManPhone,
+				leaseContractPhoto: contractPhotos,
+				siteProvince: $("#selectprovince").val(),
+				siteCity: $("#selectcity").val(),
+				address: vm.address,
+			}, function(data) {
+				closeAddPage();
+				loadData(vm.page);
+
+			}, function() {
+
+			});
 		})
 
 		//编辑
-		function editItem() {
-			console.log("编辑");
-		}
+		function editItem() {}
 
 		//删除
-		function deleteItem() {
-			console.log("删除");
-		}
+		function deleteItem() {}
 
 		//添加
 		$('#add_btn').click(function() {
 			$('#addBigDiv').removeClass("none");
 		})
-		
-		
-		
 
 		//关闭
 		function closeAddPage() {
 			$('#addBigDiv').addClass("none");
+			vm.lifePhotoImg = '';
+
+			vm.siteName = '';
+			vm.businessLicenseNumber = '';
+			vm.lawsManName = '';
+			vm.lawsManIdCardNumber = '';
+			vm.lawsManPhone = '';
+			vm.address = '';
+			$('#selectcity').val('');
+			$('#selectprovince').val('1');
+			$('#zhizhaoImg').attr('src', '../img/zhaoxiang.png');
+			for(var i = 0; i < vm.heTongImageArray.length; i++) {
+				var removeDiv = document.getElementById(vm.heTongImageArray[i]);
+				$(removeDiv).parent().parent().remove();
+			}
+
+			vm.heTongImageArray = [];
+
 		}
 
 		function selectprovince(obj) {
@@ -390,7 +455,6 @@
 					quality: 0.1
 				}, function(value) {
 					managerotateImg(value, Orientation, function(base64) {
-						console.log(base64);
 						$('#zhizhaoImg').attr('src', base64);
 						postRegular('uploadImage', {
 							"imgStr": base64.split(",")[1]
@@ -431,7 +495,6 @@
 								"</div>" +
 								"</li>");
 							vm.heTongImageArray.push(data.object);
-							console.log(vm.heTongImageArray);
 						})
 					});
 				};
@@ -440,11 +503,10 @@
 
 		function removeLi(obj) {
 			$(obj).parent().parent().remove();
-			
+
 			vm.heTongImageArray.remove(obj.id);
-			console.log(vm.heTongImageArray);
 		}
-		
+
 		function showimg(obj) {
 			index = $(obj).parent().parent().index();
 			var src = ip + vm.heTongImageArray[index];
@@ -463,7 +525,6 @@
 			src = ip + vm.heTongImageArray[index];
 			$('#show_img .i2').attr('src', src);
 		}
-		
 	</script>
 
 </html>

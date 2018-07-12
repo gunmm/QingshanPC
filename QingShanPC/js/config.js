@@ -64,10 +64,10 @@ function postRegular(url, data, callback, callback1) {
 		traditional: true,
 		data: JSON.stringify(param),
 		success: function(data) {
-			console.log("---->" + JSON.stringify(data));
+//			console.log("---->" + JSON.stringify(data));
 			removeLoading();
 			if(data.result_code != 1) {
-				myAlert(data.reason);
+				myAlert(data.result);
 				if(callback1 != null) {
 					callback1();
 				}
@@ -112,7 +112,7 @@ function myAlert(str) {
 	if(!str) {
 		return;
 	}
-	$('body').append('<div id="alert11111" style="width: 100%;height: 100%;position: fixed;top: 0;z-index: 1000;display: flex;">' +
+	$('body').append('<div id="alert11111" style="width: 100%;height: 100%;position: fixed;top: 0;z-index: 100000;display: flex;">' +
 		'<div style="margin: auto;padding: 20px; text-align: center;background: rgba(0, 0, 0, 0.8);border-radius: 10px;color: white;">' +
 		'<div style="max-width: 500px;min-width: 200px;font-size:16px; word-wrap: break-word;overflow: auto;max-height: 500px;">' + str + '</div>' +
 		'<div style="height: 1px;background: white;margin-top: 20px;"></div>' +
