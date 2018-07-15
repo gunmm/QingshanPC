@@ -27,18 +27,18 @@
 					<div class="form-group">
 						<div class="input-icon">
 							<i class="iconfont icon">&#xe6c0;</i>
-							<input class="form-control"type="text" autocomplete="off" placeholder="手机号码" title="手机号码" name="emailMobilePhone" id="emailMobilePhone">
+							<input class="form-control" type="text" autocomplete="off" placeholder="手机号码" title="手机号码" name="emailMobilePhone" id="emailMobilePhone">
 						</div>
 					</div>
 					<div class="form-group" style="position:relative">
 						<div class="input-icon">
 							<i class="iconfont icon">&#xe69f;</i>
-							<input class="form-control"  type="password" id="password" autocomplete="off" placeholder="密码" title="密码" name="password">
+							<input class="form-control" onkeypress="login()" type="password" id="password" autocomplete="off" placeholder="密码" title="密码" name="password">
 						</div>
 					</div>
 
 					<div class="form-group">
-						<input type="button" class="colorBtn" id="login_btn" value="登录" data-loading-text="登录中">
+						<input type="button" onclick="login()" class="colorBtn" id="login_btn" value="登录" data-loading-text="登录中">
 					</div>
 
 					<div id="forget-password">
@@ -57,38 +57,54 @@
 		</div>
 
 	</body>
-	
+
 	<script>
-		$('#login_btn').click(function(){
+		function login() {
 			var number = $("#emailMobilePhone").val();
-			if(number.length == 0){
+			if(number.length == 0) {
 				myAlert("手机号码不能为空！");
 				return;
 			}
-			
-			if(!checkTel(number)){
+
+			if(!checkTel(number)) {
 				myAlert("手机号格式不正确!");
 				return;
 			}
-			
-			if($("#password").val().length == 0){
+
+			if($("#password").val().length == 0) {
 				myAlert("密码不能为空！");
 				return;
 			}
-			
-		
-			var data = {"phoneNumber" : $("#emailMobilePhone").val(),
-			            "password" : hexMD5($("#password").val()),
-			            "plateform" : "PC"};
-			postLogin("login", data, function(data){
-				myAlert("登陆成功！");
-//				window.location.replace('index.html');
-			}, function() {
-				
-			})
-			
-			
-		})
+
+			var data = {
+				"phoneNumber": $("#emailMobilePhone").val(),
+				"password": hexMD5($("#password").val()),
+				"plateform": "PC"
+			};
+			postLogin("login", data, function(data) {
+					console.log()
+					if(data.object.type == '0') {
+						//超级管理员
+					}else if(data.object.type == '1'){
+						//平台管理员
+						window.location.replace('plateManager/siteList.html');
+					}else if(data.object.type == '2'){
+						//平台投诉业务处理人员
+						
+					}else if(data.object.type == '3'){
+						//站点管理员
+						window.location.replace('plateManager/driverList.html');
+					}else if(data.object.type == '4'){
+						//站点业务员
+						
+					}else{
+						myAlert("角色错误!");
+					}
+				},
+				function() {
+
+				})
+		}
 	</script>
 
 </html>

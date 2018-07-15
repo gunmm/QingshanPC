@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>站点详情</title>
+		<link rel="icon" href="../img/logo2.ico" type="img/x-ico" />
+
+		<link rel="stylesheet" href="../css/navHead.css">
+		<link rel="stylesheet" href="../css/iconfont.css">
+		<link rel="stylesheet" href="../css/pagination.css" />
+		<link rel="stylesheet" href="../css/loading.css">
+
+		<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.js"></script>
+
+		<script type="text/javascript" src="../js/config.js"></script>
+		<script type="text/javascript" src="../js/vue.min.js"></script>
+
+		<script type="text/javascript" src="../js/jquery.pagination.js"></script>
+	</head>
+
+	<body>
+		<div id="app" hidden>
+			<div class="detailHeader">
+				<div class="nameAndTimeDiv">
+					<div class="bigTitleDiv">{{siteName}}</div>
+					<div class="timeDiv">
+						<div class="createTimeDiv">创建时间：{{datetransform(createTime)}}</div>
+						<div class="createTimeDiv">更新时间：{{datetransform(updateTime)}}</div>
+					</div>
+				</div>
+
+				<div class="detailBaseInfoDiv">
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv">详细地址：</div>
+						<div class="detailvalueDiv">{{siteProvinceName}}{{siteCityName}}{{address}}</div>
+					</div>
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv">类型：</div>
+						<div class="detailvalueDiv">{{siteType == 1 ? "一级站点" : "子站点"}}</div>
+					</div>
+
+					<div id="superSiteNameDiv" class="detailKeyValueDiv none">
+						<div class="detailKeyDiv">父站点：</div>
+						<div class="detailvalueDiv">{{superSiteName}}</div>
+					</div>
+
+					<div id="superSiteRateDiv" class="detailKeyValueDiv none">
+						<div class="detailKeyDiv">父站点抽成率：</div>
+						<div class="detailvalueDiv">{{childToSuperRate}}</div>
+					</div>
+
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv">审核状态：</div>
+						<div class="detailvalueDiv">{{judgeStatus(siteCheckStatus)}}</div>
+					</div>
+
+					<div onclick="checkSite('2')" id="unPassBtnDiv" class="detailPassBtnDiv none">
+						<input type="button" class="passBtn" value="拒绝" style="background: red;color: white;" />
+						<i class="iconfont" style="color: white;font-size: 13px;">&#xe613;</i>
+					</div>
+
+					<div onclick="checkSite('1')" id="passBtnDiv" class="detailPassBtnDiv none" style="margin-right: 0px;">
+						<input type="button" class="passBtn" value="审核" />
+						<i class="iconfont">&#xe648;</i>
+					</div>
+
+				</div>
+
+				<div class="detailBaseInfoDiv">
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv">法人姓名：</div>
+						<div class="detailvalueDiv">{{lawsManName}}</div>
+					</div>
+
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv">手机号：</div>
+						<div class="detailvalueDiv">{{lawsManPhone}}</div>
+					</div>
+
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv">身份证号：</div>
+						<div class="detailvalueDiv">{{lawsManIdCardNumber}}</div>
+					</div>
+
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv">营业执照号：</div>
+						<div class="detailvalueDiv">{{businessLicenseNumber}}</div>
+					</div>
+				</div>
+
+				<div class="detailPhotoDiv">
+					<div class="photoItemDiv f-l">
+						<div class="photoTitle" style="color: white;">
+							营业执照
+						</div>
+						<div class="photoPhotoDiv">
+							<img id="zhizhaoImg" onclick='showimg1(this)' onclick="chooseImg1()" />
+							<input id="ip_zhizhao" class="fr compile-pic" type="file" accept="image/jpg,image/jpeg,image/png,image/gif" multiple hidden="true" onchange="uploadYingYe(this)">
+						</div>
+					</div>
+
+					<div class="photoarea f-l">
+						<div class="photoAreaTitle" style="color: white;">
+							场地租赁合同或土地证照片
+						</div>
+						<div class="show-pic fl">
+							<ul id="showul">
+								<li id="xz" class='fl'></li>
+							</ul>
+						</div>
+
+					</div>
+				</div>
+
+			</div>
+			<div id="show_img" class="i none">
+				<img class="i1 sel cursor-pointer" src="../img/ic_close.png" onclick="$('#show_img').addClass('none')" />
+				<img class="i2" style="margin: auto;max-width: 80%;max-height: 80%;" src="" />
+				<img class="i3 sel cursor-pointer" src="../img/ic_left.png" onclick="switchImg(-1)" />
+				<img class="i4 sel cursor-pointer" src="../img/ic_right.png" onclick="switchImg(1)" />
+			</div>
+
+			<div id="show_alone_img" class="i none">
+				<img class="i1 sel cursor-pointer" src="../img/ic_close.png" onclick="$('#show_alone_img').addClass('none')" />
+				<img id="bigAloneImg" class="i2" style="margin: auto;max-width: 80%;max-height: 80%;" src="" />
+			</div>
+		</div>
+	</body>
+
+	<script>
+		var siteId = getQueryString("siteId");
+
+		function loadSiteDetailData() {
+			postRegular('getInfoById', {
+				siteId: siteId,
+			}, function(data) {
+				$('#app').show();
+				vm.siteId = data.object.site.siteId;
+				vm.siteName = data.object.site.siteName;
+				vm.businessLicenseNumber = data.object.site.businessLicenseNumber;
+				vm.lawsManName = data.object.site.lawsManName;
+				vm.lawsManIdCardNumber = data.object.site.lawsManIdCardNumber;
+				vm.lawsManPhone = data.object.site.lawsManPhone;
+				vm.address = data.object.site.address;
+				vm.siteProvinceName = data.object.site.siteProvinceName;
+				vm.siteCityName = data.object.site.siteCityName;
+				vm.businessLicensePhoto = data.object.site.businessLicensePhoto;
+				vm.heTongImageArray = data.object.site.leaseContractPhoto.split(',');
+				vm.createTime = data.object.site.createTime;
+				vm.updateTime = data.object.site.updateTime;
+
+				vm.siteType = data.object.site.siteType;
+				vm.siteCheckStatus = data.object.site.siteCheckStatus;
+				vm.childToSuperRate = data.object.site.childToSuperRate;
+				vm.superSiteId = data.object.site.superSiteId;
+				vm.superSiteName = data.object.site.superSiteName;
+
+				if(vm.siteType == '2') {
+					$('#superSiteNameDiv').removeClass('none');
+					$('#superSiteRateDiv').removeClass('none');
+					if(vm.siteCheckStatus == '0') {
+						$('#passBtnDiv').removeClass('none');
+						$('#unPassBtnDiv').removeClass('none');
+
+					}
+
+				}
+				for(var i = 0; i < vm.heTongImageArray.length; i++) {
+					var str = vm.heTongImageArray[i];
+					$("#xz").before(
+						"<li class='fl'>" +
+						"<div class='muteImgDiv'>" +
+						"<img class='showBigImg' onclick='showimg(this)' src='" + ip + str + "'/>" +
+						"<input type='hidden' name='yinyezhihao' value=''/>" +
+						"</div>" +
+						"</li>");
+
+				}
+
+				$('#zhizhaoImg').attr('src', ip + vm.businessLicensePhoto);
+				$('#bigAloneImg').attr('src', ip + vm.businessLicensePhoto);
+
+			}, function() {
+
+			})
+		}
+		loadSiteDetailData();
+
+		var vm = new Vue({
+			el: '#app',
+			data: {
+				siteId: '',
+				siteName: '',
+				businessLicenseNumber: '',
+				lawsManName: '',
+				lawsManIdCardNumber: '',
+				lawsManPhone: '',
+				siteProvinceName: '',
+				siteCityName: '',
+				address: '',
+				heTongImageArray: [],
+				businessLicensePhoto: '',
+				siteType: '',
+				siteCheckStatus: '',
+				childToSuperRate: '',
+				superSiteId: '',
+				superSiteName: '',
+				createTime: '',
+				updateTime: '',
+			},
+			methods: {
+
+			}
+		})
+
+		function checkSite(siteCheckStatus) {
+			postRegular('checkSite', {
+				siteId: vm.siteId,
+				siteCheckStatus: siteCheckStatus,
+			}, function(data) {
+				window.location.reload();
+			})
+		}
+
+		function showimg1(obj) {
+			$('#show_alone_img').removeClass('none');
+		}
+
+		function showimg(obj) {
+			index = $(obj).parent().parent().index();
+			var src = ip + vm.heTongImageArray[index];
+			$('#show_img').removeClass('none');
+			$('#show_img .i2').attr('src', src);
+		}
+
+		function switchImg(num) {
+			index += num;
+			var src;
+			if(index < 0) {
+				index = vm.heTongImageArray.length - 1;
+			} else if(index >= vm.heTongImageArray.length) {
+				index = 0;
+			}
+			src = ip + vm.heTongImageArray[index];
+			$('#show_img .i2').attr('src', src);
+		}
+	</script>
+
+</html>

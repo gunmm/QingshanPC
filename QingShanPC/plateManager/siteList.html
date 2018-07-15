@@ -3,13 +3,13 @@
 
 	<head>
 		<meta charset="UTF-8">
-		<title></title>
+		<title>站点列表</title>
+		<link rel="icon" href="../img/logo2.ico" type="img/x-ico" />
 
 		<link rel="stylesheet" href="../css/iconfont.css">
 		<link rel="stylesheet" href="../css/loading.css">
 		<link rel="stylesheet" href="../css/navHead.css">
 
-		<link rel="stylesheet" href="../css/easyui/easyui.css" />
 		<link rel="stylesheet" href="../css/pagination.css" />
 
 		<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.js"></script>
@@ -19,7 +19,6 @@
 		<script type="text/javascript" src="../js/config.js"></script>
 		<script type="text/javascript" src="../js/vue.min.js"></script>
 
-		<script type="text/javascript" src="../js/jquery.easyui.min.js"></script>
 		<script type="text/javascript" src="../js/jquery.pagination.js"></script>
 		<script type="text/javascript" src="../js/exif.js"></script>
 
@@ -51,7 +50,7 @@
 		</style>
 	</head>
 
-	<body bgcolor="red">
+	<body>
 		<div class="header">
 			<div class="logoDiv"></div>
 			<ul class="nav">
@@ -72,6 +71,46 @@
 		</div>
 		<div id="app" class="content" hidden>
 			<div class="oprationToolBar">
+				<div class="filterDiv">
+					<div class="nameFilterDiv">
+						<div class="filterKeyDiv">站点名称</div>
+						<div class="filterValueDiv">
+							<input v-model="filterSiteName" class="filterValueInput" type="text" placeholder="" title="站点名称">
+						</div>
+					</div>
+					<div class="nameFilterDiv">
+						<div class="filterKeyDiv">法人姓名</div>
+						<div class="filterValueDiv">
+							<input v-model="filterLawsManName" class="filterValueInput" type="text" placeholder="" title="法人姓名">
+						</div>
+					</div>
+
+					<div class="nameFilterDiv" style="width: 400px;">
+						<div class="filterKeyDiv">创建时间</div>
+						<div class="filterValueDiv">
+							<input v-model="filterBeginTime" style="width: 135px;" class="filterValueInput" type="date" placeholder="" title="法人姓名">
+						</div>
+						<div style="float:left;line-height: 50px;width: 30px;text-align: center;">至</div>
+						<div class="filterValueDiv">
+							<input v-model="filterEndTime" style="width: 135px;" class="filterValueInput" type="date" placeholder="" title="法人姓名">
+						</div>
+
+					</div>
+
+					<div class="filterOperateBtnDiv">
+						<div id="query_btn" class="filterOperateDiv">
+							<input type="button" class="filterOperateBtn" value="查询" />
+							<i class="iconfont" style="font-size: 20px; margin-top: 15px;">&#xe60e;</i>
+						</div>
+						<div id="clear_btn" class="filterOperateDiv">
+							<input type="button" class="filterOperateBtn" value="清空" />
+							<i class="iconfont">&#xe630;</i>
+						</div>
+
+					</div>
+
+				</div>
+
 				<div id="add_btn" class="addDiv">
 					<input type="button" class="colorBtn" value="新建">
 					<i class="iconfont">&#xe636;</i>
@@ -83,12 +122,13 @@
 					<table class="hovertable" title="">
 						<thead>
 							<tr>
+								<th>#</th>
 								<th>站点名称</th>
 								<th>站点类型</th>
 								<th>地址</th>
 								<th>审核状态</th>
 								<th>法人姓名</th>
-								<th>创建时间</th>
+								<th>注册时间</th>
 								<th>更新时间</th>
 								<th>子站点个数</th>
 								<th>操作</th>
@@ -96,22 +136,24 @@
 
 						</thead>
 
-						<tr v-for="item in datalist" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+						<tr v-for="item in datalist" @click="openItemDetailPage(item.siteId)" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+							<td>{{item.id}}</td>
 							<td>{{item.siteName}}</td>
 							<td>{{item.siteType == 1 ? "一级站点" : "子站点"}}</td>
 							<td>{{item.siteProvinceName}}{{item.siteCityName}}{{item.address}}</td>
-							<td>{{item.siteCheckStatus}}</td>
+							<td>{{judgeStatus(item.siteCheckStatus)}}</td>
 							<td>{{item.lawsManName}}</td>
 							<td>{{datetransform(item.createTime)}}</td>
 							<td>{{datetransform(item.updateTime)}}</td>
 							<td>0</td>
 							<td>
 								<div class="oprateDiv">
-									<a href="javascript:editItem()">编辑</a>
-									<a href="javascript:deleteItem()">删除</a>
+									<a @click="editItem(item.id,$event)">编辑</a>
+									<a @click="deleteItem(item.id,$event)">删除</a>
 								</div>
 
 							</td>
+
 						</tr>
 
 					</table>
@@ -237,7 +279,7 @@
 
 			<div id="show_img" class="i none">
 				<img class="i1 sel cursor-pointer" src="../img/ic_close.png" onclick="$('#show_img').addClass('none')" />
-				<img class="i2" src="" />
+				<img class="i2" style="margin: auto;max-width: 80%;max-height: 80%;" src="" />
 				<img class="i3 sel cursor-pointer" src="../img/ic_left.png" onclick="switchImg(-1)" />
 				<img class="i4 sel cursor-pointer" src="../img/ic_right.png" onclick="switchImg(1)" />
 			</div>
@@ -266,6 +308,8 @@
 		var vm = new Vue({
 			el: '#app',
 			data: {
+				isEdit: 0,
+				siteId: '',
 				province: province,
 				city: city,
 				nowcity: nowcity,
@@ -281,6 +325,10 @@
 				lawsManIdCardNumber: '',
 				lawsManPhone: '',
 				address: '',
+				filterSiteName: '',
+				filterLawsManName: '',
+				filterBeginTime: '',
+				filterEndTime: '',
 
 			},
 			methods: {
@@ -288,33 +336,68 @@
 			}
 		})
 
-		function loadData(page) {
+		function loadData() {
 			$("#Pagination").empty();
 			postRegular('getSiteList', {
-				page: page,
+				page: vm.page,
 				rows: vm.pageSize,
+				filterSiteName: vm.filterSiteName,
+				filterLawsManName: vm.filterLawsManName,
+				filterBeginTime: vm.filterBeginTime,
+				filterEndTime: vm.filterEndTime,
 			}, function(data) {
 				$('#app').show();
 				vm.datalist = data.object.siteList;
+				for(var i = 0; i < vm.datalist.length; i++) {
+					var obj = vm.datalist[i];
+					obj.id = i + 1;
+				}
 				vm.itemCount = data.object.siteCount;
-				$('.allPage').html(Math.ceil(data.object.siteCount/vm.pageSize));
-				$("#Pagination").pagination(data.object.siteCount/vm.pageSize, {
+				$('.allPage').html(Math.ceil(data.object.siteCount / vm.pageSize));
+				$("#Pagination").pagination(data.object.siteCount / vm.pageSize, {
 					callback: function(page) { // 回调函数
 						vm.page = page;
-						loadData(page);
-//						postRegular('getSiteList', {
-//							page: page,
-//							rows: vm.pageSize,
-//						}, function(data) {
-//							vm.datalist = data.object.siteList;
-//						})
+						loadPageData();
 					}
 				});
 			}, function() {
 
 			})
 		}
-		loadData(vm.page);
+		loadData();
+
+		function loadPageData() {
+			postRegular('getSiteList', {
+				page: vm.page,
+				rows: vm.pageSize,
+				filterSiteName: vm.filterSiteName,
+				filterLawsManName: vm.filterLawsManName,
+				filterBeginTime: vm.filterBeginTime,
+				filterEndTime: vm.filterEndTime,
+			}, function(data) {
+				vm.datalist = data.object.siteList;
+				for(var i = 0; i < vm.datalist.length; i++) {
+					var obj = vm.datalist[i];
+					obj.id = i + 1;
+				}
+			})
+		}
+
+		//筛选确认
+		$('#query_btn').click(function() {
+			vm.page = 0;
+			loadData();
+		})
+
+		//筛选清空
+		$('#clear_btn').click(function() {
+			vm.filterSiteName = '';
+			vm.filterLawsManName = '';
+			vm.filterBeginTime = '';
+			vm.filterEndTime = '';
+			loadData();
+
+		})
 
 		//保存
 		$('#save_btn').click(function() {
@@ -352,6 +435,12 @@
 				myAlert("法人电话不能为空！");
 				return;
 			}
+			
+			if(!checkTel(vm.lawsManPhone)) {
+				myAlert("法人电话号格式不正确!");
+				return;
+			}
+			
 
 			if(vm.lifePhotoImg.length == 0) {
 				myAlert("营业执照照片未上传！");
@@ -365,31 +454,117 @@
 
 			var contractPhotos = vm.heTongImageArray.join(',');
 
-			postRegular('addSite', {
-				siteName: vm.siteName,
-				businessLicenseNumber: vm.businessLicenseNumber,
-				businessLicensePhoto: vm.lifePhotoImg,
-				lawsManName: vm.lawsManName,
-				lawsManIdCardNumber: vm.lawsManIdCardNumber,
-				lawsManPhone: vm.lawsManPhone,
-				leaseContractPhoto: contractPhotos,
-				siteProvince: $("#selectprovince").val(),
-				siteCity: $("#selectcity").val(),
-				address: vm.address,
-			}, function(data) {
-				closeAddPage();
-				loadData(vm.page);
+			if(vm.isEdit == 0) {
+				postRegular('addSite', {
+					siteName: vm.siteName,
+					businessLicenseNumber: vm.businessLicenseNumber,
+					businessLicensePhoto: vm.lifePhotoImg,
+					lawsManName: vm.lawsManName,
+					lawsManIdCardNumber: vm.lawsManIdCardNumber,
+					lawsManPhone: vm.lawsManPhone,
+					leaseContractPhoto: contractPhotos,
+					siteProvince: $("#selectprovince").val(),
+					siteCity: $("#selectcity").val(),
+					address: vm.address,
+					siteType: '1',
+				}, function(data) {
+					closeAddPage();
+					window.location.reload();
 
-			}, function() {
+				}, function() {
 
-			});
+				});
+			} else if(vm.isEdit == 1) {
+				postRegular('editSite', {
+					siteId: vm.siteId,
+					siteName: vm.siteName,
+					businessLicenseNumber: vm.businessLicenseNumber,
+					businessLicensePhoto: vm.lifePhotoImg,
+					lawsManName: vm.lawsManName,
+					lawsManIdCardNumber: vm.lawsManIdCardNumber,
+					lawsManPhone: vm.lawsManPhone,
+					leaseContractPhoto: contractPhotos,
+					siteProvince: $("#selectprovince").val(),
+					siteCity: $("#selectcity").val(),
+					address: vm.address,
+				}, function(data) {
+					closeAddPage();
+					window.location.reload();
+
+				}, function() {
+
+				});
+			}
+
 		})
 
 		//编辑
-		function editItem() {}
+		function editItem(itemIndex,$event) {
+			
+			 $event.stopPropagation();
+			vm.isEdit = 1;
+
+			var obj = vm.datalist[itemIndex - 1];
+			vm.siteId = obj.siteId;
+			vm.lifePhotoImg = obj.businessLicensePhoto;
+			vm.siteName = obj.siteName;
+			vm.businessLicenseNumber = obj.businessLicenseNumber;
+			vm.lawsManName = obj.lawsManName;
+			vm.lawsManIdCardNumber = obj.lawsManIdCardNumber;
+			vm.lawsManPhone = obj.lawsManPhone;
+			vm.address = obj.address;
+			$("#selectprovince").val(obj.siteProvince);
+			vm.nowcity = city[obj.siteProvince];
+
+			setTimeout(function() {
+				$("#selectcity").val(obj.siteCity);
+			}, 50);
+
+			if(obj.leaseContractPhoto.length > 0) {
+				vm.heTongImageArray = obj.leaseContractPhoto.split(',');
+				for(var i = 0; i < vm.heTongImageArray.length; i++) {
+					var str = vm.heTongImageArray[i];
+					$("#xz").before(
+						"<li class='fl'>" +
+						"<div class='muteImgDiv'>" +
+						"<img class='showBigImg' onclick='showimg(this)' src='" + ip + str + "'/>" +
+						"<input type='hidden' name='yinyezhihao' value=''/>" +
+						"<div id='" + str + "' class='delet-pic' onclick='removeLi(this)'>" +
+						"<img src='../img/9E9E7268-4F63-4B93-8850-DFF862172AEA@2x.png' />" +
+						"</div>" +
+						"</div>" +
+						"</li>");
+
+				}
+			} else {
+				vm.heTongImageArray = [];
+			}
+
+			if(vm.lifePhotoImg.length > 0) {
+				$('#zhizhaoImg').attr('src', ip + vm.lifePhotoImg);
+			}
+
+			$('#addBigDiv').removeClass("none");
+		}
 
 		//删除
-		function deleteItem() {}
+		function deleteItem(itemIndex,$event) {
+			 $event.stopPropagation();
+			var obj = vm.datalist[itemIndex - 1];
+			console.log(obj.siteName);
+			if(window.confirm('你确定要删除 ' + obj.siteName + ' 吗？')) {
+				postRegular('deleteSite', {
+					siteId: obj.siteId,
+				}, function(data) {
+					loadPageData();
+					myAlert("刪除成功！");
+				}, function() {
+
+				});
+			} else {
+
+			}
+		}
 
 		//添加
 		$('#add_btn').click(function() {
@@ -399,6 +574,8 @@
 		//关闭
 		function closeAddPage() {
 			$('#addBigDiv').addClass("none");
+			vm.isEdit = 0;
+			vm.siteId = '';
 			vm.lifePhotoImg = '';
 
 			vm.siteName = '';
@@ -417,6 +594,12 @@
 
 			vm.heTongImageArray = [];
 
+		}
+
+		//点击查看详情
+		function openItemDetailPage(siteId) {
+			console.log(siteId)
+			window.open("siteDetail.html?siteId=" + siteId);
 		}
 
 		function selectprovince(obj) {
@@ -525,6 +708,8 @@
 			src = ip + vm.heTongImageArray[index];
 			$('#show_img .i2').attr('src', src);
 		}
+
+		
 	</script>
 
 </html>
