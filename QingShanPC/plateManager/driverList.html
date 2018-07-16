@@ -351,7 +351,8 @@
 			el: '#app',
 			data: {
 				isEdit: 0,
-				siteId: '',
+				driverId: '',
+				vehicleId: '',
 				page: 0,
 				pageSize: 15,
 				itemCount: 0,
@@ -569,7 +570,7 @@
 						"vehicleModel": vm.vehicleModel,
 						"loadWeight": vm.loadWeight,
 						"vehicleMakeDate": vm.vehicleMakeDate,
-//						"drivingCardNumber": vm.drivingCardNumber,
+						//						"drivingCardNumber": vm.drivingCardNumber,
 						"vehicleRegistrationNumber": vm.drivingCardNumber,
 						"operationCertificateNumber": vm.operationCertificateNumber,
 						"gpsType": $("#GPSType").val(),
@@ -603,19 +604,64 @@
 
 				});
 			} else if(vm.isEdit == 1) {
-				postRegular('editSite', {
-					siteId: vm.siteId,
-					siteName: vm.siteName,
-					businessLicenseNumber: vm.businessLicenseNumber,
-					businessLicensePhoto: vm.lifePhotoImg,
-					lawsManName: vm.lawsManName,
-					lawsManIdCardNumber: vm.lawsManIdCardNumber,
-					lawsManPhone: vm.lawsManPhone,
-					leaseContractPhoto: contractPhotos,
-					siteProvince: $("#selectprovince").val(),
-					siteCity: $("#selectcity").val(),
-					address: vm.address,
-				}, function(data) {
+				var vehicle;
+				if($("#xingshidengji").val() == '1') {
+					vehicle = {
+						"vehicleId": vm.vehicleId,
+						"plateNumber": vm.plateNumber,
+						"vehicleType": $("#vehicleType").val(),
+						"vehicleBrand": vm.vehicleBrand,
+						"vehicleModel": vm.vehicleModel,
+						"loadWeight": vm.loadWeight,
+						"vehicleMakeDate": vm.vehicleMakeDate,
+						"drivingCardNumber": vm.drivingCardNumber,
+						//					"vehicleRegistrationNumber": vm.drivingCardNumber,
+						"operationCertificateNumber": vm.operationCertificateNumber,
+						"gpsType": $("#GPSType").val(),
+						"gpsSerialNumber": vm.GPSSerialNumber,
+						"vehiclePhoto": vm.cheliangImgUrl,
+						"insuranceNumber": vm.baoxianImgUrl,
+						"businessLicenseNumber": vm.yingyeImgUrl,
+						"vehicleIdCardNumber": vm.chezhushenfImgUrl
+					}
+
+				} else {
+					vehicle = {
+						"vehicleId": vm.vehicleId,
+						"plateNumber": vm.plateNumber,
+						"vehicleType": $("#vehicleType").val(),
+						"vehicleBrand": vm.vehicleBrand,
+						"vehicleModel": vm.vehicleModel,
+						"loadWeight": vm.loadWeight,
+						"vehicleMakeDate": vm.vehicleMakeDate,
+						//						"drivingCardNumber": vm.drivingCardNumber,
+						"vehicleRegistrationNumber": vm.drivingCardNumber,
+						"operationCertificateNumber": vm.operationCertificateNumber,
+						"gpsType": $("#GPSType").val(),
+						"gpsSerialNumber": vm.GPSSerialNumber,
+						"vehiclePhoto": vm.cheliangImgUrl,
+						"insuranceNumber": vm.baoxianImgUrl,
+						"businessLicenseNumber": vm.yingyeImgUrl,
+						"vehicleIdCardNumber": vm.chezhushenfImgUrl,
+					}
+				}
+
+				var data = {
+					"user": {
+						"userId": vm.driverId,
+						"nickname": vm.driverName,
+						"phoneNumber": vm.phoneNumber,
+						"userIdCardNumber": vm.userIdCardNumber,
+						"driverLicenseNumber": vm.driverLicenseNumber,
+						"driverQualificationNumber": vm.driverQualificationNumber,
+						"vehicleType": $("#vehicleType").val(),
+						"belongSiteId": "cf7bcec5-38d1-40e3-aad4-9ac998fd5c58"
+
+					},
+					"vehicle": vehicle
+				};
+				console.log(data);
+				postRegular('editDriver', data, function(data) {
 					closeAddPage();
 					window.location.reload();
 
@@ -628,68 +674,76 @@
 		function editItem(itemIndex, $event) {
 
 			$event.stopPropagation();
-			//			vm.isEdit = 1;
-			//
-			//			var obj = vm.datalist[itemIndex - 1];
-			//			vm.siteId = obj.siteId;
-			//			vm.lifePhotoImg = obj.businessLicensePhoto;
-			//			vm.siteName = obj.siteName;
-			//			vm.businessLicenseNumber = obj.businessLicenseNumber;
-			//			vm.lawsManName = obj.lawsManName;
-			//			vm.lawsManIdCardNumber = obj.lawsManIdCardNumber;
-			//			vm.lawsManPhone = obj.lawsManPhone;
-			//			vm.address = obj.address;
-			//			$("#selectprovince").val(obj.siteProvince);
-			//			vm.nowcity = city[obj.siteProvince];
-			//
-			//			setTimeout(function() {
-			//				$("#selectcity").val(obj.siteCity);
-			//			}, 50);
-			//
-			//			if(obj.leaseContractPhoto.length > 0) {
-			//				vm.heTongImageArray = obj.leaseContractPhoto.split(',');
-			//				for(var i = 0; i < vm.heTongImageArray.length; i++) {
-			//					var str = vm.heTongImageArray[i];
-			//					$("#xz").before(
-			//						"<li class='fl'>" +
-			//						"<div class='muteImgDiv'>" +
-			//						"<img class='showBigImg' onclick='showimg(this)' src='" + ip + str + "'/>" +
-			//						"<input type='hidden' name='yinyezhihao' value=''/>" +
-			//						"<div id='" + str + "' class='delet-pic' onclick='removeLi(this)'>" +
-			//						"<img src='../img/9E9E7268-4F63-4B93-8850-DFF862172AEA@2x.png' />" +
-			//						"</div>" +
-			//						"</div>" +
-			//						"</li>");
-			//
-			//				}
-			//			} else {
-			//				vm.heTongImageArray = [];
-			//			}
-			//
-			//			if(vm.lifePhotoImg.length > 0) {
-			//				$('#zhizhaoImg').attr('src', ip + vm.lifePhotoImg);
-			//			}
-			//
-			//			$('#addBigDiv').removeClass("none");
+			vm.isEdit = 1;
+
+			var obj = vm.datalist[itemIndex - 1];
+			vm.driverId = obj.userId;
+			vm.vehicleId = obj.vehicleId;
+
+			vm.driverName = obj.nickname;
+			vm.phoneNumber = obj.phoneNumber;
+			vm.userIdCardNumber = obj.userIdCardNumber;
+			
+
+			vm.plateNumber = obj.plateNumber;
+			vm.vehicleBrand = obj.vehicleBrand;
+			vm.vehicleModel = obj.vehicleModel;
+			vm.loadWeight = obj.loadWeight;
+			vm.vehicleMakeDate = obj.vehicleMakeDate;
+			vm.driverLicenseNumber = obj.driverLicenseNumber;
+			vm.driverQualificationNumber = obj.driverQualificationNumber;
+			
+			vm.operationCertificateNumber = obj.operationCertificateNumber;
+			vm.GPSSerialNumber = obj.gpsSerialNumber;
+			vm.cheliangImgUrl = obj.vehiclePhoto;
+			vm.baoxianImgUrl = obj.insuranceNumber;
+			vm.yingyeImgUrl = obj.businessLicenseNumber;
+			vm.chezhushenfImgUrl = obj.vehicleIdCardNumber;
+
+
+			if(obj.drivingCardNumber != '' && obj.drivingCardNumber != null) {
+				$("#xingshidengji").val('1');
+				vm.drivingCardNumber = obj.drivingCardNumber;
+			} else {
+				$("#xingshidengji").val('2');
+				vm.drivingCardNumber = obj.vehicleRegistrationNumber;
+			}
+
+			$("#vehicleType").val(obj.vehicleType);
+			$("#GPSType").val(obj.gpsType);
+			
+			$('#cheliangImg').attr('src', ip + vm.cheliangImgUrl);
+			$('#baoxianImg').attr('src', ip + vm.baoxianImgUrl);
+
+
+			if(vm.yingyeImgUrl != '' && vm.yingyeImgUrl != null) {
+				$('#yingyeImg').attr('src', ip + vm.yingyeImgUrl);
+			}
+
+			if(vm.chezhushenfImgUrl != '' && vm.chezhushenfImgUrl != null) {
+				$('#chezhuImg').attr('src', ip + vm.chezhushenfImgUrl);
+			}
+			
+
+			$('#addBigDiv').removeClass("none");
 		}
 
 		//删除
 		function deleteItem(itemIndex, $event) {
 			$event.stopPropagation();
-			//			var obj = vm.datalist[itemIndex - 1];
-			//			console.log(obj.siteName);
-			//			if(window.confirm('你确定要删除 ' + obj.siteName + ' 吗？')) {
-			//				postRegular('deleteSite', {
-			//					siteId: obj.siteId,
-			//				}, function(data) {
-			//					loadPageData();
-			//					myAlert("刪除成功！");
-			//				}, function() {
-			//
-			//				});
-			//			} else {
-			//
-			//			}
+			var obj = vm.datalist[itemIndex - 1];
+			if(window.confirm('你确定要删除 ' + obj.nickname + ' 吗？')) {
+				postRegular('deleteDriver', {
+					driverId: obj.userId,
+				}, function(data) {
+					loadPageData();
+					myAlert("刪除成功！");
+				}, function() {
+
+				});
+			} else {
+
+			}
 		}
 
 		//跳转至站点详情
@@ -706,25 +760,38 @@
 		//关闭
 		function closeAddPage() {
 			$('#addBigDiv').addClass("none");
-			//			vm.isEdit = 0;
-			//			vm.siteId = '';
-			//			vm.lifePhotoImg = '';
-			//
-			//			vm.siteName = '';
-			//			vm.businessLicenseNumber = '';
-			//			vm.lawsManName = '';
-			//			vm.lawsManIdCardNumber = '';
-			//			vm.lawsManPhone = '';
-			//			vm.address = '';
-			//			$('#selectcity').val('');
-			//			$('#selectprovince').val('1');
-			//			$('#zhizhaoImg').attr('src', '../img/zhaoxiang.png');
-			//			for(var i = 0; i < vm.heTongImageArray.length; i++) {
-			//				var removeDiv = document.getElementById(vm.heTongImageArray[i]);
-			//				$(removeDiv).parent().parent().remove();
-			//			}
-			//
-			//			vm.heTongImageArray = [];
+			vm.isEdit = 0;
+			vm.driverId = '';
+			vm.vehicleId = '';
+
+			vm.driverName = '';
+			vm.phoneNumber = '';
+			vm.userIdCardNumber = '';
+			vm.driverLicenseNumber = '';
+			vm.driverQualificationNumber = '';
+
+			vm.plateNumber = '';
+			vm.vehicleBrand = '';
+			vm.vehicleModel = '';
+			vm.loadWeight = '';
+			vm.vehicleMakeDate = '';
+			vm.drivingCardNumber = '';
+			vm.vehicleRegistrationNumber = '';
+			vm.operationCertificateNumber = '';
+			vm.GPSSerialNumber = '';
+			vm.cheliangImgUrl = '';
+			vm.baoxianImgUrl = '';
+			vm.yingyeImgUrl = '';
+			vm.chezhushenfImgUrl = '';
+
+			$("#vehicleType").val('');
+			$("#xingshidengji").val('');
+			$("#GPSType").val('');
+
+			$('#cheliangImg').attr('src', '../img/zhaoxiang.png');
+			$('#baoxianImg').attr('src', '../img/zhaoxiang.png');
+			$('#yingyeImg').attr('src', '../img/zhaoxiang.png');
+			$('#chezhuImg').attr('src', '../img/zhaoxiang.png');
 
 		}
 
@@ -770,27 +837,22 @@
 					quality: 0.1
 				}, function(value) {
 					managerotateImg(value, Orientation, function(base64) {
-						if(valuee == 1) {
-							$('#cheliangImg').attr('src', base64);
-						} else if(valuee == 2) {
-							$('#baoxianImg').attr('src', base64);
-						} else if(valuee == 3) {
-							$('#yingyeImg').attr('src', base64);
-						} else if(valuee == 4) {
-							$('#chezhuImg').attr('src', base64);
-						}
 						postRegular('uploadImage', {
 							"imgStr": base64.split(",")[1]
 						}, function(data) {
 
 							if(valuee == 1) {
 								vm.cheliangImgUrl = data.object;
+								$('#cheliangImg').attr('src', ip + data.object);
 							} else if(valuee == 2) {
 								vm.baoxianImgUrl = data.object;
+								$('#baoxianImg').attr('src', ip + data.object);
 							} else if(valuee == 3) {
 								vm.yingyeImgUrl = data.object;
+								$('#yingyeImg').attr('src', ip + data.object);
 							} else if(valuee == 4) {
 								vm.chezhushenfImgUrl = data.object;
+								$('#chezhuImg').attr('src', ip + data.object);
 							}
 
 						})
@@ -804,7 +866,6 @@
 			name: '车辆类型',
 		}, function(data) {
 			vm.vehicleTypeArray = data.object;
-			console.log(vm.vehicleTypeArray)
 		})
 
 		//请求GPS厂家类型
@@ -812,7 +873,6 @@
 			name: 'GPS类型',
 		}, function(data) {
 			vm.GPSTypeArray = data.object;
-			console.log(vm.GPSTypeArray)
 
 		})
 	</script>

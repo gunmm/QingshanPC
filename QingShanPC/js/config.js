@@ -86,7 +86,7 @@ function addLoading() {
 		return;
 	}
 
-	$('body').append('<div id="loading11111" style="width: 100%;height: 100%;position: fixed;top: 0;z-index: 1000;display: flex;">' +
+	$('body').append('<div id="loading11111" style="width: 100%;height: 100%;position: fixed;top: 0;z-index: 10001;display: flex;">' +
 		'<div style="margin: auto;padding: 20px; text-align: center;background: rgba(0, 0, 0, 0.5);border-radius: 10px;">' +
 		'<div class="load-1" style="height: 55px;">' +
 		'<div class="k-line k-line3-1"></div>' +
