@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>司机详情</title>
+		<link rel="icon" href="../img/logo2.ico" type="img/x-ico" />
+
+		<link rel="stylesheet" href="../css/navHead.css">
+		<link rel="stylesheet" href="../css/iconfont.css">
+		<link rel="stylesheet" href="../css/pagination.css" />
+		<link rel="stylesheet" href="../css/loading.css">
+
+		<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.js"></script>
+
+		<script type="text/javascript" src="../js/config.js"></script>
+		<script type="text/javascript" src="../js/vue.min.js"></script>
+
+		<script type="text/javascript" src="../js/jquery.pagination.js"></script>
+	</head>
+
+	<body>
+		<div id="app" hidden>
+			<div class="detailHeader" style="height: 550px;">
+				<div class="nameAndTimeDiv">
+					<div class="bigTitleDiv">{{nickname}}</div>
+					<div class="timeDiv">
+						<div class="createTimeDiv">创建时间：{{datetransform(createTime)}}</div>
+						<div class="createTimeDiv">更新时间：{{datetransform(updateTime)}}</div>
+					</div>
+				</div>
+				<div class="detailBaseInfoDiv">
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv" style=" font-size: 25px;">评分：</div>
+						<div class="detailvalueDiv" style="color: yellow; font-size: 25px;">{{score}}</div>
+					</div>
+				</div>
+
+				<div class="detailBaseInfoDiv" style="margin-top: 5px;">
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv">所属站点：</div>
+						<div class="detailvalueDiv zhandianTiaozhuanDiv">
+							<a @click="jumpToSite()" class="zhandianTiaozhuan">{{belongSiteName}}</a>
+						</div>
+					</div>
+				</div>
+
+				<div class="detailBaseInfoDiv">
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv">联系电话：</div>
+						<div class="detailvalueDiv">{{phoneNumber}}</div>
+					</div>
+
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv">身份证号：</div>
+						<div class="detailvalueDiv">{{userIdCardNumber}}</div>
+					</div>
+
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv">驾驶证号：</div>
+						<div class="detailvalueDiv">{{driverLicenseNumber}}</div>
+					</div>
+
+					<div id="teshuzigeDiv" class="detailKeyValueDiv none">
+						<div class="detailKeyDiv">特殊资格证号：</div>
+						<div class="detailvalueDiv">{{driverQualificationNumber}}</div>
+					</div>
+				</div>
+				<br>
+
+				<div class="detailBaseInfoDiv" style="padding-bottom: 10px;padding-top: 10px;">
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv" style="font-size: 30px;">车牌号：</div>
+						<div class="detailvalueDiv" style="font-size: 30px;color: yellow;">{{plateNumber}}</div>
+					</div>
+				</div>
+				<div class="detailBaseInfoDiv">
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv">车辆类型：</div>
+						<div class="detailvalueDiv" style="color: orange;">{{vehicleTypeName}}</div>
+					</div>
+				</div>
+				<div class="detailBaseInfoDiv" style="margin-top: 10px;">
+
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv">GPS类型：</div>
+						<div class="detailvalueDiv">{{gpsTypeName}}</div>
+					</div>
+
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv"> GPS序列号：</div>
+						<div class="detailvalueDiv">{{gpsSerialNumber}}</div>
+					</div>
+
+				</div>
+				<div class="detailBaseInfoDiv">
+
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv">车辆品牌：</div>
+						<div class="detailvalueDiv">{{vehicleBrand}}</div>
+					</div>
+
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv">车辆型号：</div>
+						<div class="detailvalueDiv">{{vehicleModel}}</div>
+					</div>
+
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv">车辆载重：</div>
+						<div class="detailvalueDiv">{{loadWeight}}吨</div>
+					</div>
+
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv">出厂日期：</div>
+						<div class="detailvalueDiv">{{vehicleMakeDate}}</div>
+					</div>
+				</div>
+
+				<div class="detailBaseInfoDiv">
+
+					<div id="xingshizhengDiv" class="detailKeyValueDiv none">
+						<div class="detailKeyDiv">行驶证号：</div>
+						<div class="detailvalueDiv">{{drivingCardNumber}}</div>
+					</div>
+
+					<div id="dengjizhengDiv" class="detailKeyValueDiv none">
+						<div class="detailKeyDiv">车辆登记证号：</div>
+						<div class="detailvalueDiv">{{vehicleRegistrationNumber}}</div>
+					</div>
+
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv">营运证号：</div>
+						<div class="detailvalueDiv">{{operationCertificateNumber}}</div>
+					</div>
+				</div>
+
+				<div class="detailPhotoDiv">
+					<div class="photoItemDiv f-l">
+						<div class="photoTitle" style="color: white;">
+							车辆图片
+						</div>
+						<div class="photoPhotoDiv">
+							<img id="cheliangImg" onclick='showimg1(this, 1)' />
+							<input id="ip_zhizhao" class="fr compile-pic" type="file" accept="image/jpg,image/jpeg,image/png,image/gif" multiple hidden="true" onchange="uploadYingYe(this)">
+						</div>
+					</div>
+
+					<div class="photoItemDiv f-l">
+						<div class="photoTitle" style="color: white;">
+							登记保险证
+						</div>
+						<div class="photoPhotoDiv">
+							<img id="baoxianImg" onclick='showimg1(this, 2)' onclick="chooseImg1()" />
+							<input id="ip_zhizhao" class="fr compile-pic" type="file" accept="image/jpg,image/jpeg,image/png,image/gif" multiple hidden="true" onchange="uploadYingYe(this)">
+						</div>
+					</div>
+
+					<div id="chezhuDiv" class="photoItemDiv f-l none">
+						<div class="photoTitle" style="color: white;">
+							车主身份证
+						</div>
+						<div class="photoPhotoDiv">
+							<img id="chezhuImg" onclick='showimg1(this, 3)' onclick="chooseImg1()" />
+							<input id="ip_zhizhao" class="fr compile-pic" type="file" accept="image/jpg,image/jpeg,image/png,image/gif" multiple hidden="true" onchange="uploadYingYe(this)">
+						</div>
+					</div>
+
+					<div id="zhizhaoDiv" class="photoItemDiv f-l none">
+						<div class="photoTitle" style="color: white;">
+							营业执照
+						</div>
+						<div class="photoPhotoDiv">
+							<img id="yingyeImg" onclick='showimg1(this, 4)' onclick="chooseImg1()" />
+							<input id="ip_zhizhao" class="fr compile-pic" type="file" accept="image/jpg,image/jpeg,image/png,image/gif" multiple hidden="true" onchange="uploadYingYe(this)">
+						</div>
+					</div>
+
+				</div>
+			</div>
+			
+			<div style="width: 100%;height: 500px;background: gray;">订单数据待添加</div>
+
+			<div id="show_alone_img" class="i none">
+				<img class="i1 sel cursor-pointer" src="../img/ic_close.png" onclick="$('#show_alone_img').addClass('none')" />
+				<img id="bigAloneImg" class="i2" style="margin: auto;max-width: 80%;max-height: 80%;" src="" />
+			</div>
+		</div>
+
+	</body>
+
+	<script>
+		var driverId = getQueryString("driverId");
+
+		function loadDriverDetailData() {
+			postRegular('getDriverInfoById', {
+				driverId: driverId,
+			}, function(data) {
+				console.log(data);
+				$('#app').show();
+				vm.nickname = data.object.nickname;
+				vm.createTime = data.object.createTime;
+				vm.updateTime = data.object.updateTime;
+				vm.score = data.object.score;
+				vm.score = vm.score.toFixed(1);
+				
+				vm.belongSiteId = data.object.belongSiteId;
+				vm.belongSiteName = data.object.belongSiteName;
+				vm.phoneNumber = data.object.phoneNumber;
+				vm.userIdCardNumber = data.object.userIdCardNumber;
+				vm.driverLicenseNumber = data.object.driverLicenseNumber;
+				vm.driverQualificationNumber = data.object.driverQualificationNumber;
+				vm.plateNumber = data.object.plateNumber;
+				vm.vehicleTypeName = data.object.vehicleTypeName;
+				vm.gpsTypeName = data.object.gpsTypeName;
+				vm.gpsSerialNumber = data.object.gpsSerialNumber;
+				vm.vehicleBrand = data.object.vehicleBrand;
+				vm.vehicleModel = data.object.vehicleModel;
+				vm.loadWeight = data.object.loadWeight;
+				vm.vehicleMakeDate = data.object.vehicleMakeDate;
+				vm.drivingCardNumber = data.object.drivingCardNumber;
+				vm.vehicleRegistrationNumber = data.object.vehicleRegistrationNumber;
+				vm.operationCertificateNumber = data.object.operationCertificateNumber;
+
+				vm.cheliangImgUrl = data.object.vehiclePhoto;
+				vm.baoxianImgUrl = data.object.insuranceNumber;
+				vm.yingyeImgUrl = data.object.businessLicenseNumber;
+				vm.chezhushenfImgUrl = data.object.vehicleIdCardNumber;
+
+				if(vm.driverQualificationNumber != null) {
+					$('#teshuzigeDiv').removeClass('none');
+				}
+
+				if(vm.drivingCardNumber != null) {
+					$('#xingshizhengDiv').removeClass('none');
+				}
+
+				if(vm.vehicleRegistrationNumber != null) {
+					$('#dengjizhengDiv').removeClass('none');
+				}
+
+				$('#cheliangImg').attr('src', ip + vm.cheliangImgUrl);
+				$('#baoxianImg').attr('src', ip + vm.baoxianImgUrl);
+
+				if(vm.yingyeImgUrl != null) {
+					if(vm.yingyeImgUrl.length > 0) {
+						$('#zhizhaoDiv').removeClass('none');
+						$('#yingyeImg').attr('src', ip + vm.yingyeImgUrl);
+					}
+
+				}
+
+				if(vm.chezhushenfImgUrl != null) {
+					if(vm.chezhushenfImgUrl.length > 0) {
+						$('#chezhuDiv').removeClass('none');
+						$('#chezhuImg').attr('src', ip + vm.chezhushenfImgUrl);
+					}
+
+				}
+
+			}, function() {})
+		}
+
+		loadDriverDetailData();
+
+		var vm = new Vue({
+			el: '#app',
+			data: {
+				nickname: '',
+				createTime: '',
+				updateTime: '',
+				score: '',
+				belongSiteId: '',
+				belongSiteName: '',
+				phoneNumber: '',
+				userIdCardNumber: '',
+				driverLicenseNumber: '',
+				driverQualificationNumber: '',
+				plateNumber: '',
+				vehicleTypeName: '',
+				gpsTypeName: '',
+				gpsSerialNumber: '',
+				vehicleBrand: '',
+				vehicleModel: '',
+				loadWeight: '',
+				vehicleMakeDate: '',
+				drivingCardNumber: '',
+				vehicleRegistrationNumber: '',
+				operationCertificateNumber: '',
+
+				cheliangImgUrl: '',
+				baoxianImgUrl: '',
+				yingyeImgUrl: '',
+				chezhushenfImgUrl: '',
+			},
+			methods: {}
+		})
+		//跳转至站点详情
+
+		function jumpToSite() {
+			window.open("siteDetail.html?siteId=" + vm.belongSiteId);
+		}
+
+		function showimg1(obj, index) {
+			$('#show_alone_img').removeClass('none');
+			var imgUrl;
+			if(index == 1) {
+				imgUrl = vm.cheliangImgUrl;
+			} else if(index == 2) {
+				imgUrl = vm.baoxianImgUrl;
+			} else if(index == 3) {
+				imgUrl = vm.chezhushenfImgUrl;
+			} else if(index == 4) {
+				imgUrl = vm.yingyeImgUrl;
+			}
+			
+			$('#bigAloneImg').attr('src', ip + imgUrl);
+		}
+	</script>
+
+</html>

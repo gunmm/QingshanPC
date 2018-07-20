@@ -72,28 +72,16 @@
 			<div class="oprationToolBar">
 				<div class="filterDiv">
 					<div class="nameFilterDiv">
-						<div class="filterKeyDiv">站点名称</div>
+						<div class="filterKeyDiv">司机姓名</div>
 						<div class="filterValueDiv">
-							<input class="filterValueInput" type="text" placeholder="" title="站点名称">
+							<input v-model="filterDriverName" class="filterValueInput" type="text" placeholder="" title="司机姓名">
 						</div>
 					</div>
 					<div class="nameFilterDiv">
-						<div class="filterKeyDiv">法人姓名</div>
+						<div class="filterKeyDiv">车牌号</div>
 						<div class="filterValueDiv">
-							<input class="filterValueInput" type="text" placeholder="" title="法人姓名">
+							<input v-model="filterPlateNumber" class="filterValueInput" type="text" placeholder="" title="车牌号">
 						</div>
-					</div>
-
-					<div class="nameFilterDiv" style="width: 400px;">
-						<div class="filterKeyDiv">创建时间</div>
-						<div class="filterValueDiv">
-							<input style="width: 135px;" class="filterValueInput" type="date" placeholder="" title="法人姓名">
-						</div>
-						<div style="float:left;line-height: 50px;width: 30px;text-align: center;">至</div>
-						<div class="filterValueDiv">
-							<input style="width: 135px;" class="filterValueInput" type="date" placeholder="" title="法人姓名">
-						</div>
-
 					</div>
 
 					<div class="filterOperateBtnDiv">
@@ -358,6 +346,9 @@
 				itemCount: 0,
 				datalist: [],
 
+				filterDriverName: '',
+				filterPlateNumber: '',
+
 				driverName: '',
 				phoneNumber: '',
 				userIdCardNumber: '',
@@ -392,6 +383,8 @@
 			postRegular('getDriverList', {
 				page: vm.page,
 				rows: vm.pageSize,
+				filterDriverName: vm.filterDriverName,
+				filterPlateNumber: vm.filterPlateNumber
 			}, function(data) {
 
 				$('#app').show();
@@ -419,6 +412,8 @@
 			postRegular('getDriverList', {
 				page: vm.page,
 				rows: vm.pageSize,
+				filterDriverName: vm.filterDriverName,
+				filterPlateNumber: vm.filterPlateNumber
 			}, function(data) {
 				vm.datalist = data.object.driverList;
 				for(var i = 0; i < vm.datalist.length; i++) {
@@ -430,17 +425,15 @@
 
 		//筛选确认
 		$('#query_btn').click(function() {
-			//			vm.page = 0;
-			//			loadData();
+			vm.page = 0;
+			loadData();
 		})
 
 		//筛选清空
 		$('#clear_btn').click(function() {
-			//			vm.filterSiteName = '';
-			//			vm.filterLawsManName = '';
-			//			vm.filterBeginTime = '';
-			//			vm.filterEndTime = '';
-			//			loadData();
+			vm.filterDriverName = '';
+			vm.filterPlateNumber = '';
+			loadData();
 
 		})
 
@@ -536,7 +529,7 @@
 				return;
 			}
 
-			if(vm.driverQualificationNumber.length == 0 && $("#vehicleType").val() == '4') {
+			if(vm.driverQualificationNumber.length == 0 && $("#vehicleType").val().length == 2) {
 				myAlert("特殊资格证号不能为空！");
 				return;
 			}
@@ -683,7 +676,6 @@
 			vm.driverName = obj.nickname;
 			vm.phoneNumber = obj.phoneNumber;
 			vm.userIdCardNumber = obj.userIdCardNumber;
-			
 
 			vm.plateNumber = obj.plateNumber;
 			vm.vehicleBrand = obj.vehicleBrand;
@@ -692,14 +684,13 @@
 			vm.vehicleMakeDate = obj.vehicleMakeDate;
 			vm.driverLicenseNumber = obj.driverLicenseNumber;
 			vm.driverQualificationNumber = obj.driverQualificationNumber;
-			
+
 			vm.operationCertificateNumber = obj.operationCertificateNumber;
 			vm.GPSSerialNumber = obj.gpsSerialNumber;
 			vm.cheliangImgUrl = obj.vehiclePhoto;
 			vm.baoxianImgUrl = obj.insuranceNumber;
 			vm.yingyeImgUrl = obj.businessLicenseNumber;
 			vm.chezhushenfImgUrl = obj.vehicleIdCardNumber;
-
 
 			if(obj.drivingCardNumber != '' && obj.drivingCardNumber != null) {
 				$("#xingshidengji").val('1');
@@ -711,10 +702,9 @@
 
 			$("#vehicleType").val(obj.vehicleType);
 			$("#GPSType").val(obj.gpsType);
-			
+
 			$('#cheliangImg').attr('src', ip + vm.cheliangImgUrl);
 			$('#baoxianImg').attr('src', ip + vm.baoxianImgUrl);
-
 
 			if(vm.yingyeImgUrl != '' && vm.yingyeImgUrl != null) {
 				$('#yingyeImg').attr('src', ip + vm.yingyeImgUrl);
@@ -723,7 +713,6 @@
 			if(vm.chezhushenfImgUrl != '' && vm.chezhushenfImgUrl != null) {
 				$('#chezhuImg').attr('src', ip + vm.chezhushenfImgUrl);
 			}
-			
 
 			$('#addBigDiv').removeClass("none");
 		}
@@ -796,9 +785,8 @@
 		}
 
 		//点击查看详情
-		function openItemDetailPage(siteId) {
-			//			console.log(siteId)
-			//			window.open("siteDetail.html?siteId=" + siteId);
+		function openItemDetailPage(driverId) {
+			window.open("driverDetail.html?driverId=" + driverId);
 		}
 
 		function chooseImg(value) {
