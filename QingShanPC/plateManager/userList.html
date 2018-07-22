@@ -3,9 +3,8 @@
 
 	<head>
 		<meta charset="UTF-8">
-		<title>货源方列表</title>
+		<title>人员管理</title>
 		<link rel="icon" href="../img/logo2.ico" type="img/x-ico" />
-
 		<link rel="stylesheet" href="../css/iconfont.css">
 		<link rel="stylesheet" href="../css/loading.css">
 		<link rel="stylesheet" href="../css/navHead.css">
@@ -22,7 +21,7 @@
 		<script type="text/javascript" src="../js/jquery.pagination.js"></script>
 		<script type="text/javascript" src="../js/exif.js"></script>
 
-		<script type="text/javascript">
+		<script>
 			$(function() {
 				$('.nav').kwicks({
 					max: 120,
@@ -45,17 +44,17 @@
 
 				var idStr = "#navBar" + index;
 				$(idStr).addClass("on");
-				if(index == '1'){
+				if(index == '1') {
 					window.location.replace('siteList.html');
-				}else if(index == '2'){
+				} else if(index == '2') {
 					window.location.replace('driverList.html');
-				}else if(index == '3'){
+				} else if(index == '3') {
 					window.location.replace('masterList.html');
-				}else if(index == '4'){
+				} else if(index == '4') {
 					window.location.replace('childSiteList.html');
-				}else if(index == '5'){
+				} else if(index == '5') {
 					window.location.replace('userList.html');
-				}else if(index == '6'){
+				} else if(index == '6') {
 					window.location.replace('mapList.html');
 				}
 			}
@@ -73,14 +72,14 @@
 					<a id="navBar2" href="javascript:selectNav('2')">司机列表</a>
 				</li>
 				<li id="masterListNav">
-					<a id="navBar3" class="on" href="javascript:selectNav('3')">货源方列表</a>
+					<a id="navBar3" href="javascript:selectNav('3')">货源方列表</a>
 				</li>
 				<li id="childSiteListNav">
 					<a id="navBar4" href="javascript:selectNav('4')">子站点</a>
 				</li>
-				
+
 				<li id="userListNav">
-					<a id="navBar5" href="javascript:selectNav('5')">人员管理</a>
+					<a id="navBar5" class="on" href="javascript:selectNav('5')">人员管理</a>
 				</li>
 				<li id="mapListNav">
 					<a id="navBar6" href="javascript:selectNav('6')">地图展示</a>
@@ -93,15 +92,15 @@
 			<div class="oprationToolBar">
 				<div class="filterDiv">
 					<div class="nameFilterDiv">
-						<div class="filterKeyDiv">货主姓名</div>
+						<div class="filterKeyDiv">姓名</div>
 						<div class="filterValueDiv">
-							<input v-model="filterMasterName" class="filterValueInput" type="text" placeholder="" title="司机姓名">
+							<input v-model="filterNickName" class="filterValueInput" type="text" placeholder="" title="姓名">
 						</div>
 					</div>
 					<div class="nameFilterDiv">
-						<div class="filterKeyDiv">货主电话</div>
+						<div class="filterKeyDiv">手机号</div>
 						<div class="filterValueDiv">
-							<input v-model="filterPhoneNumber" class="filterValueInput" type="text" placeholder="" title="车牌号">
+							<input v-model="filterPhoneNumber" class="filterValueInput" type="text" placeholder="" title="手机号">
 						</div>
 					</div>
 
@@ -124,7 +123,6 @@
 					<i class="iconfont">&#xe636;</i>
 				</div>
 			</div>
-
 			<div class="bigContent">
 				<div class="listContent">
 
@@ -132,12 +130,9 @@
 						<thead>
 							<tr>
 								<th>#</th>
-								<th>货主姓名</th>
-								<th>联系电话</th>
+								<th>姓名</th>
+								<th>电话</th>
 								<th>身份证号</th>
-								<th>主营货物</th>
-								<th>所属站点</th>
-								<th>评分</th>
 								<th>注册时间</th>
 								<th>更新时间</th>
 								<th>操作</th>
@@ -145,16 +140,11 @@
 
 						</thead>
 
-						<tr v-for="item in datalist" @click="openItemDetailPage(item.userId)" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+						<tr v-for="item in datalist" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
 							<td>{{item.id}}</td>
 							<td>{{item.nickname}}</td>
 							<td>{{item.phoneNumber}}</td>
 							<td>{{item.userIdCardNumber}}</td>
-							<td>{{item.mainGoodsName}}</td>
-							<td>
-								<a @click="jumpToSite(item.belongSiteId,$event)" style="color: #ffac59;">{{item.belongSiteName}}</a>
-							</td>
-							<td>{{item.score.toFixed(1)}}</td>
 							<td>{{datetransform(item.createTime)}}</td>
 							<td>{{datetransform(item.updateTime)}}</td>
 							<td>
@@ -188,34 +178,32 @@
 				<div class="addContentDiv">
 					<div class="topBarDiv">
 						<i class="iconfont">&#xe608;</i>
-						<div class="titleDiv">新建货源方</div>
+						<div class="titleDiv">新建管理员</div>
 						<div class="closeDiv">
 							<i id="closeBtn" onclick="closeAddPage()" class="iconfont">&#xe607;</i>
 						</div>
 					</div>
+					
 					<div class="addPageLineDiv" style="margin-top: 20px;">
 						<div class="addPageLineSmallDiv">
 							<div class="keyDiv">姓名</div>
 							<input v-model="nickname" class="valueInput" type="text" placeholder="" title="姓名">
 						</div>
 						<div class="addPageLineSmallDiv">
-							<div class="keyDiv">主营货物</div>
-							<input v-model="mainGoodsName" class="valueInput" type="text" placeholder="" title="主营货物">
-						</div>
-					</div>
-
-					<div class="addPageLineDiv" style="margin-top: 20px;">
-						<div class="addPageLineSmallDiv">
 							<div class="keyDiv">手机号</div>
 							<input v-model="phoneNumber" class="valueInput" type="text" placeholder="" title="手机号">
 						</div>
+					</div>
+					
+					<div class="addPageLineDiv" style="margin-top: 20px;">
+						
 						<div class="addPageLineSmallDiv">
 							<div class="keyDiv">身份证号</div>
 							<input v-model="userIdCardNumber" class="valueInput" type="text" placeholder="" title="身份证号">
 						</div>
 
 					</div>
-
+					
 					<div class="operateBarDiv">
 						<div class="hrDiv" style="margin: 0px;"></div>
 						<div onclick="closeAddPage()" class="operateDiv">
@@ -228,32 +216,29 @@
 						</div>
 					</div>
 				</div>
-
 			</div>
 		</div>
 	</body>
-
+	
 	<script>
 		
 		var vm = new Vue({
 			el: '#app',
 			data: {
 				isEdit: 0,
-				masterId: '',
-				siteId: '',
+				manageId: '',
 
 				page: 0,
 				pageSize: 15,
 				itemCount: 0,
 				datalist: [],
 
-				filterMasterName: '',
+				filterNickName: '',
 				filterPhoneNumber: '',
 
 				nickname: '',
 				phoneNumber: '',
 				userIdCardNumber: '',
-				mainGoodsName: '',
 			},
 			methods: {
 
@@ -264,7 +249,6 @@
 			var removeLi = document.getElementById('childSiteListNav');
 			$(removeLi).remove();
 			
-			$('#add_btn').addClass('none');
 		} else if(sessionStorage.userType == '1') {
 			var removeLi = document.getElementById('childSiteListNav');
 			$(removeLi).remove();
@@ -300,25 +284,25 @@
 
 		function loadData() {
 			$("#Pagination").empty();
-			postRegular('getMasterList', {
+			postRegular('getManageList', {
 				page: vm.page,
 				rows: vm.pageSize,
-				filterMasterName: vm.filterMasterName,
+				filterNickName: vm.filterNickName,
 				filterPhoneNumber: vm.filterPhoneNumber,
-				siteId: vm.siteId
-
+				siteId: sessionStorage.belongSiteId,
+				
 			}, function(data) {
 
 				$('#app').show();
-				vm.datalist = data.object.masterList;
+				vm.datalist = data.object.manageList;
 				for(var i = 0; i < vm.datalist.length; i++) {
 					var obj = vm.datalist[i];
 					obj.id = i + 1;
 				}
 
-				vm.itemCount = data.object.masterCount;
-				$('.allPage').html(Math.ceil(data.object.masterCount / vm.pageSize));
-				$("#Pagination").pagination(data.object.masterCount / vm.pageSize, {
+				vm.itemCount = data.object.manageCount;
+				$('.allPage').html(Math.ceil(data.object.manageCount / vm.pageSize));
+				$("#Pagination").pagination(data.object.manageCount / vm.pageSize, {
 					callback: function(page) { // 回调函数
 						vm.page = page;
 						loadPageData();
@@ -331,15 +315,15 @@
 		loadData();
 
 		function loadPageData() {
-			postRegular('getMasterList', {
+			postRegular('getManageList', {
 				page: vm.page,
 				rows: vm.pageSize,
-				filterMasterName: vm.filterMasterName,
+				filterNickName: vm.filterNickName,
 				filterPhoneNumber: vm.filterPhoneNumber,
-				siteId: vm.siteId
+				siteId: sessionStorage.belongSiteId
 
 			}, function(data) {
-				vm.datalist = data.object.masterList;
+				vm.datalist = data.object.manageList;
 				for(var i = 0; i < vm.datalist.length; i++) {
 					var obj = vm.datalist[i];
 					obj.id = i + 1;
@@ -355,7 +339,7 @@
 
 		//筛选清空
 		$('#clear_btn').click(function() {
-			vm.filterMasterName = '';
+			vm.filterNickName = '';
 			vm.filterPhoneNumber = '';
 			loadData();
 
@@ -365,11 +349,6 @@
 		$('#save_btn').click(function() {
 			if(vm.nickname.length == 0) {
 				myAlert("姓名不能为空！");
-				return;
-			}
-
-			if(vm.mainGoodsName.length == 0) {
-				myAlert("主营货物不能为空！");
 				return;
 			}
 
@@ -393,11 +372,9 @@
 					"nickname": vm.nickname,
 					"phoneNumber": vm.phoneNumber,
 					"userIdCardNumber": vm.userIdCardNumber,
-					"mainGoodsName": vm.mainGoodsName,
-					"belongSiteId": vm.siteId
+					"belongSiteId": sessionStorage.belongSiteId
 				};
-				console.log(data);
-				postRegular('addMaster', data, function(data) {
+				postRegular('addManage', data, function(data) {
 					closeAddPage();
 					window.location.reload();
 
@@ -407,15 +384,12 @@
 			} else if(vm.isEdit == 1) {
 
 				var data = {
-					"userId": vm.masterId,
+					"userId": vm.manageId,
 					"nickname": vm.nickname,
 					"phoneNumber": vm.phoneNumber,
 					"userIdCardNumber": vm.userIdCardNumber,
-					"mainGoodsName": vm.mainGoodsName,
-					"belongSiteId": vm.siteId
 				};
-				console.log(data);
-				postRegular('editMaster', data, function(data) {
+				postRegular('editManage', data, function(data) {
 					closeAddPage();
 					window.location.reload();
 
@@ -428,13 +402,13 @@
 
 			$event.stopPropagation();
 			vm.isEdit = 1;
+			
 
 			var obj = vm.datalist[itemIndex - 1];
-			vm.masterId = obj.userId;
+			vm.manageId = obj.userId;
 			vm.nickname = obj.nickname;
 			vm.phoneNumber = obj.phoneNumber;
 			vm.userIdCardNumber = obj.userIdCardNumber;
-			vm.mainGoodsName = obj.mainGoodsName;
 
 			$('#addBigDiv').removeClass("none");
 		}
@@ -457,11 +431,6 @@
 			}
 		}
 
-		//跳转至站点详情
-		function jumpToSite(siteId, $event) {
-			$event.stopPropagation();
-			window.open("siteDetail.html?siteId=" + siteId);
-		}
 
 		//添加
 		$('#add_btn').click(function() {
@@ -476,13 +445,8 @@
 			vm.nickname = '';
 			vm.phoneNumber = '';
 			vm.userIdCardNumber = '';
-			vm.mainGoodsName = '';
 		}
 
-		//点击查看详情
-		function openItemDetailPage(masterId) {
-			window.open("masterDetail.html?masterId=" + masterId);
-		}
 	</script>
 
 </html>

@@ -11,7 +11,7 @@ function getRegularIp() {
 
 function postLogin(url, data, callback, callback1) {
 	var head = {
-		"token": "111"
+
 	};
 	var param = {
 		"body": data,
@@ -48,7 +48,8 @@ function postLogin(url, data, callback, callback1) {
 function postRegular(url, data, callback, callback1) {
 	var param;
 	var head = {
-		"token": "111"
+		"token": sessionStorage.token,
+		"userId": sessionStorage.userId,
 	};
 	var param = {
 		"body": data,
@@ -63,13 +64,21 @@ function postRegular(url, data, callback, callback1) {
 		traditional: true,
 		data: JSON.stringify(param),
 		success: function(data) {
-			//			console.log("---->" + JSON.stringify(data));
+
+			if((typeof data == 'string') && data.constructor == String) {
+				data = JSON.parse(data);
+			}
+
+			//			console.log("---->" + JSON.stringify(data))
 			removeLoading();
-			if(data.result_code != 1) {
+			if(data.result_code == 0) {
 				myAlert(data.result);
 				if(callback1 != null) {
 					callback1();
 				}
+				return;
+			} else if(data.result_code == -9) {
+				window.location.replace('../index.html');
 				return;
 			}
 			callback(data);
@@ -305,4 +314,128 @@ function judgeStatus(siteCheckStatus) {
 		return "审核未通过";
 	}
 
+}
+
+addInfoDiv();
+
+function addInfoDiv() {
+	var urlStr = window.location.href;
+	if(urlStr.indexOf('List.html') > 0) {
+		postRegular('getUserInfoById', {
+			userId: sessionStorage.userId,
+		}, function(data) {
+			personinfoview(data.object.nickname, data.object.personImageUrl, data.object.phoneNumber, data.object.type);
+		})
+	}
+}
+
+function personinfoview(name, imgurl, telephone, type) {
+	if(imgurl) {
+		imgurl = ip + imgurl;
+	} else {
+		imgurl = '../img/avatar_96x96.png';
+	}
+	var typeStr = '';
+	if(type == '0') {
+		typeStr = "超级管理员";
+	} else if(type == '1') {
+		typeStr = "平台管理员";
+	} else if(type == '2') {
+		typeStr = "";
+	} else if(type == '3') {
+		typeStr = "站点管理员";
+	} else if(type == '4') {
+		typeStr = "站点业务员";
+	}
+	setTimeout(function() {
+		$('body').append(
+			'<div onmouseenter="showdetail()" onmouseleave="hidedetail()">' +
+
+			'<div style="background: #27303f;height: 50px;width: 220px;z-index: 19999;position: fixed;right: 0px;top: 0px;margin-right: 0px;display: flex;float: left;">' +
+			'<div style="background: white; width: 36px;height: 36px;margin: 0px;margin-top: 7px;margin-left: 10px;border-radius: 18px;">' +
+			'<img style="margin: 0px;width: 36px;height: 36px;border-radius: 18px;" id="headImg" src="' + imgurl + '" alt="" />' +
+			'</div>' +
+			'<div style="padding-left: 10px;margin-top: 0px;line-height: 50px;height: 50px;font-size:15px;color: white;"><nobr style="font-size:18px;">' + name + '</nobr></div>' +
+			'<div style="padding-left: 10px;margin-top: 10px;line-height: 34px;height: 34px;font-size:15px;color:#CCCCCC;"><nobr style="font-size:13px;">' + typeStr + '</nobr></div>' +
+
+			'</div>' +
+
+			'<div id="infodetaildiv" style="z-index: 9999;background: white;top: 50px;right:0px;margin-right: 0px;width: 220px;position: fixed;" hidden>' +
+			'<div style="width: 200px;text-align: center;margin: 10px;font-size: 14px;color: #27303f;">手机号码：' + telephone + '</div>' +
+			'<div id="changeinfoheadimg" style="width: 200px;text-align: center;margin: 10px;" hidden><a style="color:orange;" href="javascript:changeinfoheadimg()">修改图像</a></div>' +
+			'<input id="changeinfoheadimginput" class="fr compile-pic" type="file" accept="image/jpg,image/jpeg,image/png,image/gif" hidden="true" onchange="changeinfoheadimgact(this)">' +
+			'<div style="width: 200px;text-align: center;margin: 10px;"><a style="color:gray;" href="javascript:loginOut()">退出</a></div>' +
+			'</div>' +
+			'</div>'
+		);
+		if(type == 2) {
+			$('#changeinfoheadimg').hide();
+		} else {
+			$('#changeinfoheadimg').show();
+		}
+	}, 50);
+
+}
+
+function loginOut() {
+	sessionStorage.clear();
+	
+	window.location.replace('../index.html');
+}
+
+function showdetail() {
+	$('#infodetaildiv').show();
+}
+
+function hidedetail() {
+	$('#infodetaildiv').hide();
+}
+
+function changeinfoheadimg() {
+	$('#changeinfoheadimginput').click();
+}
+
+function changeinfoheadimgact(input) {
+	var files = input.files;
+	var file = files[0];
+	var imageType = /^image\//;
+	if(!imageType.test(file.type)) {
+		alert("请选择图片类型上传");
+		return;
+	}
+
+	var Orientation = null;
+	//获取照片方向角属性，用户旋转控制  
+	EXIF.getData(file, function() {
+		EXIF.getAllTags(this);
+		Orientation = EXIF.getTag(this, 'Orientation');
+	});
+
+	var reader = new FileReader();
+	reader.readAsDataURL(file);
+	reader.onload = function(e) {
+
+		dealImage(e.target.result, {
+			quality: 0.1
+		}, function(value) {
+
+			managerotateImg(value, Orientation, function(base64) {
+
+				postRegular('uploadImage', {
+					"imgStr": base64.split(",")[1]
+				}, function(data) {
+					postRegular('updateUserInfo', {
+						"userId":sessionStorage.userId,
+						"personImageUrl": data.object
+					}, function(data) {
+						myAlert("修改成功！");
+						window.location.reload();
+					})
+
+				})
+
+			})
+
+		});
+	};
 }

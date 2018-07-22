@@ -41,8 +41,10 @@
 					</div>
 
 					<div id="superSiteNameDiv" class="detailKeyValueDiv none">
-						<div class="detailKeyDiv">父站点：</div>
-						<div class="detailvalueDiv">{{superSiteName}}</div>
+						<div class="detailKeyDiv ">父站点：</div>
+						<div class="detailvalueDiv zhandianTiaozhuanDiv">
+							<a @click="jumpToSite()" class="zhandianTiaozhuan">{{superSiteName}}</a>
+						</div>
 					</div>
 
 					<div id="superSiteRateDiv" class="detailKeyValueDiv none">
@@ -125,6 +127,148 @@
 				<img class="i1 sel cursor-pointer" src="../img/ic_close.png" onclick="$('#show_alone_img').addClass('none')" />
 				<img id="bigAloneImg" class="i2" style="margin: auto;max-width: 80%;max-height: 80%;" src="" />
 			</div>
+
+			<div id="listDiv" class="none">
+				<ul class="smallnav">
+					<li>
+						<a id="navBar1" class="on" href="javascript:selectNav('1')">司机列表</a>
+					</li>
+					<li>
+						<a id="navBar2" href="javascript:selectNav('2')">货源方列表</a>
+					</li>
+					<li id="childSiteListNav" class="none">
+						<a id="navBar3" href="javascript:selectNav('3')">子站点</a>
+					</li>
+					<li>
+						<a id="navBar4" href="javascript:selectNav('4')">订单列表</a>
+					</li>
+
+				</ul>
+				<div class="bigContent" style="margin-top: 3px;">
+					<div class="listContent">
+
+						<table class="hovertable" title="" id="table1">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>司机姓名</th>
+									<th>车牌号</th>
+									<th>联系电话</th>
+									<th>车辆类型</th>
+									<th>评分</th>
+									<th>注册时间</th>
+									<th>更新时间</th>
+								</tr>
+
+							</thead>
+
+							<tr v-for="item in datalist1" @click="openItemDetailPage(item.userId)" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+								<td>{{item.id}}</td>
+								<td>{{item.nickname}}</td>
+								<td>{{item.plateNumber}}</td>
+								<td>{{item.phoneNumber}}</td>
+								<td>{{item.vehicleTypeName}}</td>
+
+								<td>{{item.score.toFixed(1)}}</td>
+								<td>{{datetransform(item.createTime)}}</td>
+								<td>{{datetransform(item.updateTime)}}</td>
+
+							</tr>
+
+						</table>
+
+						<table class="hovertable none" title="" id="table2">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>货主姓名</th>
+									<th>联系电话</th>
+									<th>身份证号</th>
+									<th>主营货物</th>
+									<th>评分</th>
+									<th>注册时间</th>
+									<th>更新时间</th>
+								</tr>
+
+							</thead>
+
+							<tr v-for="item in datalist2" @click="openItemDetailPage(item.userId)" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+								<td>{{item.id}}</td>
+								<td>{{item.nickname}}</td>
+								<td>{{item.phoneNumber}}</td>
+								<td>{{item.userIdCardNumber}}</td>
+								<td>{{item.mainGoodsName}}</td>
+
+								<td>{{item.score.toFixed(1)}}</td>
+								<td>{{datetransform(item.createTime)}}</td>
+								<td>{{datetransform(item.updateTime)}}</td>
+
+							</tr>
+
+						</table>
+
+						<table class="hovertable none" title="" id="table3">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>站点名称</th>
+									<th>站点类型</th>
+									<th>地址</th>
+									<th>审核状态</th>
+									<th>法人姓名</th>
+									<th>提成率</th>
+									<th>注册时间</th>
+									<th>更新时间</th>
+								</tr>
+
+							</thead>
+
+							<tr v-for="item in datalist3" @click="openItemDetailPage(item.siteId)" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+								<td>{{item.id}}</td>
+								<td>{{item.siteName}}</td>
+								<td>{{item.siteType == 1 ? "一级站点" : "子站点"}}</td>
+								<td>{{item.siteProvinceName}}{{item.siteCityName}}{{item.address}}</td>
+								<td>{{judgeStatus(item.siteCheckStatus)}}</td>
+								<td>{{item.lawsManName}}</td>
+								<td>{{item.childToSuperRate}}</td>
+								<td>{{datetransform(item.createTime)}}</td>
+								<td>{{datetransform(item.updateTime)}}</td>
+
+							</tr>
+
+						</table>
+
+						<table class="hovertable none" title="" id="table4">
+							<thead>
+								<tr>
+									<th>订单列表待添加</th>
+								</tr>
+
+							</thead>
+
+							<tr v-for="item in datalist4" @click="openItemDetailPage(item.siteId)" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+
+							</tr>
+
+						</table>
+
+					</div>
+					<div class="hrDiv"></div>
+					<div class="countDiv">
+						<div class="f-l hejiDiv">合计</div>
+						<div class="f-l julushuDiv">记录数：</div>
+						<div class="f-l jiluCountDiv">{{itemCount}}</div>
+					</div>
+					<div class="pages">
+						<div id="Pagination"></div>
+						<div class="searchPage">
+							<span class="page-sum">共<strong class="allPage">1</strong>页</span>
+							<span class="page-go">跳转<input type="text">页</span>
+							<a href="javascript:;" class="page-btn">GO</a>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</body>
 
@@ -159,7 +303,7 @@
 				if(vm.siteType == '2') {
 					$('#superSiteNameDiv').removeClass('none');
 					$('#superSiteRateDiv').removeClass('none');
-					if(vm.siteCheckStatus == '0') {
+					if(vm.siteCheckStatus == '0' && (sessionStorage.userType == '0' || sessionStorage.userType == '1')) {
 						$('#passBtnDiv').removeClass('none');
 						$('#unPassBtnDiv').removeClass('none');
 
@@ -181,6 +325,11 @@
 				$('#zhizhaoImg').attr('src', ip + vm.businessLicensePhoto);
 				$('#bigAloneImg').attr('src', ip + vm.businessLicensePhoto);
 
+				if(vm.siteType == '1') {
+					$('#childSiteListNav').removeClass('none');
+				}
+				$('#listDiv').removeClass('none');
+
 			}, function() {
 
 			})
@@ -190,6 +339,8 @@
 		var vm = new Vue({
 			el: '#app',
 			data: {
+				currentListType: '1',
+
 				siteId: '',
 				siteName: '',
 				businessLicenseNumber: '',
@@ -208,11 +359,161 @@
 				superSiteName: '',
 				createTime: '',
 				updateTime: '',
+
+				page: 0,
+				pageSize: 15,
+				itemCount: 0,
+				datalist1: [],
+				datalist2: [],
+				datalist3: [],
+				datalist4: [],
 			},
 			methods: {
 
 			}
 		})
+
+		function loadData() {
+			var url = '';
+			var data;
+			if(vm.currentListType == '1') {
+				url = 'getDriverList';
+				data = {
+					page: vm.page,
+					rows: vm.pageSize,
+					filterDriverName: '',
+					filterPlateNumber: '',
+					siteId: siteId
+				};
+			} else if(vm.currentListType == '2') {
+				url = 'getMasterList';
+				data = {
+					page: vm.page,
+					rows: vm.pageSize,
+					filterMasterName: '',
+					filterPhoneNumber: '',
+					siteId: siteId
+				};
+			} else if(vm.currentListType == '3') {
+				url = 'getSiteList';
+				data = {
+					page: vm.page,
+					rows: vm.pageSize,
+					filterSiteName: '',
+					filterLawsManName: '',
+					filterBeginTime: '',
+					filterEndTime: '',
+					superSiteId: siteId
+				};
+
+			} else if(vm.currentListType == '4') {
+				return;
+			}
+
+			$("#Pagination").empty();
+			postRegular(url, data,
+				function(data) {
+
+					if(vm.currentListType == '1') {
+						for(var i = 0; i < data.object.driverList.length; i++) {
+							var obj = data.object.driverList[i];
+							obj.id = i + 1;
+						}
+						vm.datalist1 = data.object.driverList;
+						vm.itemCount = data.object.driverCount;
+					} else if(vm.currentListType == '2') {
+						for(var i = 0; i < data.object.masterList.length; i++) {
+							var obj = data.object.masterList[i];
+							obj.id = i + 1;
+						}
+						vm.datalist2 = data.object.masterList;
+						vm.itemCount = data.object.masterCount;
+					} else if(vm.currentListType == '3') {
+						for(var i = 0; i < data.object.siteList.length; i++) {
+							var obj = data.object.siteList[i];
+							obj.id = i + 1;
+						}
+						vm.datalist3 = data.object.siteList;
+						vm.itemCount = data.object.siteCount;
+					} else if(vm.currentListType == '4') {
+						return;
+					}
+
+					$('.allPage').html(Math.ceil(vm.itemCount / vm.pageSize));
+					$("#Pagination").pagination(vm.itemCount / vm.pageSize, {
+						callback: function(page) { // 回调函数
+							vm.page = page;
+							loadPageData();
+						}
+					});
+				},
+				function() {
+
+				})
+		}
+		loadData();
+
+		function loadPageData() {
+			var url = '';
+			var data;
+			if(vm.currentListType == '1') {
+				url = 'getDriverList';
+				data = {
+					page: vm.page,
+					rows: vm.pageSize,
+					filterDriverName: '',
+					filterPlateNumber: '',
+					siteId: siteId
+				};
+			} else if(vm.currentListType == '2') {
+				url = 'getMasterList';
+				data = {
+					page: vm.page,
+					rows: vm.pageSize,
+					filterMasterName: '',
+					filterPhoneNumber: '',
+					siteId: siteId
+				};
+			} else if(vm.currentListType == '3') {
+				url = 'getSiteList';
+				data = {
+					page: vm.page,
+					rows: vm.pageSize,
+					filterSiteName: '',
+					filterLawsManName: '',
+					filterBeginTime: '',
+					filterEndTime: '',
+					superSiteId: siteId
+				};
+			} else if(vm.currentListType == '4') {
+				return;
+			}
+			postRegular(url, data, function(data) {
+
+				if(vm.currentListType == '1') {
+					for(var i = 0; i < data.object.driverList.length; i++) {
+						var obj = data.object.driverList[i];
+						obj.id = i + 1;
+					}
+					vm.datalist1 = data.object.driverList;
+				} else if(vm.currentListType == '2') {
+					for(var i = 0; i < data.object.masterList.length; i++) {
+						var obj = data.object.masterList[i];
+						obj.id = i + 1;
+					}
+					vm.datalist2 = data.object.masterList;
+				} else if(vm.currentListType == '3') {
+					for(var i = 0; i < data.object.siteList.length; i++) {
+						var obj = data.object.siteList[i];
+						obj.id = i + 1;
+					}
+					vm.datalist3 = data.object.siteList;
+				} else if(vm.currentListType == '4') {
+					return;
+				}
+
+			})
+		}
 
 		function checkSite(siteCheckStatus) {
 			postRegular('checkSite', {
@@ -244,6 +545,75 @@
 			}
 			src = ip + vm.heTongImageArray[index];
 			$('#show_img .i2').attr('src', src);
+		}
+
+		//跳转至站点详情
+		function jumpToSite() {
+			window.open("siteDetail.html?siteId=" + vm.superSiteId);
+		}
+
+		$(function() {
+			$('.nav').kwicks({
+				max: 120,
+				isVertical: false,
+				sticky: false,
+				defaultKwick: 0,
+				event: 'mouseover',
+				spacing: 0,
+				duration: 500
+			});
+		});
+
+		function selectNav(index) {
+			$("#navBar1").removeClass("on");
+			$("#navBar2").removeClass("on");
+			$("#navBar3").removeClass("on");
+			$("#navBar4").removeClass("on");
+
+			var idStr = "#navBar" + index;
+			$(idStr).addClass("on");
+			if(index == '1') {
+				vm.currentListType = '1';
+				$('#table1').removeClass('none');
+				$('#table2').addClass('none');
+				$('#table3').addClass('none');
+				$('#').addClass('none');
+			} else if(index == '2') {
+				vm.currentListType = '2';
+				$('#table2').removeClass('none');
+				$('#table1').addClass('none');
+				$('#table3').addClass('none');
+				$('#table4').addClass('none');
+
+			} else if(index == '3') {
+				vm.currentListType = '3';
+				$('#table3').removeClass('none');
+				$('#table1').addClass('none');
+				$('#table2').addClass('none');
+				$('#table4').addClass('none');
+
+			} else if(index == '4') {
+				vm.currentListType = '4';
+				$('#table4').removeClass('none');
+				$('#table1').addClass('none');
+				$('#table2').addClass('none');
+				$('#table3').addClass('none');
+			}
+			loadData();
+		}
+
+		//点击查看详情
+		function openItemDetailPage(itemId) {
+			if(vm.currentListType == '1') {
+				window.open("driverDetail.html?driverId=" + itemId);
+			} else if(vm.currentListType == '2') {
+				window.open("masterDetail.html?masterId=" + itemId);
+			} else if(vm.currentListType == '3') {
+				window.open("siteDetail.html?siteId=" + itemId);
+			} else if(vm.currentListType == '4') {
+
+			}
+
 		}
 	</script>
 

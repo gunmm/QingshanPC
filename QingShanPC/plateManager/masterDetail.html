@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>货源方详情</title>
+		<link rel="icon" href="../img/logo2.ico" type="img/x-ico" />
+
+		<link rel="stylesheet" href="../css/navHead.css">
+		<link rel="stylesheet" href="../css/iconfont.css">
+		<link rel="stylesheet" href="../css/pagination.css" />
+		<link rel="stylesheet" href="../css/loading.css">
+
+		<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.js"></script>
+
+		<script type="text/javascript" src="../js/config.js"></script>
+		<script type="text/javascript" src="../js/vue.min.js"></script>
+
+		<script type="text/javascript" src="../js/jquery.pagination.js"></script>
+	</head>
+
+	<body>
+		<div id="app" hidden>
+			<div class="detailHeader" style="height: 150px;">
+				<div class="nameAndTimeDiv">
+					<div class="bigTitleDiv">{{nickname}}</div>
+					<div class="timeDiv">
+						<div class="createTimeDiv">创建时间：{{datetransform(createTime)}}</div>
+						<div class="createTimeDiv">更新时间：{{datetransform(updateTime)}}</div>
+					</div>
+				</div>
+				
+				<div class="detailBaseInfoDiv">
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv">手机号：</div>
+						<div class="detailvalueDiv">{{phoneNumber}}</div>
+					</div>
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv">身份证号：</div>
+						<div class="detailvalueDiv">{{userIdCardNumber}}</div>
+					</div>
+
+					<div id="superSiteNameDiv" class="detailKeyValueDiv">
+						<div class="detailKeyDiv">主营货物：</div>
+						<div class="detailvalueDiv">{{mainGoodsName}}</div>
+					</div>
+					
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv">所属站点：</div>
+						<div class="detailvalueDiv zhandianTiaozhuanDiv">
+							<a @click="jumpToSite()" class="zhandianTiaozhuan">{{belongSiteName}}</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="bigContent" style="margin-top: 10px;">
+				<div class="listContent">
+					<table class="hovertable" title="" id="table4">
+						<thead>
+							<tr>
+								<th>订单列表待添加</th>
+							</tr>
+
+						</thead>
+
+					</table>
+				</div>
+
+				<div class="hrDiv"></div>
+				
+			</div>
+			
+			
+		</div>
+	</body>
+	
+	<script>
+		var masterId = getQueryString("masterId");
+		
+		
+		function loadMasterDetailData() {
+			postRegular('getMasterInfoById', {
+				masterId: masterId,
+			}, function(data) {
+				$('#app').show();
+				vm.masterId = data.object.userId;
+				vm.nickname = data.object.nickname;
+				vm.phoneNumber = data.object.phoneNumber;
+				vm.userIdCardNumber = data.object.userIdCardNumber;
+				vm.mainGoodsName = data.object.mainGoodsName;
+				vm.createTime = data.object.createTime;
+				vm.updateTime = data.object.updateTime;
+				vm.belongSiteName = data.object.belongSiteName;
+				vm.belongSiteId = data.object.belongSiteId;;
+			}, function() {
+
+			})
+		}
+		loadMasterDetailData();
+
+		var vm = new Vue({
+			el: '#app',
+			data: {
+				masterId: '',
+				nickname: '',
+				phoneNumber: '',
+				userIdCardNumber: '',
+				mainGoodsName: '',
+				createTime: '',
+				updateTime: '',
+				belongSiteName: '',
+				belongSiteId: '',
+			},
+			methods: {
+
+			}
+		})
+		
+		//跳转至站点详情
+
+		function jumpToSite() {
+			window.open("siteDetail.html?siteId=" + vm.belongSiteId);
+		}
+
+	</script>
+
+</html>

@@ -91,6 +91,37 @@ a {
 	font-size: 16px;
 }
 
+.smallnav {
+	margin-left: 30px;
+	list-style: none;
+	height: 30px;
+	position: relative;
+	margin-top: 10px;
+}
+
+.smallnav li {
+	float: left;
+	width: 100px
+}
+
+.smallnav li a {
+	display: block;
+	height: 30px;
+	text-align: center;
+	line-height: 30px;
+	background: #27303f;
+	margin-left: 1px;
+	color: #CCCCCC
+}
+
+.smallnav li a.on,
+.smallnav li a:hover {
+	background: #27303f;
+	color: #fff;
+	font-size: 15px;
+}
+
+
 .oprationToolBar {
 	padding-top: 50px;
 	width: 100%;
@@ -295,7 +326,7 @@ table.hovertable td {
 	background: rgba(0, 0, 0, 0.7);
 	position: absolute;
 	top: 0.25%;
-	z-index: 10000;
+	z-index: 100000;
 }
 
 .i .i1 {
@@ -608,7 +639,7 @@ table.hovertable td {
 
 .detailHeader {
 	width: 100%;
-	height: 300px;
+	height: 310px;
 	background: #27303f;
 	
 }

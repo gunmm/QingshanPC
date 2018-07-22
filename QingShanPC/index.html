@@ -83,8 +83,17 @@
 			};
 			postLogin("login", data, function(data) {
 					console.log()
+					sessionStorage.token = data.object.accessToken;
+					sessionStorage.userId = data.object.userId;
+					sessionStorage.userType = data.object.type;
+					if(data.object.belongSiteId != null){
+						sessionStorage.belongSiteId = data.object.belongSiteId;
+						sessionStorage.siteType = data.object.siteType;
+					}
+
 					if(data.object.type == '0') {
 						//超级管理员
+						window.location.replace('plateManager/siteList.html');
 					}else if(data.object.type == '1'){
 						//平台管理员
 						window.location.replace('plateManager/siteList.html');
@@ -96,6 +105,7 @@
 						window.location.replace('plateManager/driverList.html');
 					}else if(data.object.type == '4'){
 						//站点业务员
+						window.location.replace('plateManager/driverList.html');
 						
 					}else{
 						myAlert("角色错误!");

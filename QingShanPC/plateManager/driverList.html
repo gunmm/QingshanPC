@@ -40,30 +40,50 @@
 				$("#navBar2").removeClass("on");
 				$("#navBar3").removeClass("on");
 				$("#navBar4").removeClass("on");
+				$("#navBar5").removeClass("on");
+				$("#navBar6").removeClass("on");
 
 				var idStr = "#navBar" + index;
 				$(idStr).addClass("on");
+				if(index == '1') {
+					window.location.replace('siteList.html');
+				} else if(index == '2') {
+					window.location.replace('driverList.html');
+				} else if(index == '3') {
+					window.location.replace('masterList.html');
+				} else if(index == '4') {
+					window.location.replace('childSiteList.html');
+				} else if(index == '5') {
+					window.location.replace('userList.html');
+				} else if(index == '6') {
+					window.location.replace('mapList.html');
+				}
 			}
 		</script>
 	</head>
 
 	<body>
-		<div class="header">
+		<div id="headerDiv" class="header" hidden>
 			<div class="logoDiv"></div>
 			<ul class="nav">
-				<li>
-					<a id="navBar2" class="on" href="javascript:selectNav('1')">司机列表</a>
+				<li id="siteListNav">
+					<a id="navBar1" href="javascript:selectNav('1')">站点列表</a>
 				</li>
-
-				<li>
-					<a id="navBar1" href="javascript:selectNav('2')">站点列表</a>
+				<li id="driverListNav">
+					<a id="navBar2" class="on" href="javascript:selectNav('2')">司机列表</a>
 				</li>
-
-				<li>
+				<li id="masterListNav">
 					<a id="navBar3" href="javascript:selectNav('3')">货源方列表</a>
 				</li>
-				<li>
-					<a id="navBar4" href="javascript:selectNav('4')">地图展示</a>
+				<li id="childSiteListNav">
+					<a id="navBar4" href="javascript:selectNav('4')">子站点</a>
+				</li>
+
+				<li id="userListNav">
+					<a id="navBar5" href="javascript:selectNav('5')">人员管理</a>
+				</li>
+				<li id="mapListNav">
+					<a id="navBar6" href="javascript:selectNav('6')">地图展示</a>
 				</li>
 
 			</ul>
@@ -133,7 +153,7 @@
 							<td>
 								<a @click="jumpToSite(item.belongSiteId,$event)" style="color: #ffac59;">{{item.belongSiteName}}</a>
 							</td>
-							<td>{{item.score}}</td>
+							<td>{{item.score.toFixed(1)}}</td>
 							<td>{{datetransform(item.createTime)}}</td>
 							<td>{{datetransform(item.updateTime)}}</td>
 							<td>
@@ -340,6 +360,7 @@
 			data: {
 				isEdit: 0,
 				driverId: '',
+				siteId: '',
 				vehicleId: '',
 				page: 0,
 				pageSize: 15,
@@ -378,13 +399,51 @@
 			}
 		})
 
+		if(sessionStorage.userType == '0') {
+			var removeLi = document.getElementById('childSiteListNav');
+			$(removeLi).remove();
+			
+			$('#add_btn').addClass('none');
+		} else if(sessionStorage.userType == '1') {
+			var removeLi = document.getElementById('childSiteListNav');
+			$(removeLi).remove();
+
+			removeLi = document.getElementById('userListNav');
+			$(removeLi).remove();
+			
+			$('#add_btn').addClass('none');
+		} else if(sessionStorage.userType == '3') {
+			vm.siteId = sessionStorage.belongSiteId;
+			var removeLi = document.getElementById('siteListNav');
+			$(removeLi).remove();
+			if(sessionStorage.siteType == '2') {
+				removeLi = document.getElementById('childSiteListNav');
+				$(removeLi).remove();
+			}
+		}else if(sessionStorage.userType == '4') {
+			vm.siteId = sessionStorage.belongSiteId;
+			var removeLi = document.getElementById('siteListNav');
+			$(removeLi).remove();
+			
+			removeLi = document.getElementById('userListNav');
+			$(removeLi).remove();
+			
+			if(sessionStorage.siteType == '2') {
+				removeLi = document.getElementById('childSiteListNav');
+				$(removeLi).remove();
+			}
+		}
+
+		$('#headerDiv').show();
+
 		function loadData() {
 			$("#Pagination").empty();
 			postRegular('getDriverList', {
 				page: vm.page,
 				rows: vm.pageSize,
 				filterDriverName: vm.filterDriverName,
-				filterPlateNumber: vm.filterPlateNumber
+				filterPlateNumber: vm.filterPlateNumber,
+				siteId: vm.siteId
 			}, function(data) {
 
 				$('#app').show();
@@ -413,7 +472,8 @@
 				page: vm.page,
 				rows: vm.pageSize,
 				filterDriverName: vm.filterDriverName,
-				filterPlateNumber: vm.filterPlateNumber
+				filterPlateNumber: vm.filterPlateNumber,
+				siteId: vm.siteId
 			}, function(data) {
 				vm.datalist = data.object.driverList;
 				for(var i = 0; i < vm.datalist.length; i++) {
@@ -583,7 +643,7 @@
 						"driverLicenseNumber": vm.driverLicenseNumber,
 						"driverQualificationNumber": vm.driverQualificationNumber,
 						"vehicleType": $("#vehicleType").val(),
-						"belongSiteId": "cf7bcec5-38d1-40e3-aad4-9ac998fd5c58"
+						"belongSiteId": vm.siteId
 
 					},
 					"vehicle": vehicle
@@ -648,7 +708,7 @@
 						"driverLicenseNumber": vm.driverLicenseNumber,
 						"driverQualificationNumber": vm.driverQualificationNumber,
 						"vehicleType": $("#vehicleType").val(),
-						"belongSiteId": "cf7bcec5-38d1-40e3-aad4-9ac998fd5c58"
+						"belongSiteId": vm.siteId
 
 					},
 					"vehicle": vehicle

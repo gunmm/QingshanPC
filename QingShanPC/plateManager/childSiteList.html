@@ -3,9 +3,8 @@
 
 	<head>
 		<meta charset="UTF-8">
-		<title>站点列表</title>
+		<title>子站点</title>
 		<link rel="icon" href="../img/logo2.ico" type="img/x-ico" />
-
 		<link rel="stylesheet" href="../css/iconfont.css">
 		<link rel="stylesheet" href="../css/loading.css">
 		<link rel="stylesheet" href="../css/navHead.css">
@@ -59,17 +58,15 @@
 					window.location.replace('mapList.html');
 				}
 			}
-			
 		</script>
-		
 	</head>
 
 	<body>
-		<div class="header" id="headerDiv" hidden>
+		<div id="headerDiv" class="header" hidden> 
 			<div class="logoDiv"></div>
 			<ul class="nav">
 				<li id="siteListNav">
-					<a id="navBar1" class="on" href="javascript:selectNav('1')">站点列表</a>
+					<a id="navBar1" href="javascript:selectNav('1')">站点列表</a>
 				</li>
 				<li id="driverListNav">
 					<a id="navBar2" href="javascript:selectNav('2')">司机列表</a>
@@ -78,7 +75,7 @@
 					<a id="navBar3" href="javascript:selectNav('3')">货源方列表</a>
 				</li>
 				<li id="childSiteListNav">
-					<a id="navBar4" href="javascript:selectNav('4')">子站点</a>
+					<a id="navBar4" class="on" href="javascript:selectNav('4')">子站点</a>
 				</li>
 				
 				<li id="userListNav">
@@ -131,7 +128,7 @@
 					</div>
 
 				</div>
-
+				
 				<div id="add_btn" class="addDiv">
 					<input type="button" class="colorBtn" value="新建">
 					<i class="iconfont">&#xe636;</i>
@@ -139,7 +136,6 @@
 			</div>
 			<div class="bigContent">
 				<div class="listContent">
-
 					<table class="hovertable" title="">
 						<thead>
 							<tr>
@@ -149,9 +145,9 @@
 								<th>地址</th>
 								<th>审核状态</th>
 								<th>法人姓名</th>
+								<th>提成率</th>
 								<th>注册时间</th>
 								<th>更新时间</th>
-								<th>子站点个数</th>
 								<th>操作</th>
 							</tr>
 
@@ -164,9 +160,9 @@
 							<td>{{item.siteProvinceName}}{{item.siteCityName}}{{item.address}}</td>
 							<td>{{judgeStatus(item.siteCheckStatus)}}</td>
 							<td>{{item.lawsManName}}</td>
+							<td>{{item.childToSuperRate}}</td>
 							<td>{{datetransform(item.createTime)}}</td>
 							<td>{{datetransform(item.updateTime)}}</td>
-							<td>0</td>
 							<td>
 								<div class="oprateDiv">
 									<a @click="editItem(item.id,$event)">编辑</a>
@@ -178,7 +174,6 @@
 						</tr>
 
 					</table>
-
 				</div>
 				<div class="hrDiv"></div>
 				<div class="countDiv">
@@ -195,12 +190,12 @@
 					</div>
 				</div>
 			</div>
-
+			
 			<div id="addBigDiv" class="i none">
 				<div class="addContentDiv">
 					<div class="topBarDiv">
 						<i class="iconfont">&#xe608;</i>
-						<div class="titleDiv">新建站点</div>
+						<div class="titleDiv">新建子站点</div>
 						<div class="closeDiv">
 							<i id="closeBtn" onclick="closeAddPage()" class="iconfont">&#xe607;</i>
 						</div>
@@ -251,6 +246,11 @@
 							<div class="keyDiv">法人手机号</div>
 							<input v-model="lawsManPhone" class="valueInput" type="text" placeholder="请输入手机号" title="法人手机号">
 						</div>
+						
+						<div class="addPageLineSmallDiv">
+							<div class="keyDiv">父站点提成率</div>
+							<input v-model="childToSuperRate" class="valueInput" type="text" placeholder="例:0.05  代表每单父站点提成5% " title="父站点提成率">
+						</div>
 					</div>
 					<div class="photoLineDiv">
 						<div class="photoItemDiv f-l">
@@ -297,8 +297,7 @@
 				</div>
 
 			</div>
-		
-			
+
 			<div id="show_img" class="i none">
 				<img class="i1 sel cursor-pointer" src="../img/ic_close.png" onclick="$('#show_img').addClass('none')" />
 				<img class="i2" style="margin: auto;max-width: 80%;max-height: 80%;" src="" />
@@ -310,10 +309,9 @@
 				<img class="i1 sel cursor-pointer" src="../img/ic_close.png" onclick="$('#show_alone_img').addClass('none')" />
 				<img class="i2" src="" />
 			</div>
-
 		</div>
 	</body>
-
+	
 	<script>
 		var province;
 		var city;
@@ -331,7 +329,7 @@
 			el: '#app',
 			data: {
 				isEdit: 0,
-				siteId: '',
+				siteId: '',//编辑时候用
 				province: province,
 				city: city,
 				nowcity: nowcity,
@@ -346,6 +344,7 @@
 				lawsManName: '',
 				lawsManIdCardNumber: '',
 				lawsManPhone: '',
+				childToSuperRate: '',
 				address: '',
 				filterSiteName: '',
 				filterLawsManName: '',
@@ -358,18 +357,37 @@
 			}
 		})
 		
-		if(sessionStorage.userType == '0'){
+		if(sessionStorage.userType == '0') {
 			var removeLi = document.getElementById('childSiteListNav');
 			$(removeLi).remove();
-		}else if(sessionStorage.userType == '1'){
+		} else if(sessionStorage.userType == '1') {
 			var removeLi = document.getElementById('childSiteListNav');
+			$(removeLi).remove();
+
+			removeLi = document.getElementById('userListNav');
+			$(removeLi).remove();
+		} else if(sessionStorage.userType == '3') {
+			var removeLi = document.getElementById('siteListNav');
+			$(removeLi).remove();
+			if(sessionStorage.siteType == '2') {
+				removeLi = document.getElementById('childSiteListNav');
+				$(removeLi).remove();
+			}
+		}else if(sessionStorage.userType == '4') {
+			var removeLi = document.getElementById('siteListNav');
 			$(removeLi).remove();
 			
 			removeLi = document.getElementById('userListNav');
 			$(removeLi).remove();
+			
+			if(sessionStorage.siteType == '2') {
+				removeLi = document.getElementById('childSiteListNav');
+				$(removeLi).remove();
+			}
 		}
 		
 		$('#headerDiv').show();
+
 
 		function loadData() {
 			$("#Pagination").empty();
@@ -380,6 +398,7 @@
 				filterLawsManName: vm.filterLawsManName,
 				filterBeginTime: vm.filterBeginTime,
 				filterEndTime: vm.filterEndTime,
+				superSiteId: sessionStorage.belongSiteId
 			}, function(data) {
 				$('#app').show();
 				vm.datalist = data.object.siteList;
@@ -409,6 +428,7 @@
 				filterLawsManName: vm.filterLawsManName,
 				filterBeginTime: vm.filterBeginTime,
 				filterEndTime: vm.filterEndTime,
+				superSiteId: sessionStorage.belongSiteId
 			}, function(data) {
 				vm.datalist = data.object.siteList;
 				for(var i = 0; i < vm.datalist.length; i++) {
@@ -471,6 +491,12 @@
 				return;
 			}
 			
+			if(vm.childToSuperRate.length == 0) {
+				myAlert("父站点提成率不能为空！");
+				return;
+			}
+			
+			
 			if(!checkTel(vm.lawsManPhone)) {
 				myAlert("法人电话号格式不正确!");
 				return;
@@ -492,16 +518,18 @@
 			if(vm.isEdit == 0) {
 				postRegular('addSite', {
 					siteName: vm.siteName,
+					superSiteId: sessionStorage.belongSiteId,
 					businessLicenseNumber: vm.businessLicenseNumber,
 					businessLicensePhoto: vm.lifePhotoImg,
 					lawsManName: vm.lawsManName,
 					lawsManIdCardNumber: vm.lawsManIdCardNumber,
 					lawsManPhone: vm.lawsManPhone,
+					childToSuperRate: vm.childToSuperRate,
 					leaseContractPhoto: contractPhotos,
 					siteProvince: $("#selectprovince").val(),
 					siteCity: $("#selectcity").val(),
 					address: vm.address,
-					siteType: '1',
+					siteType: '2',
 				}, function(data) {
 					closeAddPage();
 					window.location.reload();
@@ -518,6 +546,7 @@
 					lawsManName: vm.lawsManName,
 					lawsManIdCardNumber: vm.lawsManIdCardNumber,
 					lawsManPhone: vm.lawsManPhone,
+					childToSuperRate: vm.childToSuperRate,
 					leaseContractPhoto: contractPhotos,
 					siteProvince: $("#selectprovince").val(),
 					siteCity: $("#selectcity").val(),
@@ -547,6 +576,7 @@
 			vm.lawsManName = obj.lawsManName;
 			vm.lawsManIdCardNumber = obj.lawsManIdCardNumber;
 			vm.lawsManPhone = obj.lawsManPhone;
+			vm.childToSuperRate = obj.childToSuperRate;
 			vm.address = obj.address;
 			$("#selectprovince").val(obj.siteProvince);
 			vm.nowcity = city[obj.siteProvince];
@@ -619,6 +649,7 @@
 			vm.lawsManIdCardNumber = '';
 			vm.lawsManPhone = '';
 			vm.address = '';
+			vm.childToSuperRate = '';
 			$('#selectcity').val('');
 			$('#selectprovince').val('1');
 			$('#zhizhaoImg').attr('src', '../img/zhaoxiang.png');

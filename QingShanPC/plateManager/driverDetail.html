@@ -177,8 +177,23 @@
 
 				</div>
 			</div>
-			
-			<div style="width: 100%;height: 500px;background: gray;">订单数据待添加</div>
+
+			<div class="bigContent" style="margin-top: 10px;">
+				<div class="listContent">
+					<table class="hovertable" title="" id="table4">
+						<thead>
+							<tr>
+								<th>订单列表待添加</th>
+							</tr>
+
+						</thead>
+
+					</table>
+				</div>
+
+				<div class="hrDiv"></div>
+				
+			</div>
 
 			<div id="show_alone_img" class="i none">
 				<img class="i1 sel cursor-pointer" src="../img/ic_close.png" onclick="$('#show_alone_img').addClass('none')" />
@@ -202,7 +217,7 @@
 				vm.updateTime = data.object.updateTime;
 				vm.score = data.object.score;
 				vm.score = vm.score.toFixed(1);
-				
+
 				vm.belongSiteId = data.object.belongSiteId;
 				vm.belongSiteName = data.object.belongSiteName;
 				vm.phoneNumber = data.object.phoneNumber;
@@ -312,7 +327,7 @@
 			} else if(index == 4) {
 				imgUrl = vm.yingyeImgUrl;
 			}
-			
+
 			$('#bigAloneImg').attr('src', ip + imgUrl);
 		}
 	</script>
