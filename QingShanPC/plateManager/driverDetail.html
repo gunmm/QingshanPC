@@ -242,7 +242,9 @@
 				vm.chezhushenfImgUrl = data.object.vehicleIdCardNumber;
 
 				if(vm.driverQualificationNumber != null) {
-					$('#teshuzigeDiv').removeClass('none');
+					if(vm.driverQualificationNumber.length > 0){
+						$('#teshuzigeDiv').removeClass('none');
+					}
 				}
 
 				if(vm.drivingCardNumber != null) {

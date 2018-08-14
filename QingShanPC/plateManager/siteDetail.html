@@ -241,13 +241,31 @@
 						<table class="hovertable none" title="" id="table4">
 							<thead>
 								<tr>
-									<th>订单列表待添加</th>
+									<th>#</th>
+									<th>车辆类型</th>
+									<th>订单类型</th>
+									<th>订单状态</th>
+									<th>发货地址</th>
+									<th>收货地址</th>
+									<th>距离</th>
+									<th>费用</th>
+									<th>创建时间</th>
+									<th>更新时间</th>
 								</tr>
 
 							</thead>
 
-							<tr v-for="item in datalist4" @click="openItemDetailPage(item.siteId)" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
-
+							<tr v-for="item in datalist4" @click="openItemDetailPage(item.orderId)" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+								<td>{{item.id}}</td>
+								<td>{{item.carTypeName}}</td>
+								<td>{{item.type == 1 ? "实时" : "预约"}}</td>
+								<td>{{judgeOrderStatus(item.status)}}</td>
+								<td>{{item.sendAddress}}</td>
+								<td>{{item.receiveAddress}}</td>
+								<td>{{item.distance}} 公里</td>
+								<td>{{item.price}} 元</td>
+								<td>{{datetransform(item.createTime)}}</td>
+								<td>{{datetransform(item.updateTime)}}</td>
 							</tr>
 
 						</table>
@@ -407,7 +425,12 @@
 				};
 
 			} else if(vm.currentListType == '4') {
-				return;
+				url = 'getSiteOrderList';
+				data = {
+					page: vm.page,
+					rows: vm.pageSize,
+					siteId: siteId
+				};
 			}
 
 			$("#Pagination").empty();
@@ -436,12 +459,18 @@
 						vm.datalist3 = data.object.siteList;
 						vm.itemCount = data.object.siteCount;
 					} else if(vm.currentListType == '4') {
-						return;
+						for(var i = 0; i < data.object.orderList.length; i++) {
+							var obj = data.object.orderList[i];
+							obj.id = i + 1;
+						}
+						vm.datalist4 = data.object.orderList;
+						vm.itemCount = data.object.orderCount;
 					}
 
 					$('.allPage').html(Math.ceil(vm.itemCount / vm.pageSize));
 					$("#Pagination").pagination(vm.itemCount / vm.pageSize, {
 						callback: function(page) { // 回调函数
+							console.log("---------------" + page)
 							vm.page = page;
 							loadPageData();
 						}
@@ -486,7 +515,12 @@
 					superSiteId: siteId
 				};
 			} else if(vm.currentListType == '4') {
-				return;
+				url = 'getSiteOrderList';
+				data = {
+					page: vm.page,
+					rows: vm.pageSize,
+					siteId: siteId
+				};
 			}
 			postRegular(url, data, function(data) {
 
@@ -509,7 +543,11 @@
 					}
 					vm.datalist3 = data.object.siteList;
 				} else if(vm.currentListType == '4') {
-					return;
+					for(var i = 0; i < data.object.orderList.length; i++) {
+						var obj = data.object.orderList[i];
+						obj.id = i + 1;
+					}
+					vm.datalist4 = data.object.orderList;
 				}
 
 			})
@@ -577,7 +615,7 @@
 				$('#table1').removeClass('none');
 				$('#table2').addClass('none');
 				$('#table3').addClass('none');
-				$('#').addClass('none');
+				$('#table4').addClass('none');
 			} else if(index == '2') {
 				vm.currentListType = '2';
 				$('#table2').removeClass('none');
@@ -599,6 +637,7 @@
 				$('#table2').addClass('none');
 				$('#table3').addClass('none');
 			}
+			vm.page = 0;
 			loadData();
 		}
 
