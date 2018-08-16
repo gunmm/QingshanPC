@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>订单详情</title>
+		<link rel="icon" href="img/logo2.ico" type="img/x-ico" />
+
+		<link rel="stylesheet" href="../css/navHead.css">
+		<link rel="stylesheet" href="../css/iconfont.css">
+		<link rel="stylesheet" href="../css/pagination.css" />
+		<link rel="stylesheet" href="../css/loading.css">
+
+		<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.js"></script>
+
+		<script type="text/javascript" src="../js/config.js"></script>
+		<script type="text/javascript" src="../js/vue.min.js"></script>
+
+	</head>
+
+	<body>
+		<div id="app">
+			<div class="detailHeader" style="height: 430px;">
+				<div class="nameAndTimeDiv">
+					<div class="bigTitleDiv">{{carTypeName}}</div>
+					<div class="timeDiv">
+						<div class="createTimeDiv">创建时间：{{datetransform(createTime)}}</div>
+						<div id="appointTimeDiv" class="createTimeDiv none">预约时间：{{datetransform(appointTime)}}</div>
+						<div class="createTimeDiv">更新时间：{{datetransform(updateTime)}}</div>
+					</div>
+				</div>
+
+				<div class="detailBaseInfoDiv">
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv" style=" font-size: 25px;">订单类型：</div>
+						<div class="detailvalueDiv" style="color: yellow; font-size: 25px;">{{type=='1'?"实时":"预约"}}</div>
+					</div>
+
+				</div>
+
+				<div class="detailBaseInfoDiv" style="margin-top: 5px;">
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv">订单状态：</div>
+						<div class="detailvalueDiv">{{judgeOrderStatus(status, appointStatus, type)}}</div>
+					</div>
+				</div>
+
+				<div class="detailBaseInfoDiv">
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv">发货地址：</div>
+						<div class="detailvalueDiv">{{sendDetailAddress}}</div>
+					</div>
+
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv">发货人：</div>
+						<div class="detailvalueDiv">{{linkMan}}</div>
+					</div>
+
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv">发货人电话：</div>
+						<div class="detailvalueDiv">{{linkPhone}}</div>
+					</div>
+				</div>
+
+				<div class="detailBaseInfoDiv">
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv">收货地址：</div>
+						<div class="detailvalueDiv">{{receiveDetailAddress}}</div>
+					</div>
+
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv">收货人：</div>
+						<div class="detailvalueDiv">{{receiveMan}}</div>
+					</div>
+
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv">收货人电话：</div>
+						<div class="detailvalueDiv">{{receivePhone}}</div>
+					</div>
+				</div>
+
+				<div class="detailBaseInfoDiv">
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv">订单备注：</div>
+						<div class="detailvalueDiv">{{note == ''?"无":note}}</div>
+					</div>
+				</div>
+
+				<br>
+
+				<div class="detailBaseInfoDiv" style="padding-bottom: 10px;padding-top: 10px;">
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv" style="font-size: 30px;">车牌号：</div>
+						<div class="detailvalueDiv" style="font-size: 30px;color: yellow;">{{plateNumber}}</div>
+					</div>
+				</div>
+
+				<div class="detailBaseInfoDiv" style="margin-top: 5px;">
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv">司机姓名：</div>
+						<div class="detailvalueDiv" style="color: orange;">{{nickname}}</div>
+					</div>
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv">司机电话：</div>
+						<div class="detailvalueDiv">{{phoneNumber}}</div>
+					</div>
+
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv"> 司机评分：</div>
+						<div class="detailvalueDiv">{{score.toFixed(1)}}</div>
+					</div>
+
+				</div>
+
+				<div class="detailBaseInfoDiv" style="padding-bottom: 10px;padding-top: 20px;">
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv" style="font-size: 20px;">订单距离：</div>
+						<div class="detailvalueDiv" style="font-size: 20px;">{{distance}} 公里</div>
+					</div>
+
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv" style="font-size: 20px;">订单费用：</div>
+						<div class="detailvalueDiv" style="font-size: 20px;">{{price}} 元</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		</div>
+	</body>
+
+	<script>
+		var orderId = getQueryString("orderId");
+
+		function loadOrderDetailData() {
+			postRegular('getBigOrderInfo', {
+				orderId: orderId,
+			}, function(data) {
+				console.log(data);
+				$('#app').show();
+				vm.status = data.object.status;
+				vm.type = data.object.type;
+				vm.appointStatus = data.object.appointStatus;
+				vm.invoiceId = data.object.invoiceId;
+				vm.linkMan = data.object.linkMan;
+				vm.linkPhone = data.object.linkPhone;
+				vm.receiveMan = data.object.receiveMan;
+				vm.receivePhone = data.object.receivePhone;
+				vm.carTypeName = data.object.carTypeName;
+				vm.note = data.object.note;
+				vm.sendAddress = data.object.sendAddress;
+				vm.sendDetailAddress = data.object.sendDetailAddress;
+				vm.sendLatitude = data.object.sendLatitude;
+				vm.sendLongitude = data.object.sendLongitude;
+				vm.receiveAddress = data.object.receiveAddress;
+				vm.receiveDetailAddress = data.object.receiveDetailAddress;
+				vm.receiveLatitude = data.object.receiveLatitude;
+				vm.receiveLongitude = data.object.receiveLongitude;
+				vm.price = data.object.price;
+				vm.distance = data.object.distance;
+				vm.createTime = data.object.createTime;
+				vm.updateTime = data.object.updateTime;
+				vm.appointTime = data.object.appointTime;
+				vm.phoneNumber = data.object.phoneNumber;
+				vm.plateNumber = data.object.plateNumber;
+				vm.nickname = data.object.nickname;
+				vm.score = data.object.score;
+				
+				if(vm.type == '2'){
+					$('#appointTimeDiv').removeClass('none');
+				}
+			}, function() {})
+		}
+
+		loadOrderDetailData();
+		
+		
+		var vm = new Vue({
+			el: '#app',
+			data: {
+				status: '',
+				type: '',
+				appointStatus: '',
+				invoiceId: '',
+				linkMan: '',
+				linkPhone: '',
+				receiveMan: '',
+				receivePhone: '',
+				carTypeName: '',
+				note: '',
+				sendAddress: '',
+				sendDetailAddress: '',
+				sendLatitude: 0,
+				sendLongitude: 0,
+				receiveAddress: '',
+				receiveDetailAddress: '',
+				receiveLatitude: 0,
+				receiveLongitude: 0,
+				price: '',
+				distance: '',
+				
+
+				createTime: '',
+				updateTime: '',
+				appointTime: '',
+				
+				phoneNumber: '',
+				nickname: '',
+				plateNumber: '',
+				score: 0,
+
+			},
+			methods: {}
+		})
+	</script>
+
+</html>

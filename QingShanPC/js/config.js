@@ -321,13 +321,22 @@ function judgeStatus(siteCheckStatus) {
 
 }
 
-function judgeOrderStatus(orderStatus) {
+function judgeOrderStatus(orderStatus, appointStatus, type) {
+	
 	if(orderStatus == 0) {
 		return "待接单";
 	} else if(orderStatus == 1) {
 		return "已被抢单";
 	} else if(orderStatus == 2) {
+		if(type == '2'){
+			if(appointStatus == '0'){
+				return "等待执行";
+			}
+		}
 		return "已被接单";
+		
+		
+		
 	} else if(orderStatus == 3) {
 		return "已发货";
 	} else if(orderStatus == 4) {

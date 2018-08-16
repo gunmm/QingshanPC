@@ -277,11 +277,11 @@
 
 							</thead>
 
-							<tr v-for="item in datalist4" @click="openItemDetailPage(item.orderId)" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+							<tr v-for="item in datalist4" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
 								<td>{{item.id}}</td>
 								<td>{{item.carTypeName}}</td>
 								<td>{{item.type == 1 ? "实时" : "预约"}}</td>
-								<td>{{judgeOrderStatus(item.status)}}</td>
+								<td>{{judgeOrderStatus(item.status, item.appointStatus, item.type)}}</td>
 								<td>{{item.sendAddress}}</td>
 								<td>{{item.receiveAddress}}</td>
 								<td>{{item.distance}} 公里</td>
@@ -290,7 +290,7 @@
 								<td>{{datetransform(item.updateTime)}}</td>
 								<td>
 									<div class="oprateDiv">
-										<a @click="jumpToOrderDetail(item.id,$event)">详情</a>
+										<a @click="jumpToOrderDetail(item.orderId,$event)">详情</a>
 									</div>
 
 								</td>
@@ -613,8 +613,9 @@
 		}
 
 		//跳至订单详情
-		function jumpToOrderDetail(itemIndex, $event) {
+		function jumpToOrderDetail(itemId, $event) {
 			$event.stopPropagation();
+			window.open("orderDetail.html?orderId=" + itemId);
 		}
 
 		//跳转至站点详情
