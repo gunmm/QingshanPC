@@ -43,9 +43,10 @@ a {
 .logoDiv {
 	width: 180px;
 	height: 50px;
-	background: url('../img/bg1800.jpg');
+	background: url('../img/qingshanlogo.png');
 	background-size: cover !important;
 	float: left;
+	margin-left: 30px;
 }
 
 
@@ -63,7 +64,7 @@ a {
 }
 
 .nav {
-	margin-left: 180px;
+	margin-left: 220px;
 	list-style: none;
 	height: 50px;
 	position: relative;
@@ -249,7 +250,8 @@ a {
 
 .oprateDiv a {
 	margin: 0 5px;
-	color: #27303f;
+	/*color: #27303f;*/
+	color: blue;
 	cursor: pointer;
 }
 

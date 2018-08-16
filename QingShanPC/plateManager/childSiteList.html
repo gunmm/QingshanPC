@@ -154,7 +154,7 @@
 
 						</thead>
 
-						<tr v-for="item in datalist" @click="openItemDetailPage(item.siteId)" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+						<tr v-for="item in datalist" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
 							<td>{{item.id}}</td>
 							<td>{{item.siteName}}</td>
 							<td>{{item.siteType == 1 ? "一级站点" : "子站点"}}</td>
@@ -166,6 +166,7 @@
 							<td>{{datetransform(item.updateTime)}}</td>
 							<td>
 								<div class="oprateDiv">
+									<a @click="openItemDetailPage(item.siteId)">详情</a>
 									<a @click="editItem(item.id,$event)">编辑</a>
 									<a @click="deleteItem(item.id,$event)">删除</a>
 								</div>

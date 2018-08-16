@@ -146,7 +146,7 @@
 
 						</thead>
 
-						<tr v-for="item in datalist" @click="openItemDetailPage(item.userId)" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+						<tr v-for="item in datalist" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
 							<td>{{item.id}}</td>
 							<td>{{item.nickname}}</td>
 							<td>{{item.phoneNumber}}</td>
@@ -160,6 +160,7 @@
 							<td>{{datetransform(item.updateTime)}}</td>
 							<td>
 								<div class="oprateDiv">
+									<a @click="openItemDetailPage(item.userId)">详情</a>
 									<a @click="editItem(item.id,$event)">编辑</a>
 									<a @click="deleteItem(item.id,$event)">删除</a>
 								</div>

@@ -183,16 +183,59 @@
 					<table class="hovertable" title="" id="table4">
 						<thead>
 							<tr>
-								<th>订单列表待添加</th>
+								<th>#</th>
+								<th>车辆类型</th>
+								<th>订单类型</th>
+								<th>订单状态</th>
+								<th>发货地址</th>
+								<th>收货地址</th>
+								<th>距离</th>
+								<th>费用</th>
+								<th>创建时间</th>
+								<th>更新时间</th>
+								<th>操作</th>
 							</tr>
 
 						</thead>
+
+						<tr v-for="item in datalist4" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+							<td>{{item.id}}</td>
+							<td>{{item.carTypeName}}</td>
+							<td>{{item.type == 1 ? "实时" : "预约"}}</td>
+							<td>{{judgeOrderStatus(item.status)}}</td>
+							<td>{{item.sendAddress}}</td>
+							<td>{{item.receiveAddress}}</td>
+							<td>{{item.distance}} 公里</td>
+							<td>{{item.price}} 元</td>
+							<td>{{datetransform(item.createTime)}}</td>
+							<td>{{datetransform(item.updateTime)}}</td>
+							<td>
+								<div class="oprateDiv">
+									<a @click="jumpToOrderDetail(item.id,$event)">详情</a>
+								</div>
+
+							</td>
+						</tr>
 
 					</table>
 				</div>
 
 				<div class="hrDiv"></div>
-				
+
+				<div class="countDiv">
+					<div class="f-l hejiDiv">合计</div>
+					<div class="f-l julushuDiv">记录数：</div>
+					<div class="f-l jiluCountDiv">{{itemCount}}</div>
+				</div>
+				<div class="pages">
+					<div id="Pagination"></div>
+					<div class="searchPage">
+						<span class="page-sum">共<strong class="allPage">1</strong>页</span>
+						<span class="page-go">跳转<input type="text">页</span>
+						<a href="javascript:;" class="page-btn">GO</a>
+					</div>
+				</div>
+
 			</div>
 
 			<div id="show_alone_img" class="i none">
@@ -242,7 +285,7 @@
 				vm.chezhushenfImgUrl = data.object.vehicleIdCardNumber;
 
 				if(vm.driverQualificationNumber != null) {
-					if(vm.driverQualificationNumber.length > 0){
+					if(vm.driverQualificationNumber.length > 0) {
 						$('#teshuzigeDiv').removeClass('none');
 					}
 				}
@@ -308,11 +351,73 @@
 				baoxianImgUrl: '',
 				yingyeImgUrl: '',
 				chezhushenfImgUrl: '',
+
+				page: 0,
+				pageSize: 15,
+				itemCount: 0,
+
+				datalist4: [],
 			},
 			methods: {}
 		})
-		//跳转至站点详情
 
+		function loadData() {
+			var url = 'getPcDriverOrderList';
+			var data = {
+				page: vm.page,
+				rows: vm.pageSize,
+				driverId: driverId
+			};
+
+			$("#Pagination").empty();
+			postRegular(url, data,
+				function(data) {
+					console.log(data)
+					for(var i = 0; i < data.object.orderList.length; i++) {
+						var obj = data.object.orderList[i];
+						obj.id = i + 1;
+					}
+					vm.datalist4 = data.object.orderList;
+					vm.itemCount = data.object.orderCount;
+
+					$('.allPage').html(Math.ceil(vm.itemCount / vm.pageSize));
+					$("#Pagination").pagination(vm.itemCount / vm.pageSize, {
+						callback: function(page) { // 回调函数
+							vm.page = page;
+							loadPageData();
+						}
+					});
+				},
+				function() {
+
+				})
+		}
+		loadData();
+
+		function loadPageData() {
+			var url = 'getPcDriverOrderList';
+			var data = {
+				page: vm.page,
+				rows: vm.pageSize,
+				driverId: driverId
+			};
+			postRegular(url, data, function(data) {
+
+				for(var i = 0; i < data.object.orderList.length; i++) {
+					var obj = data.object.orderList[i];
+					obj.id = i + 1;
+				}
+				vm.datalist4 = data.object.orderList;
+
+			})
+		}
+
+		//跳至订单详情
+		function jumpToOrderDetail(itemIndex, $event) {
+			$event.stopPropagation();
+		}
+
+		//跳转至站点详情
 		function jumpToSite() {
 			window.open("siteDetail.html?siteId=" + vm.belongSiteId);
 		}

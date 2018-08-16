@@ -158,11 +158,12 @@
 									<th>评分</th>
 									<th>注册时间</th>
 									<th>更新时间</th>
+									<th>操作</th>
 								</tr>
 
 							</thead>
 
-							<tr v-for="item in datalist1" @click="openItemDetailPage(item.userId)" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+							<tr v-for="item in datalist1" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
 								<td>{{item.id}}</td>
 								<td>{{item.nickname}}</td>
 								<td>{{item.plateNumber}}</td>
@@ -172,6 +173,12 @@
 								<td>{{item.score.toFixed(1)}}</td>
 								<td>{{datetransform(item.createTime)}}</td>
 								<td>{{datetransform(item.updateTime)}}</td>
+								<td>
+									<div class="oprateDiv">
+										<a @click="openItemDetailPage(item.userId)">详情</a>
+
+									</div>
+								</td>
 
 							</tr>
 
@@ -188,11 +195,12 @@
 									<th>评分</th>
 									<th>注册时间</th>
 									<th>更新时间</th>
+									<th>操作</th>
 								</tr>
 
 							</thead>
 
-							<tr v-for="item in datalist2" @click="openItemDetailPage(item.userId)" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+							<tr v-for="item in datalist2" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
 								<td>{{item.id}}</td>
 								<td>{{item.nickname}}</td>
 								<td>{{item.phoneNumber}}</td>
@@ -202,6 +210,12 @@
 								<td>{{item.score.toFixed(1)}}</td>
 								<td>{{datetransform(item.createTime)}}</td>
 								<td>{{datetransform(item.updateTime)}}</td>
+								<td>
+									<div class="oprateDiv">
+										<a @click="openItemDetailPage(item.userId)">详情</a>
+
+									</div>
+								</td>
 
 							</tr>
 
@@ -219,11 +233,12 @@
 									<th>提成率</th>
 									<th>注册时间</th>
 									<th>更新时间</th>
+									<th>操作</th>
 								</tr>
 
 							</thead>
 
-							<tr v-for="item in datalist3" @click="openItemDetailPage(item.siteId)" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+							<tr v-for="item in datalist3" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
 								<td>{{item.id}}</td>
 								<td>{{item.siteName}}</td>
 								<td>{{item.siteType == 1 ? "一级站点" : "子站点"}}</td>
@@ -233,6 +248,12 @@
 								<td>{{item.childToSuperRate}}</td>
 								<td>{{datetransform(item.createTime)}}</td>
 								<td>{{datetransform(item.updateTime)}}</td>
+								<td>
+									<div class="oprateDiv">
+										<a @click="openItemDetailPage(item.siteId)">详情</a>
+
+									</div>
+								</td>
 
 							</tr>
 
@@ -251,6 +272,7 @@
 									<th>费用</th>
 									<th>创建时间</th>
 									<th>更新时间</th>
+									<th>操作</th>
 								</tr>
 
 							</thead>
@@ -266,6 +288,12 @@
 								<td>{{item.price}} 元</td>
 								<td>{{datetransform(item.createTime)}}</td>
 								<td>{{datetransform(item.updateTime)}}</td>
+								<td>
+									<div class="oprateDiv">
+										<a @click="jumpToOrderDetail(item.id,$event)">详情</a>
+									</div>
+
+								</td>
 							</tr>
 
 						</table>
@@ -470,7 +498,6 @@
 					$('.allPage').html(Math.ceil(vm.itemCount / vm.pageSize));
 					$("#Pagination").pagination(vm.itemCount / vm.pageSize, {
 						callback: function(page) { // 回调函数
-							console.log("---------------" + page)
 							vm.page = page;
 							loadPageData();
 						}
@@ -583,6 +610,11 @@
 			}
 			src = ip + vm.heTongImageArray[index];
 			$('#show_img .i2').attr('src', src);
+		}
+
+		//跳至订单详情
+		function jumpToOrderDetail(itemIndex, $event) {
+			$event.stopPropagation();
 		}
 
 		//跳转至站点详情
