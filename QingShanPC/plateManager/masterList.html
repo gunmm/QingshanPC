@@ -153,7 +153,7 @@
 							<td>{{item.userIdCardNumber}}</td>
 							<td>{{item.mainGoodsName}}</td>
 							<td>
-								<a @click="jumpToSite(item.belongSiteId,$event)" style="color: #ffac59;">{{item.belongSiteName}}</a>
+								<a @click="jumpToSite(item.belongSiteId,$event)" style="color: #ffac59;cursor: pointer;text-decoration: underline;">{{item.belongSiteName}}</a>
 							</td>
 							<td>{{item.score.toFixed(1)}}</td>
 							<td>{{datetransform(item.createTime)}}</td>

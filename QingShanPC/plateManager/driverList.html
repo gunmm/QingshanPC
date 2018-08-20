@@ -43,6 +43,8 @@
 				$("#navBar4").removeClass("on");
 				$("#navBar5").removeClass("on");
 				$("#navBar6").removeClass("on");
+				$("#navBar7").removeClass("on");
+				$("#navBar8").removeClass("on");
 
 				var idStr = "#navBar" + index;
 				$(idStr).addClass("on");
@@ -58,6 +60,10 @@
 					window.location.replace('userList.html');
 				} else if(index == '6') {
 					window.location.replace('mapList.html');
+				}else if(index == '7') {
+					window.location.replace('withdrawalList.html');
+				} else if(index == '8') {
+					window.location.replace('withdrawalChildList.html');
 				}
 			}
 		</script>
@@ -85,6 +91,13 @@
 				</li>
 				<li id="mapListNav">
 					<a id="navBar6" href="javascript:selectNav('6')">地图展示</a>
+				</li>
+				<li id="mapListNav">
+					<a id="navBar7" href="javascript:selectNav('7')">站点打款</a>
+				</li>
+				
+				<li id="mapListNav">
+					<a id="navBar8" href="javascript:selectNav('8')">子站点打款</a>
 				</li>
 
 			</ul>
@@ -152,7 +165,7 @@
 							<td>{{item.phoneNumber}}</td>
 							<td>{{item.vehicleTypeName}}</td>
 							<td>
-								<a @click="jumpToSite(item.belongSiteId,$event)" style="color: #ffac59;">{{item.belongSiteName}}</a>
+								<a @click="jumpToSite(item.belongSiteId,$event)" style="color: #ffac59;cursor: pointer;text-decoration: underline;">{{item.belongSiteName}}</a>
 							</td>
 							<td>{{item.score.toFixed(1)}}</td>
 							<td>{{datetransform(item.createTime)}}</td>

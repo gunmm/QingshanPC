@@ -757,6 +757,29 @@ table.hovertable td {
 	
 }
 
+.orderHeadTitleDiv {
+	width: 50%;
+	height: 80px;
+	float: left;
+	margin-left: 25%;
+	font-size: 40px;
+	text-align: center;
+	line-height: 80px;
+	color: orange;
+}
+
+.orderTotalDiv {
+	width: 25%;
+	height: 40px;
+	float: left;
+	text-align: center;
+	margin-top: 40px;
+	font-size: 20px;
+	line-height: 40px;
+}
+
+
+
 
 
 

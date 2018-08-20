@@ -4,23 +4,29 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>订单详情</title>
-		<link rel="icon" href="img/logo2.ico" type="img/x-ico" />
-
-		<link rel="stylesheet" href="../css/navHead.css">
+		<link rel="icon" href="../img/logo2.ico" type="img/x-ico" />
 		<link rel="stylesheet" href="../css/iconfont.css">
-		<link rel="stylesheet" href="../css/pagination.css" />
 		<link rel="stylesheet" href="../css/loading.css">
+		<link rel="stylesheet" href="../css/navHead.css">
+
+		<link rel="stylesheet" href="../css/pagination.css" />
 
 		<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.js"></script>
+		<script type="text/javascript" src="../js/jquery.easing.1.3.js"></script>
+		<script type="text/javascript" src="../js/jquery.kwicks-1.5.1.pack.js"></script>
 
-		<script type="text/javascript" src="../js/config.js"></script>
 		<script type="text/javascript" src="../js/vue.min.js"></script>
+
+		<script type="text/javascript" src="../js/jquery.pagination.js"></script>
+		<script type="text/javascript" src="../js/exif.js"></script>
+		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=GACUAWBtBPYEAs9iYdmkl5zdAMXMcgUp"></script>
+		<script type="text/javascript" src="../js/config.js"></script>
 
 	</head>
 
 	<body>
-		<div id="app">
-			<div class="detailHeader" style="height: 430px;">
+		<div id="app" hidden>
+			<div style="background: #27303f;height: 50%;width: 100%;">
 				<div class="nameAndTimeDiv">
 					<div class="bigTitleDiv">{{carTypeName}}</div>
 					<div class="timeDiv">
@@ -125,7 +131,10 @@
 				</div>
 			</div>
 		</div>
+		<div id="mapView" style="width: 100%;height: 500px;">
+
 		</div>
+
 	</body>
 
 	<script>
@@ -164,16 +173,59 @@
 				vm.plateNumber = data.object.plateNumber;
 				vm.nickname = data.object.nickname;
 				vm.score = data.object.score;
-				
-				if(vm.type == '2'){
+
+				if(vm.type == '2') {
 					$('#appointTimeDiv').removeClass('none');
 				}
+
+				var myIconBegin = new BMap.Icon("../img/begin.png", new BMap.Size(23, 35), {
+					// 指定定位位置。   
+					// 当标注显示在地图上时，其所指向的地理位置距离图标左上    
+					// 角各偏移10像素和25像素。您可以看到在本例中该位置即是   
+					// 图标中央下端的尖角位置。    
+					anchor: new BMap.Size(12, 35),
+					// 设置图片偏移。   
+					// 当您需要从一幅较大的图片中截取某部分作为标注图标时，您   
+					// 需要指定大图的偏移位置，此做法与css sprites技术类似。    
+					//					imageOffset: new BMap.Size(30, 20) // 设置图片偏移    
+				});
+
+				var pointBegin = new BMap.Point(vm.sendLongitude, vm.sendLatitude); // 创建点坐标
+				var marker1 = new BMap.Marker(pointBegin, {
+					icon: myIconBegin
+				}); // 创建标注
+				map.addOverlay(marker1);
+				marker1.addEventListener("click", function() {
+					message(this, "起点");
+				});
+
+				var myIconEnd = new BMap.Icon("../img/end.png", new BMap.Size(23, 35), {
+					anchor: new BMap.Size(12, 35),
+				});
+				var pointEnd = new BMap.Point(vm.receiveLongitude, vm.receiveLatitude); // 创建点坐标
+				var marker2 = new BMap.Marker(pointEnd, {
+					icon: myIconEnd
+				}); // 创建标注
+				map.addOverlay(marker2);
+				marker2.addEventListener("click", function() {
+					message(this, "终点");
+				});
+
+				BMapSetPointCenterWithPoint(vm.sendLatitude, vm.sendLongitude, vm.receiveLatitude, vm.receiveLongitude);
+
 			}, function() {})
 		}
 
-		loadOrderDetailData();
-		
-		
+		function message(obj, anObject) {
+			var opts = {
+				width: 0, // 信息窗口宽度    
+				height: 0, // 信息窗口高度
+				title: anObject
+			}
+			var infoWindow = new BMap.InfoWindow("", opts); // 创建信息窗口对象
+			obj.openInfoWindow(infoWindow, map.getCenter());
+		}
+
 		var vm = new Vue({
 			el: '#app',
 			data: {
@@ -197,12 +249,11 @@
 				receiveLongitude: 0,
 				price: '',
 				distance: '',
-				
 
 				createTime: '',
 				updateTime: '',
 				appointTime: '',
-				
+
 				phoneNumber: '',
 				nickname: '',
 				plateNumber: '',
@@ -211,6 +262,15 @@
 			},
 			methods: {}
 		})
+
+		var map = new BMap.Map("mapView"); // 创建地图实例  
+		var point = new BMap.Point(116.405419, 39.915378); // 创建点坐标  
+		map.centerAndZoom(point, 12); // 初始化地图，设置中心点坐标和地图级别  
+		map.enableScrollWheelZoom(true); //开启鼠标滚轮缩放
+		map.addControl(new BMap.NavigationControl());
+		map.addControl(new BMap.ScaleControl());
+		map.addControl(new BMap.OverviewMapControl());
+		loadOrderDetailData();
 	</script>
 
 </html>

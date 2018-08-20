@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>司机提成列表</title>
+		<link rel="icon" href="../img/logo2.ico" type="img/x-ico" />
+
+		<link rel="stylesheet" href="../css/iconfont.css">
+		<link rel="stylesheet" href="../css/loading.css">
+		<link rel="stylesheet" href="../css/navHead.css">
+
+		<link rel="stylesheet" href="../css/pagination.css" />
+
+		<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.js"></script>
+		<script type="text/javascript" src="../js/jquery.easing.1.3.js"></script>
+		<script type="text/javascript" src="../js/jquery.kwicks-1.5.1.pack.js"></script>
+
+		<script type="text/javascript" src="../js/config.js"></script>
+		<script type="text/javascript" src="../js/vue.min.js"></script>
+
+		<script type="text/javascript" src="../js/jquery.pagination.js"></script>
+		<script type="text/javascript" src="../js/exif.js"></script>
+	</head>
+
+	<body>
+		<div id="app" class="content" hidden>
+			<div style="width: 100%;height: 80px;">
+				<div class="orderHeadTitleDiv">{{siteName}}</div>
+				<div v-if="type=='1'" class="orderTotalDiv">司机订单提成总计：{{fee}} 元</div>
+				<div v-else class="orderTotalDiv">货主订单提成总计：{{fee}} 元</div>
+			</div>
+			<div class="bigContent">
+				<div class="listContent">
+					<table class="hovertable" title="">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>订单ID</th>
+								<th>车辆类型</th>
+								<th>运输距离</th>
+								<th>运输费用</th>
+								<th>总服务费</th>
+								<th>所得服务费</th>
+								<th>完成时间</th>
+							</tr>
+
+						</thead>
+
+						<tr v-for="item in datalist" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+							<td>{{item.id}}</td>
+							<td>
+								<a @click="jumpToOrderDetail(item.orderId,$event)" style="color: #ffac59;cursor: pointer;text-decoration: underline;">{{item.orderId}}</a>
+							</td>
+							<td>{{item.carTypeName}}</td>
+							<td>{{item.distance}} 公里</td>
+							<td>{{item.price.toFixed(2)}} 元</td>
+							<td>{{item.servicePrice.toFixed(2)}} 元</td>
+							<td style="color: red;">{{getOwnFee(item.servicePrice)}} 元</td>
+							<td>{{datetransform(item.finishTime)}}</td>
+
+						</tr>
+
+					</table>
+
+				</div>
+				<div class="hrDiv"></div>
+				<div class="countDiv">
+					<div class="f-l hejiDiv">合计</div>
+					<div class="f-l julushuDiv">记录数：</div>
+					<div class="f-l jiluCountDiv">{{itemCount}}</div>
+				</div>
+				<div class="pages">
+					<div id="Pagination"></div>
+					<div class="searchPage">
+						<span class="page-sum">共<strong class="allPage">1</strong>页</span>
+						<span class="page-go">跳转<input type="text">页</span>
+						<a href="javascript:;" class="page-btn">GO</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+
+	<script>
+		var siteId = getQueryString("siteId");
+		var siteName = getQueryString("siteName");
+		var fee = getQueryString("fee");
+		var type = getQueryString("type");
+		var currentMonth = getQueryString("currentMonth");
+
+		console.log(siteName)
+		var vm = new Vue({
+			el: '#app',
+			data: {
+				page: 0,
+				pageSize: 15,
+				itemCount: 0,
+				datalist: [],
+
+				siteName: siteName,
+				fee: fee,
+
+			},
+			methods: {
+
+			}
+		})
+
+		function loadData() {
+			$("#Pagination").empty();
+			var urlStr = "";
+			if(type == '1') {
+				urlStr = 'getTotalDriverItemOrderListBySiteId';
+			}else if(type == '2'){
+				urlStr = 'getTotalMasterItemOrderListBySiteId';
+			}
+			postRegular(urlStr, {
+				page: vm.page,
+				rows: vm.pageSize,
+				siteId: siteId,
+				queryTime: currentMonth,
+			}, function(data) {
+				$('#app').show();
+				vm.datalist = data.object.withdrawalOrderList;
+				for(var i = 0; i < vm.datalist.length; i++) {
+					var obj = vm.datalist[i];
+					obj.id = vm.page * 15 + i + 1;
+				}
+
+				vm.itemCount = data.object.withdrawalCount;
+				$('.allPage').html(Math.ceil(data.object.withdrawalCount / vm.pageSize));
+				$("#Pagination").pagination(data.object.withdrawalCount / vm.pageSize, {
+					callback: function(page) { // 回调函数
+						vm.page = page;
+						loadPageData();
+					}
+				});
+			}, function() {
+
+			})
+		}
+		loadData();
+
+		function loadPageData() {
+			var urlStr = "";
+			if(type == '1') {
+				urlStr = 'getTotalDriverItemOrderListBySiteId';
+			}else if(type == '2'){
+				urlStr = 'getTotalMasterItemOrderListBySiteId';
+			}
+			postRegular(urlStr, {
+				page: vm.page,
+				rows: vm.pageSize,
+				siteId: siteId,
+				queryTime: currentMonth,
+			}, function(data) {
+				vm.datalist = data.object.withdrawalOrderList;
+				for(var i = 0; i < vm.datalist.length; i++) {
+					var obj = vm.datalist[i];
+					obj.id = vm.page * 15 + i + 1;
+				}
+			})
+		}
+		
+		function getOwnFee(servicePrice) {
+			if(type == '1') {
+				return (servicePrice*0.3).toFixed(2);
+			}else if(type == '2'){
+				return (servicePrice*0.5).toFixed(2);
+			}
+		}
+	</script>
+
+</html>

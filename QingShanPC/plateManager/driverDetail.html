@@ -211,7 +211,7 @@
 							<td>{{datetransform(item.updateTime)}}</td>
 							<td>
 								<div class="oprateDiv">
-									<a @click="jumpToOrderDetail(item.id,$event)">详情</a>
+									<a @click="jumpToOrderDetail(item.orderId,$event)">详情</a>
 								</div>
 
 							</td>
@@ -412,10 +412,6 @@
 			})
 		}
 
-		//跳至订单详情
-		function jumpToOrderDetail(itemIndex, $event) {
-			$event.stopPropagation();
-		}
 
 		//跳转至站点详情
 		function jumpToSite() {

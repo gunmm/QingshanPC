@@ -203,28 +203,6 @@
 			});
 		}
 
-		function BMapSetPointCenterWithPoint(lat1, lng1, lat2, lng2) {
-			var point1 = new BMap.Point(lng1, lat1);
-			var point2 = new BMap.Point(lng2, lat2);
-			var zoom = 13;
-			var zooms = [50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 25000, 50000,
-				100000, 200000, 500000, 1000000, 2000000
-			];
-			var distance = map.getDistance(point1, point2);
-			for (var i = 0; i < 16; i++) {
-				if ((zooms[i] - distance) > 0) {
-					zoom = 18 - i + 2;
-					break;
-				}
-			}
-			var pointLng = (lng1 + lng2) / 2;
-			var pointLat = (lat1 + lat2) / 2;
-			console.log(pointLng)
-			console.log(pointLat)
-			var pointCenter = new BMap.Point(pointLng, pointLat);
-			map.centerAndZoom(pointCenter, zoom + 0.3);
-		}
-
 		function openItemDetailPage(driverId) {
 			window.open("driverDetail.html?driverId=" + driverId);
 		}
