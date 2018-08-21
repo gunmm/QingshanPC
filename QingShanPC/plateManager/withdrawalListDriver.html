@@ -88,6 +88,7 @@
 		var fee = getQueryString("fee");
 		var type = getQueryString("type");
 		var currentMonth = getQueryString("currentMonth");
+		var isChildSiteList = getQueryString("isChildSiteList");
 
 		console.log(siteName)
 		var vm = new Vue({
@@ -120,6 +121,7 @@
 				rows: vm.pageSize,
 				siteId: siteId,
 				queryTime: currentMonth,
+				isChildSiteList: isChildSiteList
 			}, function(data) {
 				$('#app').show();
 				vm.datalist = data.object.withdrawalOrderList;
@@ -154,6 +156,7 @@
 				rows: vm.pageSize,
 				siteId: siteId,
 				queryTime: currentMonth,
+				isChildSiteList: isChildSiteList
 			}, function(data) {
 				vm.datalist = data.object.withdrawalOrderList;
 				for(var i = 0; i < vm.datalist.length; i++) {

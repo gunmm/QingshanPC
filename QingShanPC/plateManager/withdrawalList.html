@@ -182,7 +182,7 @@
 							</td>
 							<td>
 								<div class="oprateDiv">
-									<a v-if="item.bankCardNumber != null" @click="withDraw(item.siteId)">确认打款</a>
+									<a v-if="item.bankCardNumber != null" @click="withDraw(item.siteId, item.totalFee.toFixed(2), item.bankCardNumber, item.userId)">确认打款</a>
 									<a v-else>未绑定银行卡</a>
 								</div>
 
@@ -231,9 +231,9 @@
 
 			}
 		})
-		
+
 		var state = window.history.state;
-		if(state){
+		if(state) {
 			vm.queryTime = state.queryTime;
 		}
 
@@ -338,9 +338,22 @@
 			loadData();
 
 		})
-		
-		function withDraw(siteId){
-			
+
+		function withDraw(siteId, withdrawalAmount, toBankNumber, toUserId) {
+			if(withdrawalAmount == 0){
+				myAlert("所选时间段该站点暂无待打款项！");
+				return;
+			}
+			postRegular('withdrawalBySiteId', {
+				siteId: siteId,
+				withdrawalAmount: withdrawalAmount,
+				toBankNumber: toBankNumber,
+				toUserId: toUserId,
+				oprationUserId: sessionStorage.userId,
+				periodOfTime: vm.queryTime,
+			}, function(data) {
+				window.location.reload();
+			})
 		}
 
 		function transfer(itemId, type, siteName, fee) {
@@ -385,8 +398,6 @@
 			}
 
 		}
-		
-		
 	</script>
 
 </html>

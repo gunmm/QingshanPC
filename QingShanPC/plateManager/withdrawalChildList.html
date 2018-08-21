@@ -151,9 +151,12 @@
 								<th>站点名称</th>
 								<th>法人姓名</th>
 								<th>银行卡号</th>
+								<th>父站点抽成率</th>
 								<th>站点司机提成</th>
 								<th>站点货主提成</th>
-								<th>总打款额</th>
+								<th>站点提成总额</th>
+								<th>父站点所得提成</th>
+								<th>打款总额</th>
 							</tr>
 
 						</thead>
@@ -163,6 +166,7 @@
 							<td>{{item.siteName}}</td>
 							<td>{{item.nickname}}</td>
 							<td>{{item.bankCardNumber == null?'未绑定':item.bankCardNumber}}</td>
+							<td>{{item.childToSuperRate}}</td>
 							<td style="color: orange;">{{item.registerDriverFee == null?0:item.registerDriverFee}} 元
 								<div class="oprateDiv">
 									<a @click="transfer(item.siteId, 1, item.siteName, item.registerDriverFee == null?'0':item.registerDriverFee)">详情</a>
@@ -175,6 +179,12 @@
 							</td>
 							<td style="color: red;">
 								{{item.totalFee.toFixed(2)}} 元
+							</td>
+							<td style="color: orange;">
+								{{item.totalFee.toFixed(2)*item.childToSuperRate}} 元
+							</td>
+							<td style="color: red;">
+								{{item.totalFee.toFixed(2)*(1-item.childToSuperRate	)}} 元
 							</td>
 
 						</tr>
@@ -264,7 +274,7 @@
 
 		function loadData() {
 			$("#Pagination").empty();
-			postRegular('withdrawalChildWithSuperSiteId', {
+			postRegular('withdrawalChildWithSuperSiteIdForSite', {
 				page: vm.page,
 				rows: vm.pageSize,
 				filterSiteName: vm.filterSiteName,
@@ -296,7 +306,7 @@
 		loadData();
 
 		function loadPageData() {
-			postRegular('withdrawalChildWithSuperSiteId', {
+			postRegular('withdrawalChildWithSuperSiteIdForSite', {
 				page: vm.page,
 				rows: vm.pageSize,
 				filterSiteName: vm.filterSiteName,
@@ -332,7 +342,7 @@
 		})
 
 		function transfer(itemId, type, siteName, fee) {
-			var searchUrl = encodeURI('withdrawalListDriver.html?siteId=' + itemId + '&type=' + type + '&siteName=' + siteName + '&fee=' + fee + '&currentMonth=' + vm.queryTime);
+			var searchUrl = encodeURI('withdrawalListDriver.html?siteId=' + itemId + '&type=' + type + '&siteName=' + siteName + '&fee=' + fee + '&currentMonth=' + vm.queryTime + '&isChildSiteList=1');
 				window.location = searchUrl;
 		}
 		
