@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="UTF-8">
-		<title>站点打款</title>
+		<title>打款记录</title>
 		<link rel="icon" href="../img/logo2.ico" type="img/x-ico" />
 
 		<link rel="stylesheet" href="../css/iconfont.css">
@@ -96,7 +96,7 @@
 				</li>
 
 				<li id="withdrawalListNav">
-					<a id="navBar7" class="on"  href="javascript:selectNav('7')">站点打款</a>
+					<a id="navBar7" href="javascript:selectNav('7')">站点打款</a>
 				</li>
 
 				<li id="withdrawalChildListNav">
@@ -104,7 +104,7 @@
 				</li>
 
 				<li id="finishWithdrawaledListNav">
-					<a id="navBar9" href="javascript:selectNav('9')">打款记录</a>
+					<a id="navBar9" class="on" href="javascript:selectNav('9')">打款记录</a>
 				</li>
 
 			</ul>
@@ -116,19 +116,6 @@
 						<div class="filterKeyDiv">站点名称</div>
 						<div class="filterValueDiv">
 							<input v-model="filterSiteName" class="filterValueInput" type="text" placeholder="" title="站点名称">
-						</div>
-					</div>
-					<div class="nameFilterDiv">
-						<div class="filterKeyDiv">法人姓名</div>
-						<div class="filterValueDiv">
-							<input v-model="filterLowsManName" class="filterValueInput" type="text" placeholder="" title="法人姓名">
-						</div>
-					</div>
-
-					<div class="nameFilterDiv">
-						<div class="filterKeyDiv">查询时间</div>
-						<div class="filterValueDiv">
-							<input v-model="queryTime" class="filterValueInput" type="month" placeholder="" title="查询时间">
 						</div>
 					</div>
 
@@ -154,13 +141,12 @@
 							<tr>
 								<th>#</th>
 								<th>站点名称</th>
-								<th>法人姓名</th>
-								<th>银行卡号</th>
-								<th>站点司机提成</th>
-								<th>站点货主提成</th>
-								<th>子站点司机提成</th>
-								<th>子站点货主提成</th>
-								<th>总打款额</th>
+								<th>收款人姓名</th>
+								<th>收款银行卡号</th>
+								<th>打款金额</th>
+								<th>打款人</th>
+								<th>款项所属月份</th>
+								<th>打款时间</th>
 								<th>操作</th>
 							</tr>
 
@@ -170,34 +156,16 @@
 							<td>{{item.id}}</td>
 							<td>{{item.siteName}}</td>
 							<td>{{item.nickname}}</td>
-							<td>{{item.bankCardNumber == null?'未绑定':item.bankCardNumber}}</td>
-							<td style="color: orange;">{{item.registerDriverFee == null?0:item.registerDriverFee}} 元
-								<div class="oprateDiv">
-									<a @click="transfer(item.siteId, 1, item.siteName, item.registerDriverFee == null?'0':item.registerDriverFee)">详情</a>
-								</div>
-							</td>
-							<td style="color: orange;">{{item.registerGoodsManFee == null?0:item.registerGoodsManFee}} 元
-								<div class="oprateDiv">
-									<a @click="transfer(item.siteId, 2, item.siteName, item.registerGoodsManFee == null?'0':item.registerGoodsManFee)">详情</a>
-								</div>
-							</td>
-							<td style="color: orange;">{{item.childDriverFee == null?0:item.childDriverFee}} 元
-								<div class="oprateDiv">
-									<a @click="transfer(item.siteId, 3, item.siteName, item.childDriverFee == null?'0':item.childDriverFee)">详情</a>
-								</div>
-							</td>
-							<td style="color: orange;">{{item.childGoodsManFee == null?0:item.childGoodsManFee}} 元
-								<div class="oprateDiv">
-									<a @click="transfer(item.siteId, 4, item.siteName, item.childGoodsManFee == null?'0':item.childGoodsManFee)">详情</a>
-								</div>
-							</td>
+							<td>{{item.bankCardNumber}}</td>
 							<td style="color: red;">
-								{{item.totalFee.toFixed(2)}} 元
+								{{item.withdrawalAmount.toFixed(2)}} 元
 							</td>
+							<td>{{item.nickname}}</td>
+							<td>{{item.periodOfTime}}</td>
+							<td>{{item.withdrawalTime}}</td>
 							<td>
 								<div class="oprateDiv">
-									<a v-if="item.bankCardNumber != null" @click="withDraw(item.siteId, item.totalFee.toFixed(2), item.bankCardNumber, item.userId)">确认打款</a>
-									<a v-else>未绑定银行卡</a>
+									<a  @click="withDraw(item.siteId, item.totalFee.toFixed(2), item.bankCardNumber, item.userId)">详情</a>
 								</div>
 
 							</td>
@@ -223,38 +191,13 @@
 				</div>
 			</div>
 		</div>
-
 	</body>
 
 	<script>
-		var lastMonth = getlastMonth();
-		var vm = new Vue({
-			el: '#app',
-			data: {
-				page: 0,
-				pageSize: 10,
-				itemCount: 0,
-				datalist: [],
-
-				filterSiteName: '',
-				filterLowsManName: '',
-				queryTime: lastMonth,
-
-			},
-			methods: {
-
-			}
-		})
-
-		var state = window.history.state;
-		if(state) {
-			vm.queryTime = state.queryTime;
-		}
-
 		if(sessionStorage.userType == '0') {
 			var removeNav = document.getElementById('childSiteListNav');
 			$(removeNav).remove();
-			
+
 			removeNav = document.getElementById('withdrawalChildListNav');
 			$(removeNav).remove();
 
@@ -265,7 +208,7 @@
 
 			removeNav = document.getElementById('userListNav');
 			$(removeNav).remove();
-			
+
 			removeNav = document.getElementById('withdrawalChildListNav');
 			$(removeNav).remove();
 
@@ -273,13 +216,13 @@
 		} else if(sessionStorage.userType == '3') {
 			var removeNav = document.getElementById('siteListNav');
 			$(removeNav).remove();
-			
+
 			removeNav = document.getElementById('withdrawalListNav');
 			$(removeNav).remove();
-			
+
 			removeNav = document.getElementById('finishWithdrawaledListNav');
 			$(removeNav).remove();
-			
+
 			if(sessionStorage.siteType == '2') {
 				removeNav = document.getElementById('childSiteListNav');
 				$(removeNav).remove();
@@ -292,10 +235,10 @@
 
 			removeNav = document.getElementById('userListNav');
 			$(removeNav).remove();
-			
+
 			removeNav = document.getElementById('withdrawalListNav');
 			$(removeNav).remove();
-			
+
 			removeNav = document.getElementById('finishWithdrawaledListNav');
 			$(removeNav).remove();
 
@@ -308,131 +251,7 @@
 		}
 
 		$('#headerDiv').show();
-
-		function loadData() {
-			$("#Pagination").empty();
-			postRegular('withdrawalBeforeOrder', {
-				page: vm.page,
-				rows: vm.pageSize,
-				filterSiteName: vm.filterSiteName,
-				filterLowsManName: vm.filterLowsManName,
-				queryTime: vm.queryTime,
-			}, function(data) {
-				console.log(data)
-				$('#app').show();
-				vm.datalist = data.object.withdrawalList;
-				for(var i = 0; i < vm.datalist.length; i++) {
-					var obj = vm.datalist[i];
-					obj.id = vm.page * 10 + i + 1;
-				}
-
-				vm.itemCount = data.object.withdrawalCount;
-				$('.allPage').html(Math.ceil(data.object.withdrawalCount / vm.pageSize));
-				$("#Pagination").pagination(data.object.withdrawalCount / vm.pageSize, {
-					callback: function(page) { // 回调函数
-						vm.page = page;
-						loadPageData();
-					}
-				});
-			}, function() {
-
-			})
-		}
-		loadData();
-
-		function loadPageData() {
-			postRegular('withdrawalBeforeOrder', {
-				page: vm.page,
-				rows: vm.pageSize,
-				filterSiteName: vm.filterSiteName,
-				filterLowsManName: vm.filterLowsManName,
-				queryTime: vm.queryTime,
-			}, function(data) {
-				vm.datalist = data.object.withdrawalList;
-				for(var i = 0; i < vm.datalist.length; i++) {
-					var obj = vm.datalist[i];
-					obj.id = vm.page * 10 + i + 1;
-				}
-			})
-		}
-
-		//筛选确认
-		$('#query_btn').click(function() {
-			vm.page = 0;
-			loadData();
-			window.history.pushState({
-				queryTime: vm.queryTime
-			}, "", "withdrawalList.html");
-		})
-
-		//筛选清空
-		$('#clear_btn').click(function() {
-			vm.filterSiteName = '';
-			vm.filterLowsManName = '';
-			vm.queryTime = lastMonth;
-			loadData();
-
-		})
-
-		function withDraw(siteId, withdrawalAmount, toBankNumber, toUserId) {
-			if(withdrawalAmount == 0) {
-				myAlert("所选时间段该站点暂无待打款项！");
-				return;
-			}
-			postRegular('withdrawalBySiteId', {
-				siteId: siteId,
-				withdrawalAmount: withdrawalAmount,
-				toBankNumber: toBankNumber,
-				toUserId: toUserId,
-				oprationUserId: sessionStorage.userId,
-				periodOfTime: vm.queryTime,
-			}, function(data) {
-				window.location.reload();
-			})
-		}
-
-		function transfer(itemId, type, siteName, fee) {
-			if(type == '1' || type == '2') {
-				var searchUrl = encodeURI('withdrawalListDriver.html?siteId=' + itemId + '&type=' + type + '&siteName=' + siteName + '&fee=' + fee + '&currentMonth=' + vm.queryTime);
-				window.location = searchUrl;
-			} else {
-				var searchUrl = encodeURI('withdrawalListChild.html?siteId=' + itemId + '&type=' + type + '&siteName=' + siteName + '&fee=' + fee + '&currentMonth=' + vm.queryTime);
-				window.location = searchUrl;
-			}
-
-		}
-
-		function getlastMonth() {
-
-			var now = new Date();
-			var year = now.getFullYear(); //getYear()+1900=getFullYear()
-			var month = now.getMonth() + 1; //0-11表示1-12月
-			var day = now.getDate();
-			if(parseInt(month) < 10) {
-				month = "0" + month;
-			}
-			if(parseInt(day) < 10) {
-				day = "0" + day;
-			}
-
-			now = year + '-' + month + '-' + day;
-
-			if(parseInt(month) == 1) { //如果是1月份，则取上一年的12月份
-				return(parseInt(year) - 1) + '-12-' + day;
-			}
-
-			var preSize = new Date(year, parseInt(month) - 1, 0).getDate(); //上月总天数
-			if(preSize < parseInt(day)) { //上月总天数<本月日期，比如3月的30日，在2月中没有30
-				return year + '-' + month + '-01';
-			}
-
-			if(parseInt(month) <= 10) {
-				return year + '-0' + (parseInt(month) - 1);
-			} else {
-				return year + '-' + (parseInt(month) - 1);
-			}
-
-		}
+		$('#app').show();
 	</script>
 
 </html>

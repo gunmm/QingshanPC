@@ -41,6 +41,9 @@
 				$("#navBar4").removeClass("on");
 				$("#navBar5").removeClass("on");
 				$("#navBar6").removeClass("on");
+				$("#navBar7").removeClass("on");
+				$("#navBar8").removeClass("on");
+				$("#navBar9").removeClass("on");
 
 				var idStr = "#navBar" + index;
 				$(idStr).addClass("on");
@@ -56,6 +59,12 @@
 					window.location.replace('userList.html');
 				} else if(index == '6') {
 					window.location.replace('mapList.html');
+				} else if(index == '7') {
+					window.location.replace('withdrawalList.html');
+				} else if(index == '8') {
+					window.location.replace('withdrawalChildList.html');
+				} else if(index == '9') {
+					window.location.replace('finishWithdrawaledList.html');
 				}
 			}
 		</script>
@@ -83,6 +92,17 @@
 				</li>
 				<li id="mapListNav">
 					<a id="navBar6" href="javascript:selectNav('6')">地图展示</a>
+				</li>
+				<li id="withdrawalListNav">
+					<a id="navBar7" href="javascript:selectNav('7')">站点打款</a>
+				</li>
+
+				<li id="withdrawalChildListNav">
+					<a id="navBar8" href="javascript:selectNav('8')">子站点打款</a>
+				</li>
+
+				<li id="finishWithdrawaledListNav">
+					<a id="navBar9" href="javascript:selectNav('9')">打款记录</a>
 				</li>
 
 			</ul>
@@ -183,7 +203,7 @@
 							<i id="closeBtn" onclick="closeAddPage()" class="iconfont">&#xe607;</i>
 						</div>
 					</div>
-					
+
 					<div class="addPageLineDiv" style="margin-top: 20px;">
 						<div class="addPageLineSmallDiv">
 							<div class="keyDiv">姓名</div>
@@ -194,16 +214,16 @@
 							<input v-model="phoneNumber" class="valueInput" type="text" placeholder="" title="手机号">
 						</div>
 					</div>
-					
+
 					<div class="addPageLineDiv" style="margin-top: 20px;">
-						
+
 						<div class="addPageLineSmallDiv">
 							<div class="keyDiv">身份证号</div>
 							<input v-model="userIdCardNumber" class="valueInput" type="text" placeholder="" title="身份证号">
 						</div>
 
 					</div>
-					
+
 					<div class="operateBarDiv">
 						<div class="hrDiv" style="margin: 0px;"></div>
 						<div onclick="closeAddPage()" class="operateDiv">
@@ -219,9 +239,8 @@
 			</div>
 		</div>
 	</body>
-	
+
 	<script>
-		
 		var vm = new Vue({
 			el: '#app',
 			data: {
@@ -244,42 +263,63 @@
 
 			}
 		})
-		
-		if(sessionStorage.userType == '0') {
-			var removeLi = document.getElementById('childSiteListNav');
-			$(removeLi).remove();
-			
-		} else if(sessionStorage.userType == '1') {
-			var removeLi = document.getElementById('childSiteListNav');
-			$(removeLi).remove();
 
-			removeLi = document.getElementById('userListNav');
-			$(removeLi).remove();
-			
+		if(sessionStorage.userType == '0') {
+			var removeNav = document.getElementById('childSiteListNav');
+			$(removeNav).remove();
+
+			removeNav = document.getElementById('withdrawalChildListNav');
+			$(removeNav).remove();
+
+			$('#add_btn').addClass('none');
+		} else if(sessionStorage.userType == '1') {
+			var removeNav = document.getElementById('childSiteListNav');
+			$(removeNav).remove();
+
+			removeNav = document.getElementById('userListNav');
+			$(removeNav).remove();
+
+			removeNav = document.getElementById('withdrawalChildListNav');
+			$(removeNav).remove();
+
 			$('#add_btn').addClass('none');
 		} else if(sessionStorage.userType == '3') {
-			vm.siteId = sessionStorage.belongSiteId;
-			var removeLi = document.getElementById('siteListNav');
-			$(removeLi).remove();
+			var removeNav = document.getElementById('siteListNav');
+			$(removeNav).remove();
+
+			removeNav = document.getElementById('withdrawalListNav');
+			$(removeNav).remove();
+
+			removeNav = document.getElementById('finishWithdrawaledListNav');
+			$(removeNav).remove();
+
 			if(sessionStorage.siteType == '2') {
-				removeLi = document.getElementById('childSiteListNav');
-				$(removeLi).remove();
+				removeNav = document.getElementById('childSiteListNav');
+				$(removeNav).remove();
+				removeNav = document.getElementById('withdrawalChildListNav');
+				$(removeNav).remove();
 			}
-		}else if(sessionStorage.userType == '4') {
-			vm.siteId = sessionStorage.belongSiteId;
-			var removeLi = document.getElementById('siteListNav');
-			$(removeLi).remove();
-			
-			removeLi = document.getElementById('userListNav');
-			$(removeLi).remove();
-			
+		} else if(sessionStorage.userType == '4') {
+			var removeNav = document.getElementById('siteListNav');
+			$(removeNav).remove();
+
+			removeNav = document.getElementById('userListNav');
+			$(removeNav).remove();
+
+			removeNav = document.getElementById('withdrawalListNav');
+			$(removeNav).remove();
+
+			removeNav = document.getElementById('finishWithdrawaledListNav');
+			$(removeNav).remove();
+
 			if(sessionStorage.siteType == '2') {
-				removeLi = document.getElementById('childSiteListNav');
-				$(removeLi).remove();
+				removeNav = document.getElementById('childSiteListNav');
+				$(removeNav).remove();
+				removeNav = document.getElementById('withdrawalChildListNav');
+				$(removeNav).remove();
 			}
 		}
 
-		
 		$('#headerDiv').show();
 
 		function loadData() {
@@ -290,7 +330,7 @@
 				filterNickName: vm.filterNickName,
 				filterPhoneNumber: vm.filterPhoneNumber,
 				siteId: sessionStorage.belongSiteId,
-				
+
 			}, function(data) {
 
 				$('#app').show();
@@ -402,7 +442,6 @@
 
 			$event.stopPropagation();
 			vm.isEdit = 1;
-			
 
 			var obj = vm.datalist[itemIndex - 1];
 			vm.manageId = obj.userId;
@@ -431,7 +470,6 @@
 			}
 		}
 
-
 		//添加
 		$('#add_btn').click(function() {
 			$('#addBigDiv').removeClass("none");
@@ -446,7 +484,6 @@
 			vm.phoneNumber = '';
 			vm.userIdCardNumber = '';
 		}
-
 	</script>
 
 </html>

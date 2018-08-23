@@ -44,6 +44,7 @@
 				$("#navBar6").removeClass("on");
 				$("#navBar7").removeClass("on");
 				$("#navBar8").removeClass("on");
+				$("#navBar9").removeClass("on");
 
 				var idStr = "#navBar" + index;
 				$(idStr).addClass("on");
@@ -63,6 +64,8 @@
 					window.location.replace('withdrawalList.html');
 				} else if(index == '8') {
 					window.location.replace('withdrawalChildList.html');
+				} else if(index == '9') {
+					window.location.replace('finishWithdrawaledList.html');
 				}
 			}
 		</script>
@@ -93,12 +96,16 @@
 					<a id="navBar6" href="javascript:selectNav('6')">地图展示</a>
 				</li>
 
-				<li id="mapListNav">
+				<li id="withdrawalListNav">
 					<a id="navBar7" href="javascript:selectNav('7')">站点打款</a>
 				</li>
 
-				<li id="mapListNav">
+				<li id="withdrawalChildListNav">
 					<a id="navBar8" class="on" href="javascript:selectNav('8')">子站点打款</a>
+				</li>
+
+				<li id="finishWithdrawaledListNav">
+					<a id="navBar9" href="javascript:selectNav('9')">打款记录</a>
 				</li>
 
 			</ul>
@@ -119,7 +126,7 @@
 							<input v-model="filterLowsManName" class="filterValueInput" type="text" placeholder="" title="法人姓名">
 						</div>
 					</div>
-					
+
 					<div class="nameFilterDiv">
 						<div class="filterKeyDiv">查询时间</div>
 						<div class="filterValueDiv">
@@ -184,7 +191,7 @@
 								{{item.totalFee.toFixed(2)*item.childToSuperRate}} 元
 							</td>
 							<td style="color: red;">
-								{{item.totalFee.toFixed(2)*(1-item.childToSuperRate	)}} 元
+								{{item.totalFee.toFixed(2)*(1-item.childToSuperRate )}} 元
 							</td>
 
 						</tr>
@@ -229,14 +236,17 @@
 
 			}
 		})
-		
+
 		var state = window.history.state;
-		if(state){
+		if(state) {
 			vm.queryTime = state.queryTime;
 		}
 
 		if(sessionStorage.userType == '0') {
 			var removeNav = document.getElementById('childSiteListNav');
+			$(removeNav).remove();
+
+			removeNav = document.getElementById('withdrawalChildListNav');
 			$(removeNav).remove();
 
 			$('#add_btn').addClass('none');
@@ -247,25 +257,43 @@
 			removeNav = document.getElementById('userListNav');
 			$(removeNav).remove();
 
+			removeNav = document.getElementById('withdrawalChildListNav');
+			$(removeNav).remove();
+
 			$('#add_btn').addClass('none');
 		} else if(sessionStorage.userType == '3') {
-			vm.siteId = sessionStorage.belongSiteId;
 			var removeNav = document.getElementById('siteListNav');
 			$(removeNav).remove();
+
+			removeNav = document.getElementById('withdrawalListNav');
+			$(removeNav).remove();
+
+			removeNav = document.getElementById('finishWithdrawaledListNav');
+			$(removeNav).remove();
+
 			if(sessionStorage.siteType == '2') {
 				removeNav = document.getElementById('childSiteListNav');
 				$(removeNav).remove();
+				removeNav = document.getElementById('withdrawalChildListNav');
+				$(removeNav).remove();
 			}
 		} else if(sessionStorage.userType == '4') {
-			vm.siteId = sessionStorage.belongSiteId;
 			var removeNav = document.getElementById('siteListNav');
 			$(removeNav).remove();
 
 			removeNav = document.getElementById('userListNav');
 			$(removeNav).remove();
 
+			removeNav = document.getElementById('withdrawalListNav');
+			$(removeNav).remove();
+
+			removeNav = document.getElementById('finishWithdrawaledListNav');
+			$(removeNav).remove();
+
 			if(sessionStorage.siteType == '2') {
 				removeNav = document.getElementById('childSiteListNav');
+				$(removeNav).remove();
+				removeNav = document.getElementById('withdrawalChildListNav');
 				$(removeNav).remove();
 			}
 		}
@@ -343,9 +371,9 @@
 
 		function transfer(itemId, type, siteName, fee) {
 			var searchUrl = encodeURI('withdrawalListDriver.html?siteId=' + itemId + '&type=' + type + '&siteName=' + siteName + '&fee=' + fee + '&currentMonth=' + vm.queryTime + '&isChildSiteList=1');
-				window.location = searchUrl;
+			window.location = searchUrl;
 		}
-		
+
 		function getlastMonth() {
 
 			var now = new Date();

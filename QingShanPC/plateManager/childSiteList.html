@@ -42,6 +42,9 @@
 				$("#navBar4").removeClass("on");
 				$("#navBar5").removeClass("on");
 				$("#navBar6").removeClass("on");
+				$("#navBar7").removeClass("on");
+				$("#navBar8").removeClass("on");
+				$("#navBar9").removeClass("on");
 
 				var idStr = "#navBar" + index;
 				$(idStr).addClass("on");
@@ -57,6 +60,12 @@
 					window.location.replace('userList.html');
 				}else if(index == '6'){
 					window.location.replace('mapList.html');
+				}else if(index == '7') {
+					window.location.replace('withdrawalList.html');
+				} else if(index == '8') {
+					window.location.replace('withdrawalChildList.html');
+				} else if(index == '9') {
+					window.location.replace('finishWithdrawaledList.html');
 				}
 			}
 		</script>
@@ -84,6 +93,17 @@
 				</li>
 				<li id="mapListNav">
 					<a id="navBar6" href="javascript:selectNav('6')">地图展示</a>
+				</li>
+				<li id="withdrawalListNav">
+					<a id="navBar7" href="javascript:selectNav('7')">站点打款</a>
+				</li>
+
+				<li id="withdrawalChildListNav">
+					<a id="navBar8" href="javascript:selectNav('8')">子站点打款</a>
+				</li>
+				
+				<li id="finishWithdrawaledListNav">
+					<a id="navBar9" href="javascript:selectNav('9')">打款记录</a>
 				</li>
 
 			</ul>
@@ -362,28 +382,55 @@
 		if(sessionStorage.userType == '0') {
 			var removeNav = document.getElementById('childSiteListNav');
 			$(removeNav).remove();
+			
+			removeNav = document.getElementById('withdrawalChildListNav');
+			$(removeNav).remove();
+
+			$('#add_btn').addClass('none');
 		} else if(sessionStorage.userType == '1') {
 			var removeNav = document.getElementById('childSiteListNav');
 			$(removeNav).remove();
 
 			removeNav = document.getElementById('userListNav');
 			$(removeNav).remove();
+			
+			removeNav = document.getElementById('withdrawalChildListNav');
+			$(removeNav).remove();
+
+			$('#add_btn').addClass('none');
 		} else if(sessionStorage.userType == '3') {
 			var removeNav = document.getElementById('siteListNav');
 			$(removeNav).remove();
+			
+			removeNav = document.getElementById('withdrawalListNav');
+			$(removeNav).remove();
+			
+			removeNav = document.getElementById('finishWithdrawaledListNav');
+			$(removeNav).remove();
+			
 			if(sessionStorage.siteType == '2') {
 				removeNav = document.getElementById('childSiteListNav');
 				$(removeNav).remove();
+				removeNav = document.getElementById('withdrawalChildListNav');
+				$(removeNav).remove();
 			}
-		}else if(sessionStorage.userType == '4') {
+		} else if(sessionStorage.userType == '4') {
 			var removeNav = document.getElementById('siteListNav');
 			$(removeNav).remove();
-			
+
 			removeNav = document.getElementById('userListNav');
 			$(removeNav).remove();
 			
+			removeNav = document.getElementById('withdrawalListNav');
+			$(removeNav).remove();
+			
+			removeNav = document.getElementById('finishWithdrawaledListNav');
+			$(removeNav).remove();
+
 			if(sessionStorage.siteType == '2') {
 				removeNav = document.getElementById('childSiteListNav');
+				$(removeNav).remove();
+				removeNav = document.getElementById('withdrawalChildListNav');
 				$(removeNav).remove();
 			}
 		}
