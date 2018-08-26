@@ -45,6 +45,7 @@
 				$("#navBar7").removeClass("on");
 				$("#navBar8").removeClass("on");
 				$("#navBar9").removeClass("on");
+				$("#navBar11").removeClass("on");
 
 				var idStr = "#navBar" + index;
 				$(idStr).addClass("on");
@@ -66,6 +67,9 @@
 					window.location.replace('withdrawalChildList.html');
 				} else if(index == '9') {
 					window.location.replace('finishWithdrawaledList.html');
+				}
+				 else if(index == '11') {
+					window.location.replace('driverWithdrawalList.html');
 				}
 			}
 		</script>
@@ -107,6 +111,10 @@
 
 				<li id="finishWithdrawaledListNav">
 					<a id="navBar9" href="javascript:selectNav('9')">打款记录</a>
+				</li>
+				
+				<li id="driverWithdrawalListNav">
+					<a id="navBar11" href="javascript:selectNav('11')">司机提现列表</a>
 				</li>
 
 			</ul>
@@ -387,8 +395,6 @@
 
 			removeNav = document.getElementById('withdrawalChildListNav');
 			$(removeNav).remove();
-
-			$('#add_btn').addClass('none');
 		} else if(sessionStorage.userType == '1') {
 			var removeNav = document.getElementById('childSiteListNav');
 			$(removeNav).remove();
@@ -399,7 +405,6 @@
 			removeNav = document.getElementById('withdrawalChildListNav');
 			$(removeNav).remove();
 
-			$('#add_btn').addClass('none');
 		} else if(sessionStorage.userType == '3') {
 			var removeNav = document.getElementById('siteListNav');
 			$(removeNav).remove();
@@ -453,7 +458,7 @@
 				vm.datalist = data.object.siteList;
 				for(var i = 0; i < vm.datalist.length; i++) {
 					var obj = vm.datalist[i];
-					obj.id = i + 1;
+					obj.id = vm.page * 15 + i + 1;
 				}
 				vm.itemCount = data.object.siteCount;
 				$('.allPage').html(Math.ceil(data.object.siteCount / vm.pageSize));
@@ -481,7 +486,7 @@
 				vm.datalist = data.object.siteList;
 				for(var i = 0; i < vm.datalist.length; i++) {
 					var obj = vm.datalist[i];
-					obj.id = i + 1;
+					obj.id = vm.page * 15 + i + 1;
 				}
 			})
 		}

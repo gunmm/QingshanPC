@@ -48,7 +48,9 @@
 
 						<tr v-for="item in datalist" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
 							<td>{{item.id}}</td>
-							<td>{{item.siteName}}</td>
+							<td>
+								<a @click="jumpToSite(item.siteId,$event)" style="color: #ffac59;cursor: pointer;text-decoration: underline;">{{item.siteName}}</a>
+							</td>
 							<td>{{item.nickname}}</td>
 							<td v-if="type=='3'" style="color: orange;">{{item.registerDriverFee == null?0:item.registerDriverFee}} 元
 								<div class="oprateDiv">
@@ -163,6 +165,12 @@
 		function transfer(itemId, type, siteName, fee) {
 			var searchUrl = encodeURI('withdrawalListDriver.html?siteId=' + itemId + '&type=' + type + '&siteName=' + siteName + '&fee=' + fee + '&currentMonth=' + currentMonth);
 				window.location = searchUrl;
+		}
+		
+		//跳转至站点详情
+		function jumpToSite(siteId, $event) {
+			$event.stopPropagation();
+			window.open("siteDetail.html?siteId=" + siteId);
 		}
 	</script>
 

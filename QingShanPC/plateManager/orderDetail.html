@@ -104,7 +104,10 @@
 				<div class="detailBaseInfoDiv" style="margin-top: 5px;">
 					<div class="detailKeyValueDiv">
 						<div class="detailKeyDiv">司机姓名：</div>
-						<div class="detailvalueDiv" style="color: orange;">{{nickname}}</div>
+						<!--<div class="detailvalueDiv" style="color: orange;">{{nickname}}</div>-->
+						<div class="detailvalueDiv zhandianTiaozhuanDiv">
+							<a @click="openDriverItemDetailPage(driverId)" class="zhandianTiaozhuan">{{nickname}}</a>
+						</div>
 					</div>
 					<div class="detailKeyValueDiv">
 						<div class="detailKeyDiv">司机电话：</div>
@@ -172,6 +175,7 @@
 				vm.phoneNumber = data.object.phoneNumber;
 				vm.plateNumber = data.object.plateNumber;
 				vm.nickname = data.object.nickname;
+				vm.driverId = data.object.driverId;
 				vm.score = data.object.score;
 
 				if(vm.type == '2') {
@@ -258,6 +262,7 @@
 				nickname: '',
 				plateNumber: '',
 				score: 0,
+				driverId:'',
 
 			},
 			methods: {}
@@ -271,6 +276,16 @@
 		map.addControl(new BMap.ScaleControl());
 		map.addControl(new BMap.OverviewMapControl());
 		loadOrderDetailData();
+		
+		
+		//点击查看详情
+		function openDriverItemDetailPage(masterId) {
+			window.open("driverDetail.html?driverId=" + masterId);
+		}
+		
+		function openMasterItemDetailPage(masterId) {
+			window.open("masterDetail.html?masterId=" + masterId);
+		}
 	</script>
 
 </html>

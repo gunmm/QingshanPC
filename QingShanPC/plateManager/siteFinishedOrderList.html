@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="UTF-8">
-		<title>站点打款</title>
+		<title>已完成订单</title>
 		<link rel="icon" href="../img/logo2.ico" type="img/x-ico" />
 
 		<link rel="stylesheet" href="../css/iconfont.css">
@@ -44,7 +44,7 @@
 				$("#navBar7").removeClass("on");
 				$("#navBar8").removeClass("on");
 				$("#navBar9").removeClass("on");
-				$("#navBar11").removeClass("on");
+				$("#navBar10").removeClass("on");
 
 				var idStr = "#navBar" + index;
 				$(idStr).addClass("on");
@@ -66,8 +66,8 @@
 					window.location.replace('withdrawalChildList.html');
 				} else if(index == '9') {
 					window.location.replace('finishWithdrawaledList.html');
-				}else if(index == '11') {
-					window.location.replace('driverWithdrawalList.html');
+				} else if(index == '10') {
+					window.location.replace('siteFinishedOrderList.html');
 				}
 			}
 		</script>
@@ -109,9 +109,9 @@
 				<li id="finishWithdrawaledListNav">
 					<a id="navBar9" href="javascript:selectNav('9')">打款记录</a>
 				</li>
-				
-				<li id="driverWithdrawalListNav">
-					<a id="navBar11" href="javascript:selectNav('11')">司机提现列表</a>
+
+				<li id="siteFinishedOrderListNav">
+					<a id="navBar10" href="javascript:selectNav('10')">已完成订单</a>
 				</li>
 
 			</ul>
@@ -119,19 +119,6 @@
 		<div id="app" class="content" hidden>
 			<div class="oprationToolBar">
 				<div class="filterDiv">
-					<div class="nameFilterDiv">
-						<div class="filterKeyDiv">站点名称</div>
-						<div class="filterValueDiv">
-							<input v-model="filterSiteName" class="filterValueInput" type="text" placeholder="" title="站点名称">
-						</div>
-					</div>
-					<div class="nameFilterDiv">
-						<div class="filterKeyDiv">法人姓名</div>
-						<div class="filterValueDiv">
-							<input v-model="filterLowsManName" class="filterValueInput" type="text" placeholder="" title="法人姓名">
-						</div>
-					</div>
-
 					<div class="nameFilterDiv">
 						<div class="filterKeyDiv">查询时间</div>
 						<div class="filterValueDiv">
@@ -160,15 +147,18 @@
 						<thead>
 							<tr>
 								<th>#</th>
-								<th>站点名称</th>
-								<th>法人姓名</th>
-								<th>银行卡号</th>
-								<th>站点司机提成</th>
-								<th>站点货主提成</th>
-								<th>子站点司机提成</th>
-								<th>子站点货主提成</th>
-								<th>总打款额</th>
-								<th>操作</th>
+								<th>订单ID</th>
+								<th>车辆类型</th>
+								<th>运输距离</th>
+								<th>运输费用</th>
+								<th>总服务费</th>
+								<th>司机所属站点</th>
+								<th>服务费</th>
+								<th>货主所属站点</th>
+								<th>服务费</th>
+								<th>所得服务费</th>
+								<th>打款状态</th>
+								<th>完成时间</th>
 							</tr>
 
 						</thead>
@@ -176,41 +166,23 @@
 						<tr v-for="item in datalist" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
 							<td>{{item.id}}</td>
 							<td>
-								<a @click="jumpToSite(item.siteId,$event)" style="color: #ffac59;cursor: pointer;text-decoration: underline;">{{item.siteName}}</a>
+								<a @click="jumpToOrderDetail(item.orderId,$event)" style="color: #ffac59;cursor: pointer;text-decoration: underline;">{{item.orderId}}</a>
 							</td>
-							<td>{{item.nickname}}</td>
-							<td>{{item.bankCardNumber == null?'未绑定':item.bankCardNumber}}</td>
-							<td style="color: orange;">{{item.registerDriverFee == null?0:item.registerDriverFee}} 元
-								<div class="oprateDiv">
-									<a @click="transfer(item.siteId, 1, item.siteName, item.registerDriverFee == null?'0':item.registerDriverFee)">详情</a>
-								</div>
-							</td>
-							<td style="color: orange;">{{item.registerGoodsManFee == null?0:item.registerGoodsManFee}} 元
-								<div class="oprateDiv">
-									<a @click="transfer(item.siteId, 2, item.siteName, item.registerGoodsManFee == null?'0':item.registerGoodsManFee)">详情</a>
-								</div>
-							</td>
-							<td style="color: orange;">{{item.childDriverFee == null?0:item.childDriverFee}} 元
-								<div class="oprateDiv">
-									<a @click="transfer(item.siteId, 3, item.siteName, item.childDriverFee == null?'0':item.childDriverFee)">详情</a>
-								</div>
-							</td>
-							<td style="color: orange;">{{item.childGoodsManFee == null?0:item.childGoodsManFee}} 元
-								<div class="oprateDiv">
-									<a @click="transfer(item.siteId, 4, item.siteName, item.childGoodsManFee == null?'0':item.childGoodsManFee)">详情</a>
-								</div>
-							</td>
-							<td style="color: red;">
-								{{item.totalFee.toFixed(2)}} 元
-							</td>
+							<td>{{item.carTypeName}}</td>
+							<td>{{item.distance}} 公里</td>
+							<td>{{item.price.toFixed(2)}} 元</td>
+							<td>{{item.servicePrice.toFixed(2)}} 元</td>
+
 							<td>
-								<div class="oprateDiv">
-									<a v-if="item.bankCardNumber != null" @click="withDraw(item.siteId, item.totalFee.toFixed(2), item.bankCardNumber, item.userId)">确认打款</a>
-									<a v-else>未绑定银行卡</a>
-								</div>
-
-							</td>
-
+								<a @click="jumpToSite(item.driverSiteId,$event)" style="color: #ffac59;cursor: pointer;text-decoration: underline;">{{item.driverSiteName}}</td>
+							<td>{{countFeeByBelongStr(item.driverBelongSiteType,1,item.servicePrice).toFixed(2)}}</td>
+							<td>
+								<a @click="jumpToSite(item.masterSiteId,$event)" style="color: #ffac59;cursor: pointer;text-decoration: underline;">{{item.masterSiteName}}</td>
+							<td>{{countFeeByBelongStr(item.masterBelongSiteType,2,item.servicePrice).toFixed(2)}}</td>
+							<td style="color: red;">{{countTotalFee(item.driverBelongSiteType,item.masterBelongSiteType,item.servicePrice).toFixed(2)}}</td>
+							<td style="color: gray;" v-if="item.withdrawMoneyStatus == '0'">未打款</td>
+							<td style="color: red;" v-else>已打款</td>
+							<td>{{datetransform(item.finishTime)}}</td>
 						</tr>
 
 					</table>
@@ -232,22 +204,20 @@
 				</div>
 			</div>
 		</div>
-
 	</body>
 
 	<script>
-		var lastMonth = getlastMonth();
+		var myDate = new Date();
+		var nowMonth = myDate.getFullYear().toString()+ "-" + ((Array(2).join('0') + (myDate.getMonth() + 1)).slice(-2)).toString();
+		console.log(nowMonth)
 		var vm = new Vue({
 			el: '#app',
 			data: {
 				page: 0,
-				pageSize: 10,
+				pageSize: 15,
 				itemCount: 0,
 				datalist: [],
-
-				filterSiteName: '',
-				filterLowsManName: '',
-				queryTime: lastMonth,
+				queryTime: nowMonth,
 
 			},
 			methods: {
@@ -267,6 +237,9 @@
 			removeNav = document.getElementById('withdrawalChildListNav');
 			$(removeNav).remove();
 
+			removeNav = document.getElementById('siteFinishedOrderListNav');
+			$(removeNav).remove();
+
 			$('#add_btn').addClass('none');
 		} else if(sessionStorage.userType == '1') {
 			var removeNav = document.getElementById('childSiteListNav');
@@ -276,6 +249,9 @@
 			$(removeNav).remove();
 
 			removeNav = document.getElementById('withdrawalChildListNav');
+			$(removeNav).remove();
+
+			removeNav = document.getElementById('siteFinishedOrderListNav');
 			$(removeNav).remove();
 
 			$('#add_btn').addClass('none');
@@ -296,6 +272,7 @@
 				$(removeNav).remove();
 			}
 		} else if(sessionStorage.userType == '4') {
+
 			var removeNav = document.getElementById('siteListNav');
 			$(removeNav).remove();
 
@@ -315,29 +292,27 @@
 				$(removeNav).remove();
 			}
 		}
-
 		$('#headerDiv').show();
 
 		function loadData() {
 			$("#Pagination").empty();
-			postRegular('withdrawalBeforeOrder', {
+			var urlStr = "getFinishedOrderListOnMonth";
+			postRegular(urlStr, {
 				page: vm.page,
 				rows: vm.pageSize,
-				filterSiteName: vm.filterSiteName,
-				filterLowsManName: vm.filterLowsManName,
+				siteId: sessionStorage.belongSiteId,
 				queryTime: vm.queryTime,
 			}, function(data) {
-				console.log(data)
 				$('#app').show();
-				vm.datalist = data.object.withdrawalList;
+				vm.datalist = data.object.finishedOrderList;
 				for(var i = 0; i < vm.datalist.length; i++) {
 					var obj = vm.datalist[i];
-					obj.id = vm.page * 10 + i + 1;
+					obj.id = vm.page * 15 + i + 1;
 				}
 
-				vm.itemCount = data.object.withdrawalCount;
-				$('.allPage').html(Math.ceil(data.object.withdrawalCount / vm.pageSize));
-				$("#Pagination").pagination(data.object.withdrawalCount / vm.pageSize, {
+				vm.itemCount = data.object.finishedOrderListCount;
+				$('.allPage').html(Math.ceil(data.object.finishedOrderListCount / vm.pageSize));
+				$("#Pagination").pagination(data.object.finishedOrderListCount / vm.pageSize, {
 					callback: function(page) { // 回调函数
 						vm.page = page;
 						loadPageData();
@@ -350,17 +325,18 @@
 		loadData();
 
 		function loadPageData() {
-			postRegular('withdrawalBeforeOrder', {
+			var urlStr = "getFinishedOrderListOnMonth";
+
+			postRegular(urlStr, {
 				page: vm.page,
 				rows: vm.pageSize,
-				filterSiteName: vm.filterSiteName,
-				filterLowsManName: vm.filterLowsManName,
+				siteId: sessionStorage.belongSiteId,
 				queryTime: vm.queryTime,
 			}, function(data) {
-				vm.datalist = data.object.withdrawalList;
+				vm.datalist = data.object.finishedOrderList;
 				for(var i = 0; i < vm.datalist.length; i++) {
 					var obj = vm.datalist[i];
-					obj.id = vm.page * 10 + i + 1;
+					obj.id = vm.page * 15 + i + 1;
 				}
 			})
 		}
@@ -371,49 +347,42 @@
 			loadData();
 			window.history.pushState({
 				queryTime: vm.queryTime
-			}, "", "withdrawalList.html");
+			}, "", "siteFinishedOrderList.html");
 		})
 
 		//筛选清空
 		$('#clear_btn').click(function() {
-			vm.filterSiteName = '';
-			vm.filterLowsManName = '';
-			vm.queryTime = lastMonth;
+			vm.queryTime = nowMonth;
 			loadData();
 
 		})
 
-		function withDraw(siteId, withdrawalAmount, toBankNumber, toUserId) {
-			if(withdrawalAmount == 0) {
-				myAlert("所选时间段该站点暂无待打款项！");
-				return;
-			}
-			if(window.confirm('确定已经将 ' + withdrawalAmount + '元 打至 银行卡号 ' + toBankNumber + ' ？')) {
-				postRegular('withdrawalBySiteId', {
-					siteId: siteId,
-					withdrawalAmount: withdrawalAmount,
-					toBankNumber: toBankNumber,
-					toUserId: toUserId,
-					oprationUserId: sessionStorage.userId,
-					periodOfTime: vm.queryTime,
-				}, function(data) {
-					window.location.reload();
-				})
+		//根据所属站点字符串计算服务费
+		function countFeeByBelongStr(belongSiteType, type, totalFee) {
+			if(type == '1') {
+				if(belongSiteType == '本站点' || belongSiteType == '子站点') {
+					return totalFee * 0.3;
+				}
+				return 0;
 			} else {
-
+				if(belongSiteType == '本站点' || belongSiteType == '子站点') {
+					return totalFee * 0.5;
+				}
+				return 0;
 			}
-
 		}
 
-		function transfer(itemId, type, siteName, fee) {
-			if(type == '1' || type == '2') {
-				var searchUrl = encodeURI('withdrawalListDriver.html?siteId=' + itemId + '&type=' + type + '&siteName=' + siteName + '&fee=' + fee + '&currentMonth=' + vm.queryTime);
-				window.location = searchUrl;
-			} else {
-				var searchUrl = encodeURI('withdrawalListChild.html?siteId=' + itemId + '&type=' + type + '&siteName=' + siteName + '&fee=' + fee + '&currentMonth=' + vm.queryTime);
-				window.location = searchUrl;
+		function countTotalFee(driverBelongSiteType, masterBelongSiteType, totalFee) {
+			var driverFee = 0;
+			var masterFee = 0;
+			if(driverBelongSiteType == '本站点' || driverBelongSiteType == '子站点') {
+				driverFee = totalFee * 0.3;
 			}
 
+			if(masterBelongSiteType == '本站点' || masterBelongSiteType == '子站点') {
+				masterFee = totalFee * 0.5;
+			}
+			return driverFee + masterFee;
 		}
 
 		//跳转至站点详情

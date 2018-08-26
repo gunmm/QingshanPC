@@ -45,6 +45,7 @@
 				$("#navBar7").removeClass("on");
 				$("#navBar8").removeClass("on");
 				$("#navBar9").removeClass("on");
+				$("#navBar10").removeClass("on");
 
 				var idStr = "#navBar" + index;
 				$(idStr).addClass("on");
@@ -66,6 +67,8 @@
 					window.location.replace('withdrawalChildList.html');
 				} else if(index == '9') {
 					window.location.replace('finishWithdrawaledList.html');
+				}else if(index == '10') {
+					window.location.replace('siteFinishedOrderList.html');
 				}
 			}
 		</script>
@@ -106,6 +109,10 @@
 
 				<li id="finishWithdrawaledListNav">
 					<a id="navBar9" href="javascript:selectNav('9')">打款记录</a>
+				</li>
+				
+				<li id="siteFinishedOrderListNav">
+					<a id="navBar10" href="javascript:selectNav('10')">已完成订单</a>
 				</li>
 
 			</ul>
@@ -170,7 +177,9 @@
 
 						<tr v-for="item in datalist" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
 							<td>{{item.id}}</td>
-							<td>{{item.siteName}}</td>
+							<td>
+								<a @click="jumpToSite(item.siteId,$event)" style="color: #ffac59;cursor: pointer;text-decoration: underline;">{{item.siteName}}</a>
+							</td>
 							<td>{{item.nickname}}</td>
 							<td>{{item.bankCardNumber == null?'未绑定':item.bankCardNumber}}</td>
 							<td>{{item.childToSuperRate}}</td>
@@ -248,6 +257,9 @@
 
 			removeNav = document.getElementById('withdrawalChildListNav');
 			$(removeNav).remove();
+			
+			removeNav = document.getElementById('siteFinishedOrderListNav');
+			$(removeNav).remove();
 
 			$('#add_btn').addClass('none');
 		} else if(sessionStorage.userType == '1') {
@@ -255,6 +267,9 @@
 			$(removeNav).remove();
 
 			removeNav = document.getElementById('userListNav');
+			$(removeNav).remove();
+			
+			removeNav = document.getElementById('siteFinishedOrderListNav');
 			$(removeNav).remove();
 
 			removeNav = document.getElementById('withdrawalChildListNav');
@@ -403,7 +418,12 @@
 			} else {
 				return year + '-' + (parseInt(month) - 1);
 			}
-
+		}
+		
+		//跳转至站点详情
+		function jumpToSite(siteId, $event) {
+			$event.stopPropagation();
+			window.open("siteDetail.html?siteId=" + siteId);
 		}
 	</script>
 
