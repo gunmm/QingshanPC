@@ -339,6 +339,8 @@ function judgeOrderStatus(orderStatus, appointStatus, type) {
 		return "已完成";
 	} else if(orderStatus == 9) {
 		return "订单取消";
+	} else if(orderStatus == 8) {
+		return "订单异常";
 	}
 
 }
