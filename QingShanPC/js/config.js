@@ -347,6 +347,17 @@ function judgeOrderStatus(orderStatus, appointStatus, type) {
 
 }
 
+function judgeSiteOrderRoleBelongStr(type) {
+
+	if(type == '3') {
+		return "货主、司机";
+	} else if(type == '2') {
+		return "司机";
+	} else {
+		return "货主";
+	}
+}
+
 addInfoDiv();
 
 var bankCardNumber = '';
