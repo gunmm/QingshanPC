@@ -51,27 +51,27 @@
 				var idStr = "#navBar" + index;
 				$(idStr).addClass("on");
 				if(index == '1') {
-					window.location.replace('siteList.html');
+					window.location.replace('../site/siteList.html');
 				} else if(index == '2') {
 					window.location.replace('driverList.html');
 				} else if(index == '3') {
-					window.location.replace('masterList.html');
+					window.location.replace('../master/masterList.html');
 				} else if(index == '4') {
-					window.location.replace('childSiteList.html');
+					window.location.replace('../site/childSiteList.html');
 				} else if(index == '5') {
-					window.location.replace('userList.html');
+					window.location.replace('../user/userList.html');
 				} else if(index == '6') {
-					window.location.replace('mapList.html');
+					window.location.replace('../map/mapList.html');
 				} else if(index == '7') {
-					window.location.replace('withdrawalList.html');
+					window.location.replace('../withdrawal/withdrawalList.html');
 				} else if(index == '8') {
-					window.location.replace('withdrawalChildList.html');
+					window.location.replace('../withdrawal/withdrawalChildList.html');
 				} else if(index == '9') {
-					window.location.replace('finishWithdrawaledList.html');
+					window.location.replace('../withdrawal/finishWithdrawaledList.html');
 				} else if(index == '10') {
-					window.location.replace('siteFinishedOrderList.html');
+					window.location.replace('../site/siteFinishedOrderList.html');
 				} else if(index == '11') {
-					window.location.replace('driverWithdrawalList.html');
+					window.location.replace('../withdrawal/driverWithdrawalList.html');
 				}
 			}
 		</script>
@@ -872,7 +872,7 @@
 		//跳转至站点详情
 		function jumpToSite(siteId, $event) {
 			$event.stopPropagation();
-			window.open("siteDetail.html?siteId=" + siteId);
+			window.open("../site/siteDetail.html?siteId=" + siteId);
 		}
 
 		//添加

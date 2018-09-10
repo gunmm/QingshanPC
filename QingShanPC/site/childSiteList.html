@@ -3,9 +3,8 @@
 
 	<head>
 		<meta charset="UTF-8">
-		<title>站点列表</title>
+		<title>子站点</title>
 		<link rel="icon" href="../img/logo2.ico" type="img/x-ico" />
-
 		<link rel="stylesheet" href="../css/iconfont.css">
 		<link rel="stylesheet" href="../css/loading.css">
 		<link rel="stylesheet" href="../css/navHead.css">
@@ -16,11 +15,12 @@
 		<script type="text/javascript" src="../js/jquery.easing.1.3.js"></script>
 		<script type="text/javascript" src="../js/jquery.kwicks-1.5.1.pack.js"></script>
 
-		<script type="text/javascript" src="../js/exif.js"></script>
-		<script type="text/javascript" src="../js/config.js"></script>
+		
 		<script type="text/javascript" src="../js/vue.min.js"></script>
 
 		<script type="text/javascript" src="../js/jquery.pagination.js"></script>
+		<script type="text/javascript" src="../js/exif.js"></script>
+		<script type="text/javascript" src="../js/config.js"></script>
 
 		<script type="text/javascript">
 			$(function() {
@@ -45,44 +45,42 @@
 				$("#navBar7").removeClass("on");
 				$("#navBar8").removeClass("on");
 				$("#navBar9").removeClass("on");
-				$("#navBar11").removeClass("on");
+				$("#navBar10").removeClass("on");
 
 				var idStr = "#navBar" + index;
 				$(idStr).addClass("on");
-				if(index == '1') {
+				if(index == '1'){
 					window.location.replace('siteList.html');
-				} else if(index == '2') {
-					window.location.replace('driverList.html');
-				} else if(index == '3') {
-					window.location.replace('masterList.html');
-				} else if(index == '4') {
+				}else if(index == '2'){
+					window.location.replace('../driver/driverList.html');
+				}else if(index == '3'){
+					window.location.replace('../master/masterList.html');
+				}else if(index == '4'){
 					window.location.replace('childSiteList.html');
-				} else if(index == '5') {
-					window.location.replace('userList.html');
-				} else if(index == '6') {
-					window.location.replace('mapList.html');
-				} else if(index == '7') {
-					window.location.replace('withdrawalList.html');
+				}else if(index == '5'){
+					window.location.replace('../user/userList.html');
+				}else if(index == '6'){
+					window.location.replace('../map/mapList.html');
+				}else if(index == '7') {
+					window.location.replace('../withdrawal/withdrawalList.html');
 				} else if(index == '8') {
-					window.location.replace('withdrawalChildList.html');
+					window.location.replace('../withdrawal/withdrawalChildList.html');
 				} else if(index == '9') {
-					window.location.replace('finishWithdrawaledList.html');
+					window.location.replace('../withdrawal/finishWithdrawaledList.html');
+				}else if(index == '10') {
+					window.location.replace('siteFinishedOrderList.html');
 				}
-				 else if(index == '11') {
-					window.location.replace('driverWithdrawalList.html');
-				}
+				
 			}
 		</script>
-
 	</head>
 
 	<body>
-		<div class="header" id="headerDiv" hidden>
-			<div class="logoDiv">
-			</div>
+		<div id="headerDiv" class="header" hidden> 
+			<div class="logoDiv"></div>
 			<ul class="nav">
 				<li id="siteListNav">
-					<a id="navBar1" class="on" href="javascript:selectNav('1')">站点列表</a>
+					<a id="navBar1" href="javascript:selectNav('1')">站点列表</a>
 				</li>
 				<li id="driverListNav">
 					<a id="navBar2" href="javascript:selectNav('2')">司机列表</a>
@@ -91,16 +89,15 @@
 					<a id="navBar3" href="javascript:selectNav('3')">货源方列表</a>
 				</li>
 				<li id="childSiteListNav">
-					<a id="navBar4" href="javascript:selectNav('4')">子站点</a>
+					<a id="navBar4" class="on" href="javascript:selectNav('4')">子站点</a>
 				</li>
-
+				
 				<li id="userListNav">
 					<a id="navBar5" href="javascript:selectNav('5')">人员管理</a>
 				</li>
 				<li id="mapListNav">
 					<a id="navBar6" href="javascript:selectNav('6')">地图展示</a>
 				</li>
-
 				<li id="withdrawalListNav">
 					<a id="navBar7" href="javascript:selectNav('7')">站点打款</a>
 				</li>
@@ -108,13 +105,13 @@
 				<li id="withdrawalChildListNav">
 					<a id="navBar8" href="javascript:selectNav('8')">子站点打款</a>
 				</li>
-
+				
 				<li id="finishWithdrawaledListNav">
 					<a id="navBar9" href="javascript:selectNav('9')">打款记录</a>
 				</li>
 				
-				<li id="driverWithdrawalListNav">
-					<a id="navBar11" href="javascript:selectNav('11')">司机提现列表</a>
+				<li id="siteFinishedOrderListNav">
+					<a id="navBar10" href="javascript:selectNav('10')">已完成订单</a>
 				</li>
 
 			</ul>
@@ -160,7 +157,7 @@
 					</div>
 
 				</div>
-
+				
 				<div id="add_btn" class="addDiv">
 					<input type="button" class="colorBtn" value="新建">
 					<i class="iconfont">&#xe636;</i>
@@ -168,7 +165,6 @@
 			</div>
 			<div class="bigContent">
 				<div class="listContent">
-
 					<table class="hovertable" title="">
 						<thead>
 							<tr>
@@ -178,9 +174,9 @@
 								<th>地址</th>
 								<th>审核状态</th>
 								<th>法人姓名</th>
+								<th>提成率</th>
 								<th>注册时间</th>
 								<th>更新时间</th>
-								<th>子站点个数</th>
 								<th>操作</th>
 							</tr>
 
@@ -189,15 +185,13 @@
 						<tr v-for="item in datalist" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
 							<td>{{item.id}}</td>
 							<td>{{item.siteName}}</td>
-							<td v-if="item.siteType == 1" style="color: orange;">{{item.siteType == 1 ? "一级站点" : "子站点"}}</td>
-							<td v-else style="color: orangered">{{item.siteType == 1 ? "一级站点" : "子站点"}}</td>
+							<td>{{item.siteType == 1 ? "一级站点" : "子站点"}}</td>
 							<td>{{item.siteProvinceName}}{{item.siteCityName}}{{item.address}}</td>
-							<td v-if="judgeStatus(item.siteCheckStatus) == '审核未通过' || judgeStatus(item.siteCheckStatus) == '待审核'" style="color: red;">{{judgeStatus(item.siteCheckStatus)}}</td>
-							<td v-else style="color: orange;">{{judgeStatus(item.siteCheckStatus)}}</td>
+							<td>{{judgeStatus(item.siteCheckStatus)}}</td>
 							<td>{{item.lawsManName}}</td>
+							<td>{{item.childToSuperRate}}</td>
 							<td>{{datetransform(item.createTime)}}</td>
 							<td>{{datetransform(item.updateTime)}}</td>
-							<td>{{item.childCount}}</td>
 							<td>
 								<div class="oprateDiv">
 									<a @click="openItemDetailPage(item.siteId)">详情</a>
@@ -210,7 +204,6 @@
 						</tr>
 
 					</table>
-
 				</div>
 				<div class="hrDiv"></div>
 				<div class="countDiv">
@@ -227,12 +220,12 @@
 					</div>
 				</div>
 			</div>
-
+			
 			<div id="addBigDiv" class="i none">
 				<div class="addContentDiv">
 					<div class="topBarDiv">
 						<i class="iconfont">&#xe608;</i>
-						<div class="titleDiv">新建站点</div>
+						<div class="titleDiv">新建子站点</div>
 						<div class="closeDiv">
 							<i id="closeBtn" onclick="closeAddPage()" class="iconfont">&#xe607;</i>
 						</div>
@@ -282,6 +275,11 @@
 						<div class="addPageLineSmallDiv">
 							<div class="keyDiv">法人手机号</div>
 							<input v-model="lawsManPhone" class="valueInput" type="text" placeholder="请输入手机号" title="法人手机号">
+						</div>
+						
+						<div class="addPageLineSmallDiv">
+							<div class="keyDiv">父站点提成率</div>
+							<input v-model="childToSuperRate" class="valueInput" type="text" placeholder="例:0.05  代表每单父站点提成5% " title="父站点提成率">
 						</div>
 					</div>
 					<div class="photoLineDiv">
@@ -341,10 +339,9 @@
 				<img class="i1 sel cursor-pointer" src="../img/ic_close.png" onclick="$('#show_alone_img').addClass('none')" />
 				<img class="i2" src="" />
 			</div>
-
 		</div>
 	</body>
-
+	
 	<script>
 		var province;
 		var city;
@@ -362,7 +359,7 @@
 			el: '#app',
 			data: {
 				isEdit: 0,
-				siteId: '',
+				siteId: '',//编辑时候用
 				province: province,
 				city: city,
 				nowcity: nowcity,
@@ -377,6 +374,7 @@
 				lawsManName: '',
 				lawsManIdCardNumber: '',
 				lawsManPhone: '',
+				childToSuperRate: '',
 				address: '',
 				filterSiteName: '',
 				filterLawsManName: '',
@@ -388,33 +386,42 @@
 
 			}
 		})
-
+		
 		if(sessionStorage.userType == '0') {
 			var removeNav = document.getElementById('childSiteListNav');
 			$(removeNav).remove();
-
+			
 			removeNav = document.getElementById('withdrawalChildListNav');
 			$(removeNav).remove();
+			
+			removeNav = document.getElementById('siteFinishedOrderListNav');
+			$(removeNav).remove();
+
+			$('#add_btn').addClass('none');
 		} else if(sessionStorage.userType == '1') {
 			var removeNav = document.getElementById('childSiteListNav');
 			$(removeNav).remove();
 
 			removeNav = document.getElementById('userListNav');
 			$(removeNav).remove();
-
+			
 			removeNav = document.getElementById('withdrawalChildListNav');
 			$(removeNav).remove();
+			
+			removeNav = document.getElementById('siteFinishedOrderListNav');
+			$(removeNav).remove();
 
+			$('#add_btn').addClass('none');
 		} else if(sessionStorage.userType == '3') {
 			var removeNav = document.getElementById('siteListNav');
 			$(removeNav).remove();
-
+			
 			removeNav = document.getElementById('withdrawalListNav');
 			$(removeNav).remove();
-
+			
 			removeNav = document.getElementById('finishWithdrawaledListNav');
 			$(removeNav).remove();
-
+			
 			if(sessionStorage.siteType == '2') {
 				removeNav = document.getElementById('childSiteListNav');
 				$(removeNav).remove();
@@ -427,10 +434,10 @@
 
 			removeNav = document.getElementById('userListNav');
 			$(removeNav).remove();
-
+			
 			removeNav = document.getElementById('withdrawalListNav');
 			$(removeNav).remove();
-
+			
 			removeNav = document.getElementById('finishWithdrawaledListNav');
 			$(removeNav).remove();
 
@@ -441,8 +448,9 @@
 				$(removeNav).remove();
 			}
 		}
-
+		
 		$('#headerDiv').show();
+
 
 		function loadData() {
 			$("#Pagination").empty();
@@ -453,6 +461,7 @@
 				filterLawsManName: vm.filterLawsManName,
 				filterBeginTime: vm.filterBeginTime,
 				filterEndTime: vm.filterEndTime,
+				superSiteId: sessionStorage.belongSiteId
 			}, function(data) {
 				$('#app').show();
 				vm.datalist = data.object.siteList;
@@ -482,6 +491,7 @@
 				filterLawsManName: vm.filterLawsManName,
 				filterBeginTime: vm.filterBeginTime,
 				filterEndTime: vm.filterEndTime,
+				superSiteId: sessionStorage.belongSiteId
 			}, function(data) {
 				vm.datalist = data.object.siteList;
 				for(var i = 0; i < vm.datalist.length; i++) {
@@ -543,11 +553,18 @@
 				myAlert("法人电话不能为空！");
 				return;
 			}
-
+			
+			if(vm.childToSuperRate.length == 0) {
+				myAlert("父站点提成率不能为空！");
+				return;
+			}
+			
+			
 			if(!checkTel(vm.lawsManPhone)) {
 				myAlert("法人电话号格式不正确!");
 				return;
 			}
+			
 
 			if(vm.lifePhotoImg.length == 0) {
 				myAlert("营业执照照片未上传！");
@@ -564,16 +581,18 @@
 			if(vm.isEdit == 0) {
 				postRegular('addSite', {
 					siteName: vm.siteName,
+					superSiteId: sessionStorage.belongSiteId,
 					businessLicenseNumber: vm.businessLicenseNumber,
 					businessLicensePhoto: vm.lifePhotoImg,
 					lawsManName: vm.lawsManName,
 					lawsManIdCardNumber: vm.lawsManIdCardNumber,
 					lawsManPhone: vm.lawsManPhone,
+					childToSuperRate: vm.childToSuperRate,
 					leaseContractPhoto: contractPhotos,
 					siteProvince: $("#selectprovince").val(),
 					siteCity: $("#selectcity").val(),
 					address: vm.address,
-					siteType: '1',
+					siteType: '2',
 				}, function(data) {
 					closeAddPage();
 					window.location.reload();
@@ -590,6 +609,7 @@
 					lawsManName: vm.lawsManName,
 					lawsManIdCardNumber: vm.lawsManIdCardNumber,
 					lawsManPhone: vm.lawsManPhone,
+					childToSuperRate: vm.childToSuperRate,
 					leaseContractPhoto: contractPhotos,
 					siteProvince: $("#selectprovince").val(),
 					siteCity: $("#selectcity").val(),
@@ -606,9 +626,9 @@
 		})
 
 		//编辑
-		function editItem(itemIndex, $event) {
-
-			$event.stopPropagation();
+		function editItem(itemIndex,$event) {
+			
+			 $event.stopPropagation();
 			vm.isEdit = 1;
 
 			var obj = vm.datalist[itemIndex - 1];
@@ -619,6 +639,7 @@
 			vm.lawsManName = obj.lawsManName;
 			vm.lawsManIdCardNumber = obj.lawsManIdCardNumber;
 			vm.lawsManPhone = obj.lawsManPhone;
+			vm.childToSuperRate = obj.childToSuperRate;
 			vm.address = obj.address;
 			$("#selectprovince").val(obj.siteProvince);
 			vm.nowcity = city[obj.siteProvince];
@@ -655,8 +676,8 @@
 		}
 
 		//删除
-		function deleteItem(itemIndex, $event) {
-			$event.stopPropagation();
+		function deleteItem(itemIndex,$event) {
+			 $event.stopPropagation();
 			var obj = vm.datalist[itemIndex - 1];
 			console.log(obj.siteName);
 			if(window.confirm('你确定要删除 ' + obj.siteName + ' 吗？')) {
@@ -691,6 +712,7 @@
 			vm.lawsManIdCardNumber = '';
 			vm.lawsManPhone = '';
 			vm.address = '';
+			vm.childToSuperRate = '';
 			$('#selectcity').val('');
 			$('#selectprovince').val('1');
 			$('#zhizhaoImg').attr('src', '../img/zhaoxiang.png');
@@ -814,6 +836,8 @@
 			src = ip + vm.heTongImageArray[index];
 			$('#show_img .i2').attr('src', src);
 		}
+
+		
 	</script>
 
 </html>

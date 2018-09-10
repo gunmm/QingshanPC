@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>人员管理</title>
+		<link rel="icon" href="../img/logo2.ico" type="img/x-ico" />
+		<link rel="stylesheet" href="../css/iconfont.css">
+		<link rel="stylesheet" href="../css/loading.css">
+		<link rel="stylesheet" href="../css/navHead.css">
+
+		<link rel="stylesheet" href="../css/pagination.css" />
+
+		<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.js"></script>
+		<script type="text/javascript" src="../js/jquery.easing.1.3.js"></script>
+		<script type="text/javascript" src="../js/jquery.kwicks-1.5.1.pack.js"></script>
+
+		<script type="text/javascript" src="../js/config.js"></script>
+		<script type="text/javascript" src="../js/vue.min.js"></script>
+
+		<script type="text/javascript" src="../js/jquery.pagination.js"></script>
+		<script type="text/javascript" src="../js/exif.js"></script>
+
+		<script>
+			$(function() {
+				$('.nav').kwicks({
+					max: 120,
+					isVertical: false,
+					sticky: false,
+					defaultKwick: 0,
+					event: 'mouseover',
+					spacing: 0,
+					duration: 500
+				});
+			});
+
+			function selectNav(index) {
+				$("#navBar1").removeClass("on");
+				$("#navBar2").removeClass("on");
+				$("#navBar3").removeClass("on");
+				$("#navBar4").removeClass("on");
+				$("#navBar5").removeClass("on");
+				$("#navBar6").removeClass("on");
+				$("#navBar7").removeClass("on");
+				$("#navBar8").removeClass("on");
+				$("#navBar9").removeClass("on");
+				$("#navBar10").removeClass("on");
+				$("#navBar11").removeClass("on");
+
+				var idStr = "#navBar" + index;
+				$(idStr).addClass("on");
+				if(index == '1') {
+					window.location.replace('../site/siteList.html');
+				} else if(index == '2') {
+					window.location.replace('../driver/driverList.html');
+				} else if(index == '3') {
+					window.location.replace('../master/masterList.html');
+				} else if(index == '4') {
+					window.location.replace('../site/childSiteList.html');
+				} else if(index == '5') {
+					window.location.replace('userList.html');
+				} else if(index == '6') {
+					window.location.replace('../map/mapList.html');
+				} else if(index == '7') {
+					window.location.replace('../withdrawal/withdrawalList.html');
+				} else if(index == '8') {
+					window.location.replace('../withdrawal/withdrawalChildList.html');
+				} else if(index == '9') {
+					window.location.replace('../withdrawal/finishWithdrawaledList.html');
+				}else if(index == '10') {
+					window.location.replace('../site/siteFinishedOrderList.html');
+				}else if(index == '11') {
+					window.location.replace('../withdrawal/driverWithdrawalList.html');
+				}
+			}
+		</script>
+	</head>
+
+	<body>
+		<div id="headerDiv" class="header" hidden>
+			<div class="logoDiv"></div>
+			<ul class="nav">
+				<li id="siteListNav">
+					<a id="navBar1" href="javascript:selectNav('1')">站点列表</a>
+				</li>
+				<li id="driverListNav">
+					<a id="navBar2" href="javascript:selectNav('2')">司机列表</a>
+				</li>
+				<li id="masterListNav">
+					<a id="navBar3" href="javascript:selectNav('3')">货源方列表</a>
+				</li>
+				<li id="childSiteListNav">
+					<a id="navBar4" href="javascript:selectNav('4')">子站点</a>
+				</li>
+
+				<li id="userListNav">
+					<a id="navBar5" class="on" href="javascript:selectNav('5')">人员管理</a>
+				</li>
+				<li id="mapListNav">
+					<a id="navBar6" href="javascript:selectNav('6')">地图展示</a>
+				</li>
+				<li id="withdrawalListNav">
+					<a id="navBar7" href="javascript:selectNav('7')">站点打款</a>
+				</li>
+
+				<li id="withdrawalChildListNav">
+					<a id="navBar8" href="javascript:selectNav('8')">子站点打款</a>
+				</li>
+
+				<li id="finishWithdrawaledListNav">
+					<a id="navBar9" href="javascript:selectNav('9')">打款记录</a>
+				</li>
+				
+				<li id="siteFinishedOrderListNav">
+					<a id="navBar10" href="javascript:selectNav('10')">已完成订单</a>
+				</li>
+				<li id="driverWithdrawalListNav">
+					<a id="navBar11" href="javascript:selectNav('11')">司机提现列表</a>
+				</li>
+
+			</ul>
+		</div>
+
+		<div id="app" class="content" hidden>
+			<div class="oprationToolBar">
+				<div class="filterDiv">
+					<div class="nameFilterDiv">
+						<div class="filterKeyDiv">姓名</div>
+						<div class="filterValueDiv">
+							<input v-model="filterNickName" class="filterValueInput" type="text" placeholder="" title="姓名">
+						</div>
+					</div>
+					<div class="nameFilterDiv">
+						<div class="filterKeyDiv">手机号</div>
+						<div class="filterValueDiv">
+							<input v-model="filterPhoneNumber" class="filterValueInput" type="text" placeholder="" title="手机号">
+						</div>
+					</div>
+
+					<div class="filterOperateBtnDiv">
+						<div id="query_btn" class="filterOperateDiv">
+							<input type="button" class="filterOperateBtn" value="查询" />
+							<i class="iconfont" style="font-size: 20px; margin-top: 15px;">&#xe60e;</i>
+						</div>
+						<div id="clear_btn" class="filterOperateDiv">
+							<input type="button" class="filterOperateBtn" value="清空" />
+							<i class="iconfont">&#xe630;</i>
+						</div>
+
+					</div>
+
+				</div>
+
+				<div id="add_btn" class="addDiv">
+					<input type="button" class="colorBtn" value="新建">
+					<i class="iconfont">&#xe636;</i>
+				</div>
+			</div>
+			<div class="bigContent">
+				<div class="listContent">
+
+					<table class="hovertable" title="">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>姓名</th>
+								<th>电话</th>
+								<th>身份证号</th>
+								<th>注册时间</th>
+								<th>更新时间</th>
+								<th>操作</th>
+							</tr>
+
+						</thead>
+
+						<tr v-for="item in datalist" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+							<td>{{item.id}}</td>
+							<td>{{item.nickname}}</td>
+							<td>{{item.phoneNumber}}</td>
+							<td>{{item.userIdCardNumber}}</td>
+							<td>{{datetransform(item.createTime)}}</td>
+							<td>{{datetransform(item.updateTime)}}</td>
+							<td>
+								<div class="oprateDiv">
+									<a @click="editItem(item.id,$event)">编辑</a>
+									<a @click="deleteItem(item.id,$event)">删除</a>
+								</div>
+
+							</td>
+
+						</tr>
+
+					</table>
+				</div>
+				<div class="hrDiv"></div>
+				<div class="countDiv">
+					<div class="f-l hejiDiv">合计</div>
+					<div class="f-l julushuDiv">记录数：</div>
+					<div class="f-l jiluCountDiv">{{itemCount}}</div>
+				</div>
+				<div class="pages">
+					<div id="Pagination"></div>
+					<div class="searchPage">
+						<span class="page-sum">共<strong class="allPage">1</strong>页</span>
+						<span class="page-go">跳转<input type="text">页</span>
+						<a href="javascript:;" class="page-btn">GO</a>
+					</div>
+				</div>
+			</div>
+			<div id="addBigDiv" class="i none">
+				<div class="addContentDiv">
+					<div class="topBarDiv">
+						<i class="iconfont">&#xe608;</i>
+						<div class="titleDiv">新建管理员</div>
+						<div class="closeDiv">
+							<i id="closeBtn" onclick="closeAddPage()" class="iconfont">&#xe607;</i>
+						</div>
+					</div>
+
+					<div class="addPageLineDiv" style="margin-top: 20px;">
+						<div class="addPageLineSmallDiv">
+							<div class="keyDiv">姓名</div>
+							<input v-model="nickname" class="valueInput" type="text" placeholder="" title="姓名">
+						</div>
+						<div class="addPageLineSmallDiv">
+							<div class="keyDiv">手机号</div>
+							<input v-model="phoneNumber" class="valueInput" type="text" placeholder="" title="手机号">
+						</div>
+					</div>
+
+					<div class="addPageLineDiv" style="margin-top: 20px;">
+
+						<div class="addPageLineSmallDiv">
+							<div class="keyDiv">身份证号</div>
+							<input v-model="userIdCardNumber" class="valueInput" type="text" placeholder="" title="身份证号">
+						</div>
+
+					</div>
+
+					<div class="operateBarDiv">
+						<div class="hrDiv" style="margin: 0px;"></div>
+						<div onclick="closeAddPage()" class="operateDiv">
+							<input type="button" class="colorBtn" style="background: gray;" value="取消" />
+							<i class="iconfont">&#xe664;</i>
+						</div>
+						<div id="save_btn" class="operateDiv">
+							<input type="button" class="colorBtn" value="保存" />
+							<i class="iconfont">&#xe611;</i>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+
+	<script>
+		var vm = new Vue({
+			el: '#app',
+			data: {
+				isEdit: 0,
+				manageId: '',
+
+				page: 0,
+				pageSize: 15,
+				itemCount: 0,
+				datalist: [],
+
+				filterNickName: '',
+				filterPhoneNumber: '',
+
+				nickname: '',
+				phoneNumber: '',
+				userIdCardNumber: '',
+			},
+			methods: {
+
+			}
+		})
+
+		if(sessionStorage.userType == '0') {
+			var removeNav = document.getElementById('childSiteListNav');
+			$(removeNav).remove();
+
+			removeNav = document.getElementById('withdrawalChildListNav');
+			$(removeNav).remove();
+			
+			removeNav = document.getElementById('siteFinishedOrderListNav');
+			$(removeNav).remove();
+		} else if(sessionStorage.userType == '1') {
+			var removeNav = document.getElementById('childSiteListNav');
+			$(removeNav).remove();
+
+			removeNav = document.getElementById('userListNav');
+			$(removeNav).remove();
+
+			removeNav = document.getElementById('withdrawalChildListNav');
+			$(removeNav).remove();
+			
+			removeNav = document.getElementById('siteFinishedOrderListNav');
+			$(removeNav).remove();
+
+			$('#add_btn').addClass('none');
+		} else if(sessionStorage.userType == '3') {
+			var removeNav = document.getElementById('siteListNav');
+			$(removeNav).remove();
+
+			removeNav = document.getElementById('withdrawalListNav');
+			$(removeNav).remove();
+
+			removeNav = document.getElementById('finishWithdrawaledListNav');
+			$(removeNav).remove();
+			removeNav = document.getElementById('driverWithdrawalListNav');
+			$(removeNav).remove();
+
+			if(sessionStorage.siteType == '2') {
+				removeNav = document.getElementById('childSiteListNav');
+				$(removeNav).remove();
+				removeNav = document.getElementById('withdrawalChildListNav');
+				$(removeNav).remove();
+			}
+		} else if(sessionStorage.userType == '4') {
+			var removeNav = document.getElementById('siteListNav');
+			$(removeNav).remove();
+
+			removeNav = document.getElementById('userListNav');
+			$(removeNav).remove();
+
+			removeNav = document.getElementById('withdrawalListNav');
+			$(removeNav).remove();
+
+			removeNav = document.getElementById('finishWithdrawaledListNav');
+			$(removeNav).remove();
+			removeNav = document.getElementById('driverWithdrawalListNav');
+			$(removeNav).remove();
+
+			if(sessionStorage.siteType == '2') {
+				removeNav = document.getElementById('childSiteListNav');
+				$(removeNav).remove();
+				removeNav = document.getElementById('withdrawalChildListNav');
+				$(removeNav).remove();
+			}
+		}
+
+		$('#headerDiv').show();
+
+		function loadData() {
+			$("#Pagination").empty();
+			postRegular('getManageList', {
+				page: vm.page,
+				rows: vm.pageSize,
+				filterNickName: vm.filterNickName,
+				filterPhoneNumber: vm.filterPhoneNumber,
+				siteId: sessionStorage.belongSiteId,
+
+			}, function(data) {
+
+				$('#app').show();
+				vm.datalist = data.object.manageList;
+				for(var i = 0; i < vm.datalist.length; i++) {
+					var obj = vm.datalist[i];
+					obj.id = i + 1;
+				}
+
+				vm.itemCount = data.object.manageCount;
+				$('.allPage').html(Math.ceil(data.object.manageCount / vm.pageSize));
+				$("#Pagination").pagination(data.object.manageCount / vm.pageSize, {
+					callback: function(page) { // 回调函数
+						vm.page = page;
+						loadPageData();
+					}
+				});
+			}, function() {
+
+			})
+		}
+		loadData();
+
+		function loadPageData() {
+			postRegular('getManageList', {
+				page: vm.page,
+				rows: vm.pageSize,
+				filterNickName: vm.filterNickName,
+				filterPhoneNumber: vm.filterPhoneNumber,
+				siteId: sessionStorage.belongSiteId
+
+			}, function(data) {
+				vm.datalist = data.object.manageList;
+				for(var i = 0; i < vm.datalist.length; i++) {
+					var obj = vm.datalist[i];
+					obj.id = i + 1;
+				}
+			})
+		}
+
+		//筛选确认
+		$('#query_btn').click(function() {
+			vm.page = 0;
+			loadData();
+		})
+
+		//筛选清空
+		$('#clear_btn').click(function() {
+			vm.filterNickName = '';
+			vm.filterPhoneNumber = '';
+			loadData();
+
+		})
+
+		//保存
+		$('#save_btn').click(function() {
+			if(vm.nickname.length == 0) {
+				myAlert("姓名不能为空！");
+				return;
+			}
+
+			if(vm.phoneNumber.length == 0) {
+				myAlert("手机号不能为空！");
+				return;
+			}
+
+			if(!checkTel(vm.phoneNumber)) {
+				myAlert("手机号格式不正确!");
+				return;
+			}
+
+			if(vm.userIdCardNumber.length == 0) {
+				myAlert("身份证号不能为空！");
+				return;
+			}
+
+			if(vm.isEdit == 0) {
+				var data = {
+					"nickname": vm.nickname,
+					"phoneNumber": vm.phoneNumber,
+					"userIdCardNumber": vm.userIdCardNumber,
+					"belongSiteId": sessionStorage.belongSiteId
+				};
+				postRegular('addManage', data, function(data) {
+					closeAddPage();
+					window.location.reload();
+
+				}, function() {
+
+				});
+			} else if(vm.isEdit == 1) {
+
+				var data = {
+					"userId": vm.manageId,
+					"nickname": vm.nickname,
+					"phoneNumber": vm.phoneNumber,
+					"userIdCardNumber": vm.userIdCardNumber,
+				};
+				postRegular('editManage', data, function(data) {
+					closeAddPage();
+					window.location.reload();
+
+				});
+			}
+		})
+
+		//编辑
+		function editItem(itemIndex, $event) {
+
+			$event.stopPropagation();
+			vm.isEdit = 1;
+
+			var obj = vm.datalist[itemIndex - 1];
+			vm.manageId = obj.userId;
+			vm.nickname = obj.nickname;
+			vm.phoneNumber = obj.phoneNumber;
+			vm.userIdCardNumber = obj.userIdCardNumber;
+
+			$('#addBigDiv').removeClass("none");
+		}
+
+		//删除
+		function deleteItem(itemIndex, $event) {
+			$event.stopPropagation();
+			var obj = vm.datalist[itemIndex - 1];
+			if(window.confirm('你确定要删除 ' + obj.nickname + ' 吗？')) {
+				postRegular('deleteMaster', {
+					masterId: obj.userId,
+				}, function(data) {
+					loadPageData();
+					myAlert("刪除成功！");
+				}, function() {
+
+				});
+			} else {
+
+			}
+		}
+
+		//添加
+		$('#add_btn').click(function() {
+			$('#addBigDiv').removeClass("none");
+		})
+
+		//关闭
+		function closeAddPage() {
+			$('#addBigDiv').addClass("none");
+			vm.isEdit = 0;
+
+			vm.nickname = '';
+			vm.phoneNumber = '';
+			vm.userIdCardNumber = '';
+		}
+	</script>
+
+</html>

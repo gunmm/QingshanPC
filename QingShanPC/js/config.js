@@ -1,5 +1,5 @@
-//var ip = 'http://127.0.0.1:8080/QingShansProject/';
-var ip = 'http://39.107.113.157:8080/';
+var ip = 'http://127.0.0.1:8080/';
+//var ip = 'http://39.107.113.157:8080/';
 
 //var ip = 'http://21i5632e17.51mypc.cn/QingShansProject/';
 //var ip = 'http://mzandsyl.info:10196/';
@@ -83,7 +83,11 @@ function postRegular(url, data, callback, callback1) {
 				}
 				return;
 			} else if(data.result_code == -9) {
-				window.location.replace('../index.html');
+				if(urlStr.indexOf('bankNumberDetail.html') > 0) {
+					window.location.replace('index.html');
+				}else {
+					window.location.replace('../index.html');
+				}
 				return;
 			}
 			callback(data);
@@ -425,7 +429,7 @@ function personinfoview(name, imgurl, telephone, type) {
 }
 
 function changeBankNumberAct() {
-	window.location = 'bankNumberDetail.html?bankCardNumber=' + bankCardNumber;
+	window.location = '../bankNumberDetail.html?bankCardNumber=' + bankCardNumber;
 }
 
 function loginOut() {
@@ -494,7 +498,7 @@ function changeinfoheadimgact(input) {
 //跳至订单详情
 function jumpToOrderDetail(itemId, $event) {
 	$event.stopPropagation();
-	window.open("orderDetail.html?orderId=" + itemId);
+	window.open("../order/orderDetail.html?orderId=" + itemId);
 }
 
 function BMapSetPointCenterWithPoint(lat1, lng1, lat2, lng2) {
