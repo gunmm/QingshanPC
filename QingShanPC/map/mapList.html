@@ -47,6 +47,8 @@
 				$("#navBar9").removeClass("on");
 				$("#navBar10").removeClass("on");
 				$("#navBar11").removeClass("on");
+				$("#navBar12").removeClass("on");
+				$("#navBar13").removeClass("on");
 
 				var idStr = "#navBar" + index;
 				$(idStr).addClass("on");
@@ -72,6 +74,10 @@
 					window.location.replace('../site/siteFinishedOrderList.html');
 				}else if(index == '11') {
 					window.location.replace('../withdrawal/driverWithdrawalList.html');
+				} else if(index == '12') {
+					window.location.replace('../complain/complainList.html');
+				} else if(index == '13') {
+					window.location.replace('../invoice/invoiceList.html');
 				}
 			}
 		</script>
@@ -118,6 +124,13 @@
 				</li>
 				<li id="driverWithdrawalListNav">
 					<a id="navBar11" href="javascript:selectNav('11')">司机提现列表</a>
+				</li>
+				<li id="complainListNav">
+					<a id="navBar12" href="javascript:selectNav('12')">投诉列表</a>
+				</li>
+				
+				<li id="invoiceListNav">
+					<a id="navBar13" href="javascript:selectNav('13')">发票列表</a>
 				</li>
 
 			</ul>
@@ -166,6 +179,12 @@
 			
 			removeNav = document.getElementById('driverWithdrawalListNav');
 			$(removeNav).remove();
+			
+			removeNav = document.getElementById('complainListNav');
+			$(removeNav).remove();
+			
+			removeNav = document.getElementById('invoiceListNav');
+			$(removeNav).remove();
 
 			if(sessionStorage.siteType == '2') {
 				removeNav = document.getElementById('childSiteListNav');
@@ -188,6 +207,13 @@
 			
 			removeNav = document.getElementById('driverWithdrawalListNav');
 			$(removeNav).remove();
+			
+			removeNav = document.getElementById('complainListNav');
+			$(removeNav).remove();
+			
+			removeNav = document.getElementById('invoiceListNav');
+			$(removeNav).remove();
+			
 			if(sessionStorage.siteType == '2') {
 				removeNav = document.getElementById('childSiteListNav');
 				$(removeNav).remove();

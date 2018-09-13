@@ -49,6 +49,14 @@
 						<div class="detailKeyDiv">订单状态：</div>
 						<div class="detailvalueDiv">{{judgeOrderStatus(status, appointStatus, type)}}</div>
 					</div>
+					
+					<div v-if="siteComplaintId != null" class="detailKeyValueDiv">
+						<div class="detailKeyDiv" style="color: red;">订单被货主投诉</div>
+					</div>
+					
+					<div v-if="driverComplaintId != null" class="detailKeyValueDiv">
+						<div class="detailKeyDiv" style="color: red;">订单被司机投诉</div>
+					</div>
 				</div>
 
 				<div class="detailBaseInfoDiv">
@@ -177,6 +185,8 @@
 				vm.nickname = data.object.nickname;
 				vm.driverId = data.object.driverId;
 				vm.score = data.object.score;
+				vm.siteComplaintId = data.object.siteComplaintId;
+				vm.driverComplaintId = data.object.driverComplaintId;
 
 				if(vm.type == '2') {
 					$('#appointTimeDiv').removeClass('none');
@@ -253,6 +263,8 @@
 				receiveLongitude: 0,
 				price: '',
 				distance: '',
+				siteComplaintId: '',
+				driverComplaintId: '',
 
 				createTime: '',
 				updateTime: '',

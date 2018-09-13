@@ -47,10 +47,10 @@
 
 						</thead>
 
-						<tr v-for="item in datalist" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+						<tr v-for="item in datalist">
 							<td>{{item.id}}</td>
 							<td>
-								<a @click="jumpToOrderDetail(item.orderId,$event)" style="color: #ffac59;cursor: pointer;text-decoration: underline;">{{item.orderId}}</a>
+								<a @click="jumpToOrderDetail(item.orderId,$event)" class="firstBlue" style="cursor: pointer;text-decoration: underline;">{{item.orderId}}</a>
 							</td>
 							<td>{{item.carTypeName}}</td>
 							<td>{{item.distance}} 公里</td>
@@ -89,7 +89,10 @@
 		var type = getQueryString("type");
 		var currentMonth = getQueryString("currentMonth");
 		var isChildSiteList = getQueryString("isChildSiteList");
-
+		
+		if(type == '2'){
+			document.title = "货主提成列表";
+		}
 		console.log(siteName)
 		var vm = new Vue({
 			el: '#app',
@@ -113,7 +116,7 @@
 			var urlStr = "";
 			if(type == '1') {
 				urlStr = 'getTotalDriverItemOrderListBySiteId';
-			}else if(type == '2'){
+			} else if(type == '2') {
 				urlStr = 'getTotalMasterItemOrderListBySiteId';
 			}
 			postRegular(urlStr, {
@@ -138,6 +141,11 @@
 						loadPageData();
 					}
 				});
+				setTimeout(function() {
+					$('tr:even:gt(0)').addClass('tr_even'); //默认偶数行背景色，无视标题行用:gt(0)
+					$('tr:odd').addClass('tr_odd'); //默认奇数数行背景色
+
+				}, 50);
 			}, function() {
 
 			})
@@ -148,7 +156,7 @@
 			var urlStr = "";
 			if(type == '1') {
 				urlStr = 'getTotalDriverItemOrderListBySiteId';
-			}else if(type == '2'){
+			} else if(type == '2') {
 				urlStr = 'getTotalMasterItemOrderListBySiteId';
 			}
 			postRegular(urlStr, {
@@ -163,14 +171,19 @@
 					var obj = vm.datalist[i];
 					obj.id = vm.page * 15 + i + 1;
 				}
+				setTimeout(function() {
+					$('tr:even:gt(0)').addClass('tr_even'); //默认偶数行背景色，无视标题行用:gt(0)
+					$('tr:odd').addClass('tr_odd'); //默认奇数数行背景色
+
+				}, 50);
 			})
 		}
-		
+
 		function getOwnFee(servicePrice) {
 			if(type == '1') {
-				return (servicePrice*0.3).toFixed(2);
-			}else if(type == '2'){
-				return (servicePrice*0.5).toFixed(2);
+				return(servicePrice * 0.3).toFixed(2);
+			} else if(type == '2') {
+				return(servicePrice * 0.5).toFixed(2);
 			}
 		}
 	</script>

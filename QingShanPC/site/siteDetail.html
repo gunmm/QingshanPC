@@ -158,12 +158,13 @@
 									<th>评分</th>
 									<th>注册时间</th>
 									<th>更新时间</th>
+									<th>状态</th>
 									<th>操作</th>
 								</tr>
 
 							</thead>
 
-							<tr v-for="item in datalist1" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+							<tr v-for="item in datalist1">
 								<td>{{item.id}}</td>
 								<td>{{item.nickname}}</td>
 								<td>{{item.plateNumber}}</td>
@@ -173,6 +174,8 @@
 								<td>{{item.score.toFixed(1)}}</td>
 								<td>{{datetransform(item.createTime)}}</td>
 								<td>{{datetransform(item.updateTime)}}</td>
+								<td v-if="item.blackStatus == '1'" style="color: red;">已被拉黑</td>
+								<td v-else>正常</td>
 								<td>
 									<div class="oprateDiv">
 										<a @click="openItemDetailPage(item.userId)">详情</a>
@@ -195,12 +198,13 @@
 									<th>评分</th>
 									<th>注册时间</th>
 									<th>更新时间</th>
+									<th>状态</th>
 									<th>操作</th>
 								</tr>
 
 							</thead>
 
-							<tr v-for="item in datalist2" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+							<tr v-for="item in datalist2">
 								<td>{{item.id}}</td>
 								<td>{{item.nickname}}</td>
 								<td>{{item.phoneNumber}}</td>
@@ -210,6 +214,8 @@
 								<td>{{item.score.toFixed(1)}}</td>
 								<td>{{datetransform(item.createTime)}}</td>
 								<td>{{datetransform(item.updateTime)}}</td>
+								<td v-if="item.blackStatus == '1'" style="color: red;">已被拉黑</td>
+								<td v-else>正常</td>
 								<td>
 									<div class="oprateDiv">
 										<a @click="openItemDetailPage(item.userId)">详情</a>
@@ -238,7 +244,7 @@
 
 							</thead>
 
-							<tr v-for="item in datalist3" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+							<tr v-for="item in datalist3">
 								<td>{{item.id}}</td>
 								<td>{{item.siteName}}</td>
 								<td>{{item.siteType == 1 ? "一级站点" : "子站点"}}</td>
@@ -278,7 +284,7 @@
 
 							</thead>
 
-							<tr v-for="item in datalist4" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+							<tr v-for="item in datalist4">
 								<td>{{item.id}}</td>
 								<td>{{item.carTypeName}}</td>
 								<td>{{item.type == 1 ? "实时" : "预约"}}</td>
@@ -286,7 +292,7 @@
 								<td>{{item.sendAddress}}</td>
 								<td>{{item.receiveAddress}}</td>
 								<td>{{item.distance}} 公里</td>
-								<td>{{item.price}} 元</td>
+								<td>{{item.price.toFixed(2)}} 元</td>
 								<td style="color: orange;">{{judgeSiteOrderRoleBelongStr(item.orderRoleBelong)}}</td>
 								<td>{{datetransform(item.createTime)}}</td>
 								<td>{{datetransform(item.updateTime)}}</td>
@@ -504,6 +510,11 @@
 							loadPageData();
 						}
 					});
+					setTimeout(function() {
+						$('tr:even:gt(0)').addClass('tr_even'); //默认偶数行背景色，无视标题行用:gt(0)
+						$('tr:odd').addClass('tr_odd'); //默认奇数数行背景色
+
+					}, 50);
 				},
 				function() {
 
@@ -578,6 +589,11 @@
 					}
 					vm.datalist4 = data.object.orderList;
 				}
+				setTimeout(function() {
+					$('tr:even:gt(0)').addClass('tr_even'); //默认偶数行背景色，无视标题行用:gt(0)
+					$('tr:odd').addClass('tr_odd'); //默认奇数数行背景色
+
+				}, 50);
 
 			})
 		}
@@ -613,8 +629,6 @@
 			src = ip + vm.heTongImageArray[index];
 			$('#show_img .i2').attr('src', src);
 		}
-
-		
 
 		//跳转至站点详情
 		function jumpToSite() {

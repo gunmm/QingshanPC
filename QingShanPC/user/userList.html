@@ -46,6 +46,8 @@
 				$("#navBar9").removeClass("on");
 				$("#navBar10").removeClass("on");
 				$("#navBar11").removeClass("on");
+				$("#navBar12").removeClass("on");
+				$("#navBar13").removeClass("on");
 
 				var idStr = "#navBar" + index;
 				$(idStr).addClass("on");
@@ -67,10 +69,14 @@
 					window.location.replace('../withdrawal/withdrawalChildList.html');
 				} else if(index == '9') {
 					window.location.replace('../withdrawal/finishWithdrawaledList.html');
-				}else if(index == '10') {
+				} else if(index == '10') {
 					window.location.replace('../site/siteFinishedOrderList.html');
-				}else if(index == '11') {
+				} else if(index == '11') {
 					window.location.replace('../withdrawal/driverWithdrawalList.html');
+				} else if(index == '12') {
+					window.location.replace('../complain/complainList.html');
+				} else if(index == '13') {
+					window.location.replace('../invoice/invoiceList.html');
 				}
 			}
 		</script>
@@ -110,12 +116,20 @@
 				<li id="finishWithdrawaledListNav">
 					<a id="navBar9" href="javascript:selectNav('9')">打款记录</a>
 				</li>
-				
+
 				<li id="siteFinishedOrderListNav">
 					<a id="navBar10" href="javascript:selectNav('10')">已完成订单</a>
 				</li>
 				<li id="driverWithdrawalListNav">
 					<a id="navBar11" href="javascript:selectNav('11')">司机提现列表</a>
+				</li>
+				
+				<li id="complainListNav">
+					<a id="navBar12" href="javascript:selectNav('12')">投诉列表</a>
+				</li>
+				
+				<li id="invoiceListNav">
+					<a id="navBar13" href="javascript:selectNav('13')">发票列表</a>
 				</li>
 
 			</ul>
@@ -173,7 +187,7 @@
 
 						</thead>
 
-						<tr v-for="item in datalist" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+						<tr v-for="item in datalist">
 							<td>{{item.id}}</td>
 							<td>{{item.nickname}}</td>
 							<td>{{item.phoneNumber}}</td>
@@ -283,7 +297,7 @@
 
 			removeNav = document.getElementById('withdrawalChildListNav');
 			$(removeNav).remove();
-			
+
 			removeNav = document.getElementById('siteFinishedOrderListNav');
 			$(removeNav).remove();
 		} else if(sessionStorage.userType == '1') {
@@ -295,7 +309,7 @@
 
 			removeNav = document.getElementById('withdrawalChildListNav');
 			$(removeNav).remove();
-			
+
 			removeNav = document.getElementById('siteFinishedOrderListNav');
 			$(removeNav).remove();
 
@@ -310,6 +324,12 @@
 			removeNav = document.getElementById('finishWithdrawaledListNav');
 			$(removeNav).remove();
 			removeNav = document.getElementById('driverWithdrawalListNav');
+			$(removeNav).remove();
+			
+			removeNav = document.getElementById('complainListNav');
+			$(removeNav).remove();
+			
+			removeNav = document.getElementById('invoiceListNav');
 			$(removeNav).remove();
 
 			if(sessionStorage.siteType == '2') {
@@ -331,6 +351,12 @@
 			removeNav = document.getElementById('finishWithdrawaledListNav');
 			$(removeNav).remove();
 			removeNav = document.getElementById('driverWithdrawalListNav');
+			$(removeNav).remove();
+			
+			removeNav = document.getElementById('complainListNav');
+			$(removeNav).remove();
+			
+			removeNav = document.getElementById('invoiceListNav');
 			$(removeNav).remove();
 
 			if(sessionStorage.siteType == '2') {
@@ -369,6 +395,11 @@
 						loadPageData();
 					}
 				});
+				setTimeout(function() {
+					$('tr:even:gt(0)').addClass('tr_even'); //默认偶数行背景色，无视标题行用:gt(0)
+					$('tr:odd').addClass('tr_odd'); //默认奇数数行背景色
+
+				}, 50);
 			}, function() {
 
 			})
@@ -389,6 +420,11 @@
 					var obj = vm.datalist[i];
 					obj.id = i + 1;
 				}
+				setTimeout(function() {
+					$('tr:even:gt(0)').addClass('tr_even'); //默认偶数行背景色，无视标题行用:gt(0)
+					$('tr:odd').addClass('tr_odd'); //默认奇数数行背景色
+
+				}, 50);
 			})
 		}
 

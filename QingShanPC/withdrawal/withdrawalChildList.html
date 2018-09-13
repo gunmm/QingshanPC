@@ -67,7 +67,7 @@
 					window.location.replace('withdrawalChildList.html');
 				} else if(index == '9') {
 					window.location.replace('finishWithdrawaledList.html');
-				}else if(index == '10') {
+				} else if(index == '10') {
 					window.location.replace('../site/siteFinishedOrderList.html');
 				}
 			}
@@ -110,7 +110,7 @@
 				<li id="finishWithdrawaledListNav">
 					<a id="navBar9" href="javascript:selectNav('9')">打款记录</a>
 				</li>
-				
+
 				<li id="siteFinishedOrderListNav">
 					<a id="navBar10" href="javascript:selectNav('10')">已完成订单</a>
 				</li>
@@ -175,10 +175,10 @@
 
 						</thead>
 
-						<tr v-for="item in datalist" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+						<tr v-for="item in datalist">
 							<td>{{item.id}}</td>
 							<td>
-								<a @click="jumpToSite(item.siteId,$event)" style="color: #ffac59;cursor: pointer;text-decoration: underline;">{{item.siteName}}</a>
+								<a @click="jumpToSite(item.siteId,$event)" class="jumpABold">{{item.siteName}}</a>
 							</td>
 							<td>{{item.nickname}}</td>
 							<td>{{item.bankCardNumber == null?'未绑定':item.bankCardNumber}}</td>
@@ -257,7 +257,7 @@
 
 			removeNav = document.getElementById('withdrawalChildListNav');
 			$(removeNav).remove();
-			
+
 			removeNav = document.getElementById('siteFinishedOrderListNav');
 			$(removeNav).remove();
 
@@ -268,7 +268,7 @@
 
 			removeNav = document.getElementById('userListNav');
 			$(removeNav).remove();
-			
+
 			removeNav = document.getElementById('siteFinishedOrderListNav');
 			$(removeNav).remove();
 
@@ -342,6 +342,11 @@
 						loadPageData();
 					}
 				});
+				setTimeout(function() {
+					$('tr:even:gt(0)').addClass('tr_even'); //默认偶数行背景色，无视标题行用:gt(0)
+					$('tr:odd').addClass('tr_odd'); //默认奇数数行背景色
+
+				}, 50);
 			}, function() {
 
 			})
@@ -363,6 +368,11 @@
 					var obj = vm.datalist[i];
 					obj.id = vm.page * 10 + i + 1;
 				}
+				setTimeout(function() {
+					$('tr:even:gt(0)').addClass('tr_even'); //默认偶数行背景色，无视标题行用:gt(0)
+					$('tr:odd').addClass('tr_odd'); //默认奇数数行背景色
+
+				}, 50);
 			})
 		}
 
@@ -419,7 +429,7 @@
 				return year + '-' + (parseInt(month) - 1);
 			}
 		}
-		
+
 		//跳转至站点详情
 		function jumpToSite(siteId, $event) {
 			$event.stopPropagation();

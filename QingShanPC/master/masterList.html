@@ -48,6 +48,8 @@
 				$("#navBar9").removeClass("on");
 				$("#navBar10").removeClass("on");
 				$("#navBar11").removeClass("on");
+				$("#navBar12").removeClass("on");
+				$("#navBar13").removeClass("on");
 
 				var idStr = "#navBar" + index;
 				$(idStr).addClass("on");
@@ -69,10 +71,14 @@
 					window.location.replace('../withdrawal/withdrawalChildList.html');
 				} else if(index == '9') {
 					window.location.replace('../withdrawal/finishWithdrawaledList.html');
-				}else if(index == '10') {
+				} else if(index == '10') {
 					window.location.replace('../site/siteFinishedOrderList.html');
-				}else if(index == '11') {
+				} else if(index == '11') {
 					window.location.replace('../withdrawal/driverWithdrawalList.html');
+				} else if(index == '12') {
+					window.location.replace('../complain/complainList.html');
+				} else if(index == '13') {
+					window.location.replace('../invoice/invoiceList.html');
 				}
 			}
 		</script>
@@ -117,6 +123,13 @@
 				</li>
 				<li id="driverWithdrawalListNav">
 					<a id="navBar11" href="javascript:selectNav('11')">司机提现列表</a>
+				</li>
+				<li id="complainListNav">
+					<a id="navBar12" href="javascript:selectNav('12')">投诉列表</a>
+				</li>
+				
+				<li id="invoiceListNav">
+					<a id="navBar13" href="javascript:selectNav('13')">发票列表</a>
 				</li>
 
 			</ul>
@@ -173,23 +186,26 @@
 								<th>评分</th>
 								<th>注册时间</th>
 								<th>更新时间</th>
+								<th>状态</th>
 								<th>操作</th>
 							</tr>
 
 						</thead>
 
-						<tr v-for="item in datalist" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+						<tr v-for="item in datalist">
 							<td>{{item.id}}</td>
 							<td>{{item.nickname}}</td>
 							<td>{{item.phoneNumber}}</td>
 							<td>{{item.userIdCardNumber}}</td>
 							<td>{{item.mainGoodsName}}</td>
 							<td>
-								<a @click="jumpToSite(item.belongSiteId,$event)" style="color: #ffac59;cursor: pointer;text-decoration: underline;">{{item.belongSiteName}}</a>
+								<a @click="jumpToSite(item.belongSiteId,$event)" class="jumpABold">{{item.belongSiteName}}</a>
 							</td>
 							<td>{{item.score.toFixed(1)}}</td>
 							<td>{{datetransform(item.createTime)}}</td>
 							<td>{{datetransform(item.updateTime)}}</td>
+							<td v-if="item.blackStatus == '1'" style="color: red;">已被拉黑</td>
+							<td v-else>正常</td>
 							<td>
 								<div class="oprateDiv">
 									<a @click="openItemDetailPage(item.userId)">详情</a>
@@ -299,7 +315,7 @@
 
 			removeNav = document.getElementById('withdrawalChildListNav');
 			$(removeNav).remove();
-			
+
 			removeNav = document.getElementById('siteFinishedOrderListNav');
 			$(removeNav).remove();
 
@@ -313,7 +329,7 @@
 
 			removeNav = document.getElementById('withdrawalChildListNav');
 			$(removeNav).remove();
-			
+
 			removeNav = document.getElementById('siteFinishedOrderListNav');
 			$(removeNav).remove();
 
@@ -328,6 +344,12 @@
 			removeNav = document.getElementById('finishWithdrawaledListNav');
 			$(removeNav).remove();
 			removeNav = document.getElementById('driverWithdrawalListNav');
+			$(removeNav).remove();
+			
+			removeNav = document.getElementById('complainListNav');
+			$(removeNav).remove();
+			
+			removeNav = document.getElementById('invoiceListNav');
 			$(removeNav).remove();
 			if(sessionStorage.siteType == '2') {
 				removeNav = document.getElementById('childSiteListNav');
@@ -348,6 +370,12 @@
 			removeNav = document.getElementById('finishWithdrawaledListNav');
 			$(removeNav).remove();
 			removeNav = document.getElementById('driverWithdrawalListNav');
+			$(removeNav).remove();
+			
+			removeNav = document.getElementById('complainListNav');
+			$(removeNav).remove();
+			
+			removeNav = document.getElementById('invoiceListNav');
 			$(removeNav).remove();
 
 			if(sessionStorage.siteType == '2') {
@@ -388,6 +416,11 @@
 						loadPageData();
 					}
 				});
+				setTimeout(function() {
+					$('tr:even:gt(0)').addClass('tr_even'); //默认偶数行背景色，无视标题行用:gt(0)
+					$('tr:odd').addClass('tr_odd'); //默认奇数数行背景色
+
+				}, 50)
 			}, function() {
 
 			})
@@ -408,6 +441,11 @@
 					var obj = vm.datalist[i];
 					obj.id = vm.page * 15 + i + 1;
 				}
+				setTimeout(function() {
+					$('tr:even:gt(0)').addClass('tr_even'); //默认偶数行背景色，无视标题行用:gt(0)
+					$('tr:odd').addClass('tr_odd'); //默认奇数数行背景色
+
+				}, 50);
 			})
 		}
 

@@ -43,6 +43,12 @@
 							<a @click="jumpToSite()" class="zhandianTiaozhuan">{{belongSiteName}}</a>
 						</div>
 					</div>
+					
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv">状态：</div>
+						<div v-if="blackStatus==null" class="detailvalueDiv">正常</div>
+						<div v-else class="detailvalueDiv" style="color: red;">已被拉黑</div>
+					</div>
 				</div>
 
 				<div class="detailBaseInfoDiv">
@@ -198,7 +204,7 @@
 
 						</thead>
 
-						<tr v-for="item in datalist4" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+						<tr v-for="item in datalist4">
 							<td>{{item.id}}</td>
 							<td>{{item.carTypeName}}</td>
 							<td>{{item.type == 1 ? "实时" : "预约"}}</td>
@@ -283,6 +289,7 @@
 				vm.baoxianImgUrl = data.object.insuranceNumber;
 				vm.yingyeImgUrl = data.object.businessLicenseNumber;
 				vm.chezhushenfImgUrl = data.object.vehicleIdCardNumber;
+				vm.blackStatus = data.object.blackStatus;
 
 				if(vm.driverQualificationNumber != null) {
 					if(vm.driverQualificationNumber.length > 0) {
@@ -351,7 +358,7 @@
 				baoxianImgUrl: '',
 				yingyeImgUrl: '',
 				chezhushenfImgUrl: '',
-
+				blackStatus: '',
 				page: 0,
 				pageSize: 15,
 				itemCount: 0,
@@ -387,6 +394,11 @@
 							loadPageData();
 						}
 					});
+					setTimeout(function() {
+						$('tr:even:gt(0)').addClass('tr_even'); //默认偶数行背景色，无视标题行用:gt(0)
+						$('tr:odd').addClass('tr_odd'); //默认奇数数行背景色
+
+					}, 50);
 				},
 				function() {
 
@@ -408,10 +420,14 @@
 					obj.id = i + 1;
 				}
 				vm.datalist4 = data.object.orderList;
+				setTimeout(function() {
+					$('tr:even:gt(0)').addClass('tr_even'); //默认偶数行背景色，无视标题行用:gt(0)
+					$('tr:odd').addClass('tr_odd'); //默认奇数数行背景色
+
+				}, 50);
 
 			})
 		}
-
 
 		//跳转至站点详情
 		function jumpToSite() {

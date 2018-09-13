@@ -46,10 +46,10 @@
 
 						</thead>
 
-						<tr v-for="item in datalist" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+						<tr v-for="item in datalist">
 							<td>{{item.id}}</td>
 							<td>
-								<a @click="jumpToSite(item.siteId,$event)" style="color: #ffac59;cursor: pointer;text-decoration: underline;">{{item.siteName}}</a>
+								<a @click="jumpToSite(item.siteId,$event)" class="jumpABold">{{item.siteName}}</a>
 							</td>
 							<td>{{item.nickname}}</td>
 							<td v-if="type=='3'" style="color: orange;">{{item.registerDriverFee == null?0:item.registerDriverFee}} 元
@@ -92,7 +92,6 @@
 		var fee = getQueryString("fee");
 		var type = getQueryString("type");
 		var currentMonth = getQueryString("currentMonth");
-		
 
 		var vm = new Vue({
 			el: '#app',
@@ -138,6 +137,11 @@
 						loadPageData();
 					}
 				});
+				setTimeout(function() {
+					$('tr:even:gt(0)').addClass('tr_even'); //默认偶数行背景色，无视标题行用:gt(0)
+					$('tr:odd').addClass('tr_odd'); //默认奇数数行背景色
+
+				}, 50);
 			}, function() {
 
 			})
@@ -159,14 +163,19 @@
 					var obj = vm.datalist[i];
 					obj.id = vm.page * 10 + i + 1;
 				}
+				setTimeout(function() {
+					$('tr:even:gt(0)').addClass('tr_even'); //默认偶数行背景色，无视标题行用:gt(0)
+					$('tr:odd').addClass('tr_odd'); //默认奇数数行背景色
+
+				}, 50);
 			})
 		}
 
 		function transfer(itemId, type, siteName, fee) {
 			var searchUrl = encodeURI('withdrawalListDriver.html?siteId=' + itemId + '&type=' + type + '&siteName=' + siteName + '&fee=' + fee + '&currentMonth=' + currentMonth);
-				window.location = searchUrl;
+			window.location = searchUrl;
 		}
-		
+
 		//跳转至站点详情
 		function jumpToSite(siteId, $event) {
 			$event.stopPropagation();

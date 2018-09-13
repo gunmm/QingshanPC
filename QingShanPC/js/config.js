@@ -1,4 +1,4 @@
-var ip = 'http://127.0.0.1:8080/';
+var ip = 'http://127.0.0.1:8080/QingShansProject/';
 //var ip = 'http://39.107.113.157:8080/';
 
 //var ip = 'http://21i5632e17.51mypc.cn/QingShansProject/';
@@ -69,7 +69,7 @@ function postRegular(url, data, callback, callback1) {
 		traditional: true,
 		data: JSON.stringify(param),
 		success: function(data) {
-
+			console.log(data)
 			if((typeof data == 'string') && data.constructor == String) {
 				data = JSON.parse(data);
 			}
@@ -83,6 +83,7 @@ function postRegular(url, data, callback, callback1) {
 				}
 				return;
 			} else if(data.result_code == -9) {
+				var urlStr = window.location.href;
 				if(urlStr.indexOf('bankNumberDetail.html') > 0) {
 					window.location.replace('index.html');
 				}else {
@@ -372,7 +373,6 @@ function addInfoDiv() {
 		postRegular('getUserInfoById', {
 			userId: sessionStorage.userId,
 		}, function(data) {
-			console.log(data)
 			bankCardNumber = data.object.bankCardNumber;
 			personinfoview(data.object.nickname, data.object.personImageUrl, data.object.phoneNumber, data.object.type);
 		})
