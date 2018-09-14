@@ -21,7 +21,7 @@
 
 	<body>
 		<div id="app" hidden>
-			<div class="detailHeader" style="height: 150px;">
+			<div class="detailHeader" style="height: 170px;">
 				<div class="nameAndTimeDiv">
 					<div class="bigTitleDiv">{{nickname}}</div>
 					<div class="timeDiv">
@@ -31,6 +31,13 @@
 				</div>
 
 				<div class="detailBaseInfoDiv">
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv" style=" font-size: 20px;">评分：</div>
+						<div class="detailvalueDiv" style="color: yellow; font-size: 20px;">{{score}}</div>
+					</div>
+				</div>
+
+				<div class="detailBaseInfoDiv" >
 					<div class="detailKeyValueDiv">
 						<div class="detailKeyDiv">手机号：</div>
 						<div class="detailvalueDiv">{{phoneNumber}}</div>
@@ -51,7 +58,7 @@
 							<a @click="jumpToSite()" class="zhandianTiaozhuan">{{belongSiteName}}</a>
 						</div>
 					</div>
-					
+
 					<div class="detailKeyValueDiv">
 						<div class="detailKeyDiv">状态：</div>
 						<div v-if="blackStatus==null" class="detailvalueDiv">正常</div>
@@ -80,7 +87,7 @@
 
 						</thead>
 
-						<tr v-for="item in datalist4" >
+						<tr v-for="item in datalist4">
 							<td>{{item.id}}</td>
 							<td>{{item.carTypeName}}</td>
 							<td>{{item.type == 1 ? "实时" : "预约"}}</td>
@@ -141,7 +148,9 @@
 				vm.belongSiteName = data.object.belongSiteName;
 				vm.belongSiteId = data.object.belongSiteId;
 				vm.blackStatus = data.object.blackStatus;
-				
+				vm.score = data.object.score;
+				vm.score = vm.score.toFixed(1);
+
 			}, function() {
 
 			})
@@ -161,6 +170,7 @@
 				belongSiteName: '',
 				belongSiteId: '',
 				blackStatus: '',
+				score: '',
 
 				page: 0,
 				pageSize: 15,
@@ -226,10 +236,10 @@
 				}
 				vm.datalist4 = data.object.orderList;
 				setTimeout(function() {
-						$('tr:even:gt(0)').addClass('tr_even'); //默认偶数行背景色，无视标题行用:gt(0)
-						$('tr:odd').addClass('tr_odd'); //默认奇数数行背景色
+					$('tr:even:gt(0)').addClass('tr_even'); //默认偶数行背景色，无视标题行用:gt(0)
+					$('tr:odd').addClass('tr_odd'); //默认奇数数行背景色
 
-					}, 50);
+				}, 50);
 			})
 		}
 

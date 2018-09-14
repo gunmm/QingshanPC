@@ -1024,6 +1024,7 @@
 		//请求车辆类型数据
 		postRegular('getDictionaryList', {
 			name: '车辆类型',
+			cityName: '北京市',
 		}, function(data) {
 			vm.vehicleTypeArray = data.object;
 		})
@@ -1031,6 +1032,7 @@
 		//请求GPS厂家类型
 		postRegular('getDictionaryList', {
 			name: 'GPS类型',
+			cityName: 'GPS',
 		}, function(data) {
 			vm.GPSTypeArray = data.object;
 

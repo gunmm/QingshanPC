@@ -5,54 +5,10 @@
 		<meta charset="UTF-8">
 		<title></title>
 	</head>
-		<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.js"></script>
-    <script type="text/javascript">
-    $(function(){
-        //通过jQuery控制表格隔行换色，并鼠标悬停变色
-        $('tr:even:gt(0)').addClass('tr_even');    //默认偶数行背景色，无视标题行用:gt(0)
-        $('tr:odd').addClass('tr_odd');            //默认奇数数行背景色
-        ////////////////////////////////////////////////////////////////
-    });
-        
-    </script>
-    <style type="text/css">
-    .headCls{background-color:#ccc;}    /* 标题背景色 */
-    .tr_even{background-color:#EBF8FF}  /* 偶数行背景色 */
-    .tr_odd{background-color:#DDECF3}   /* 奇数行背景色 */   
-    .tr_even:hover,.tr_odd:hover{background-color:red;}      /* 通过CSS实现鼠标悬停高亮色 */
-    </style>
 
 	<body>
-    <table border="1" width="100%" cellspacing="0" cellpadding="0">
-        <tr class="headCls">
-            <th>CSS实现鼠标悬停高亮</th>
-            <th>CSS实现鼠标悬停高亮</th>
-        </tr>
-        <tr>
-            <td>data1_1</td>
-            <td>data1_2</td>
-        </tr>
-        <tr>
-            <td>data2_1</td>
-            <td>data2_2</td>
-        </tr>
-        <tr>
-            <td>data3_1</td>
-            <td>data3_2</td>
-        </tr>
-        <tr>
-            <td>data4_1</td>
-            <td>data4_2</td>
-        </tr>
-        <tr>
-            <td>data5_1</td>
-            <td>data5_2</td>
-        </tr>
-    </table>
+		<input type="radio" name="adminFlag" value="0">否</input>
+		<input type="radio" name="adminFlag" value="1">是</input>
+	</body>
 
-
-
-
-</body>
-
-</html>
+	</html>

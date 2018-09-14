@@ -186,7 +186,8 @@
 							<td>{{item.siteName}}</td>
 							<td>{{item.siteType == 1 ? "一级站点" : "子站点"}}</td>
 							<td>{{item.siteProvinceName}}{{item.siteCityName}}{{item.address}}</td>
-							<td>{{judgeStatus(item.siteCheckStatus)}}</td>
+							<td v-if="judgeStatus(item.siteCheckStatus) == '审核未通过' || judgeStatus(item.siteCheckStatus) == '待审核'" style="color: red;">{{judgeStatus(item.siteCheckStatus)}}</td>
+							<td v-else style="color: orange;">{{judgeStatus(item.siteCheckStatus)}}</td>
 							<td>{{item.lawsManName}}</td>
 							<td>{{item.childToSuperRate}}</td>
 							<td>{{datetransform(item.createTime)}}</td>
