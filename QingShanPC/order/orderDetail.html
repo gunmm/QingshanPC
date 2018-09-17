@@ -62,7 +62,7 @@
 				<div class="detailBaseInfoDiv">
 					<div class="detailKeyValueDiv">
 						<div class="detailKeyDiv">发货地址：</div>
-						<div class="detailvalueDiv">{{sendDetailAddress}}</div>
+						<div class="detailvalueDiv">{{sendDetailAddress}}{{sendAddress}}</div>
 					</div>
 
 					<div class="detailKeyValueDiv">
@@ -79,7 +79,7 @@
 				<div class="detailBaseInfoDiv">
 					<div class="detailKeyValueDiv">
 						<div class="detailKeyDiv">收货地址：</div>
-						<div class="detailvalueDiv">{{receiveDetailAddress}}</div>
+						<div class="detailvalueDiv">{{receiveDetailAddress}}{{receiveAddress}}</div>
 					</div>
 
 					<div class="detailKeyValueDiv">
@@ -143,7 +143,8 @@
 			</div>
 		</div>
 		<div id="mapView" style="width: 100%;height: 500px;">
-
+			
+			
 		</div>
 
 	</body>
@@ -234,9 +235,19 @@
 			var opts = {
 				width: 0, // 信息窗口宽度    
 				height: 0, // 信息窗口高度
-				title: anObject
+				title: "<div style='color:orange;'>" + anObject + "</div>"
 			}
-			var infoWindow = new BMap.InfoWindow("", opts); // 创建信息窗口对象
+			var firstLineStr = vm.receiveDetailAddress+vm.receiveAddress;
+			var secondLineStr = vm.receiveLongitude.toFixed(3);
+			var thirdLineStr = vm.receiveLatitude.toFixed(3);
+			if(anObject == '起点'){
+				firstLineStr = vm.sendDetailAddress+vm.sendAddress;
+				secondLineStr = vm.sendLongitude.toFixed(3);
+				thirdLineStr = vm.sendLatitude.toFixed(3);
+			}
+			var infoWindow = new BMap.InfoWindow("<div>"+firstLineStr+"</div>"+
+			"<div style='color:gray;'>经度："+secondLineStr+"</div>"+
+			"<div style='color:gray;'>纬度："+thirdLineStr+"</div>", opts); // 创建信息窗口对象
 			obj.openInfoWindow(infoWindow, map.getCenter());
 		}
 

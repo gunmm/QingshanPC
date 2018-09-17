@@ -43,7 +43,7 @@
 							<a @click="jumpToSite()" class="zhandianTiaozhuan">{{belongSiteName}}</a>
 						</div>
 					</div>
-					
+
 					<div class="detailKeyValueDiv">
 						<div class="detailKeyDiv">状态：</div>
 						<div v-if="blackStatus==null" class="detailvalueDiv">正常</div>
@@ -209,8 +209,8 @@
 							<td>{{item.carTypeName}}</td>
 							<td>{{item.type == 1 ? "实时" : "预约"}}</td>
 							<td>{{judgeOrderStatus(item.status, item.appointStatus, item.type)}}</td>
-							<td>{{item.sendAddress}}</td>
-							<td>{{item.receiveAddress}}</td>
+							<td>{{item.sendDetailAddress}}{{item.sendAddress}}</td>
+							<td>{{item.receiveDetailAddress}}{{item.receiveAddress}}</td>
 							<td>{{item.distance}} 公里</td>
 							<td>{{item.price}} 元</td>
 							<td>{{datetransform(item.createTime)}}</td>
