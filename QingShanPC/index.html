@@ -59,6 +59,14 @@
 	</body>
 
 	<script>
+
+		$(document).keypress(function(e) {
+			var eCode = e.keyCode ? e.keyCode : e.which ? e.which : e.charCode;
+			if(eCode == 13) {
+				login();
+			}
+		});
+
 		function login() {
 			var number = $("#emailMobilePhone").val();
 			if(number.length == 0) {
@@ -86,7 +94,7 @@
 					sessionStorage.token = data.object.accessToken;
 					sessionStorage.userId = data.object.userId;
 					sessionStorage.userType = data.object.type;
-					if(data.object.belongSiteId != null){
+					if(data.object.belongSiteId != null) {
 						sessionStorage.belongSiteId = data.object.belongSiteId;
 						sessionStorage.siteType = data.object.siteType;
 					}
@@ -94,20 +102,20 @@
 					if(data.object.type == '0') {
 						//超级管理员
 						window.location.replace('site/siteList.html');
-					}else if(data.object.type == '1'){
+					} else if(data.object.type == '1') {
 						//平台管理员
 						window.location.replace('site/siteList.html');
-					}else if(data.object.type == '2'){
+					} else if(data.object.type == '2') {
 						//平台投诉业务处理人员
-						
-					}else if(data.object.type == '3'){
+
+					} else if(data.object.type == '3') {
 						//站点管理员
 						window.location.replace('driver/driverList.html');
-					}else if(data.object.type == '4'){
+					} else if(data.object.type == '4') {
 						//站点业务员
 						window.location.replace('driver/driverList.html');
-						
-					}else{
+
+					} else {
 						myAlert("角色错误!");
 					}
 				},

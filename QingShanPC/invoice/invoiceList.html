@@ -279,7 +279,7 @@
 			el: '#app',
 			data: {
 				page: 0,
-				pageSize: 15,
+				pageSize: 10,
 				itemCount: 0,
 				datalist: [],
 				
@@ -327,7 +327,7 @@
 				vm.datalist = data.object.invoiceResModelList;
 				for(var i = 0; i < vm.datalist.length; i++) {
 					var obj = vm.datalist[i];
-					obj.id = vm.page * 15 + i + 1;
+					obj.id = vm.page * 10 + i + 1;
 				}
 
 				setTimeout(function() {
@@ -361,7 +361,7 @@
 				vm.datalist = data.object.invoiceResModelList;
 				for(var i = 0; i < vm.datalist.length; i++) {
 					var obj = vm.datalist[i];
-					obj.id = vm.page * 15 + i + 1;
+					obj.id = vm.page * 10 + i + 1;
 				}
 				setTimeout(function() {
 					$('tr:even:gt(0)').addClass('tr_even'); //默认偶数行背景色，无视标题行用:gt(0)
