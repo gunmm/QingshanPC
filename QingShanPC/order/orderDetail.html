@@ -49,13 +49,27 @@
 						<div class="detailKeyDiv">订单状态：</div>
 						<div class="detailvalueDiv">{{judgeOrderStatus(status, appointStatus, type)}}</div>
 					</div>
-					
+
 					<div v-if="siteComplaintId != null" class="detailKeyValueDiv">
 						<div class="detailKeyDiv" style="color: red;">订单被货主投诉</div>
 					</div>
-					
+
 					<div v-if="driverComplaintId != null" class="detailKeyValueDiv">
 						<div class="detailKeyDiv" style="color: red;">订单被司机投诉</div>
+					</div>
+				</div>
+
+				<div class="detailBaseInfoDiv">
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv">下单人：</div>
+						<div class="detailvalueDiv">
+							<a @click="openMasterItemDetailPage(createManId)" class="zhandianTiaozhuan">{{createManName}}</a>
+						</div>
+					</div>
+
+					<div class="detailKeyValueDiv">
+						<div class="detailKeyDiv">评分：</div>
+						<div class="detailvalueDiv">{{createManScore.toFixed(1)}}</div>
 					</div>
 				</div>
 
@@ -105,26 +119,26 @@
 				<div class="detailBaseInfoDiv" style="padding-bottom: 10px;padding-top: 10px;">
 					<div class="detailKeyValueDiv">
 						<div class="detailKeyDiv" style="font-size: 30px;">车牌号：</div>
-						<div class="detailvalueDiv" style="font-size: 30px;color: yellow;">{{plateNumber}}</div>
+						<div class="detailvalueDiv" style="font-size: 30px;color: yellow;">{{plateNumber == null ? "未被接单" : plateNumber}}</div>
 					</div>
 				</div>
 
 				<div class="detailBaseInfoDiv" style="margin-top: 5px;">
 					<div class="detailKeyValueDiv">
 						<div class="detailKeyDiv">司机姓名：</div>
-						<!--<div class="detailvalueDiv" style="color: orange;">{{nickname}}</div>-->
 						<div class="detailvalueDiv zhandianTiaozhuanDiv">
-							<a @click="openDriverItemDetailPage(driverId)" class="zhandianTiaozhuan">{{nickname}}</a>
+							<a v-if="nickname == null" style="text-decoration:none" class="zhandianTiaozhuan">暂无</a>
+							<a v-else @click="openDriverItemDetailPage(driverId)" class="zhandianTiaozhuan">{{nickname}}</a>
 						</div>
 					</div>
 					<div class="detailKeyValueDiv">
 						<div class="detailKeyDiv">司机电话：</div>
-						<div class="detailvalueDiv">{{phoneNumber}}</div>
+						<div class="detailvalueDiv">{{phoneNumber == null ? "暂无" : phoneNumber}}</div>
 					</div>
 
 					<div class="detailKeyValueDiv">
 						<div class="detailKeyDiv"> 司机评分：</div>
-						<div class="detailvalueDiv">{{score.toFixed(1)}}</div>
+						<div class="detailvalueDiv">{{nickname == null ? "暂无" : score.toFixed(1)}}</div>
 					</div>
 
 				</div>
@@ -143,8 +157,7 @@
 			</div>
 		</div>
 		<div id="mapView" style="width: 100%;height: 500px;">
-			
-			
+
 		</div>
 
 	</body>
@@ -188,7 +201,10 @@
 				vm.score = data.object.score;
 				vm.siteComplaintId = data.object.siteComplaintId;
 				vm.driverComplaintId = data.object.driverComplaintId;
-
+				vm.createManName = data.object.createManName;
+				vm.createManScore = data.object.createManScore;
+				vm.createManId = data.object.createManId;
+				
 				if(vm.type == '2') {
 					$('#appointTimeDiv').removeClass('none');
 				}
@@ -237,17 +253,17 @@
 				height: 0, // 信息窗口高度
 				title: "<div style='color:orange;'>" + anObject + "</div>"
 			}
-			var firstLineStr = vm.receiveDetailAddress+vm.receiveAddress;
+			var firstLineStr = vm.receiveDetailAddress + vm.receiveAddress;
 			var secondLineStr = vm.receiveLongitude.toFixed(3);
 			var thirdLineStr = vm.receiveLatitude.toFixed(3);
-			if(anObject == '起点'){
-				firstLineStr = vm.sendDetailAddress+vm.sendAddress;
+			if(anObject == '起点') {
+				firstLineStr = vm.sendDetailAddress + vm.sendAddress;
 				secondLineStr = vm.sendLongitude.toFixed(3);
 				thirdLineStr = vm.sendLatitude.toFixed(3);
 			}
-			var infoWindow = new BMap.InfoWindow("<div>"+firstLineStr+"</div>"+
-			"<div style='color:gray;'>经度："+secondLineStr+"</div>"+
-			"<div style='color:gray;'>纬度："+thirdLineStr+"</div>", opts); // 创建信息窗口对象
+			var infoWindow = new BMap.InfoWindow("<div>" + firstLineStr + "</div>" +
+				"<div style='color:gray;'>经度：" + secondLineStr + "</div>" +
+				"<div style='color:gray;'>纬度：" + thirdLineStr + "</div>", opts); // 创建信息窗口对象
 			obj.openInfoWindow(infoWindow, map.getCenter());
 		}
 
@@ -285,7 +301,11 @@
 				nickname: '',
 				plateNumber: '',
 				score: 0,
-				driverId:'',
+				driverId: '',
+
+				createManName: '',
+				createManScore: 0,
+				createManId: '',
 
 			},
 			methods: {}
@@ -299,13 +319,12 @@
 		map.addControl(new BMap.ScaleControl());
 		map.addControl(new BMap.OverviewMapControl());
 		loadOrderDetailData();
-		
-		
+
 		//点击查看详情
 		function openDriverItemDetailPage(masterId) {
 			window.open("../driver/driverDetail.html?driverId=" + masterId);
 		}
-		
+
 		function openMasterItemDetailPage(masterId) {
 			window.open("../master/masterDetail.html?masterId=" + masterId);
 		}
