@@ -291,8 +291,7 @@
 				height: 0, // 信息窗口高度
 				title: "<div style='color:orange;'>" + anObject.plateNumber + "</div>"
 			}
-			var infoWindow = new BMap.InfoWindow("<a style='color:gray;cursor: pointer;' target='_blank' onclick='openItemDetailPage(&quot;" + anObject.userId + "&quot;)'>点击查看详情</a>"+
-			                                     "<a style='color:gray;cursor: pointer;' target='_blank' onclick='openItemDetailPage(&quot;" + anObject.userId + "&quot;)'>点击查看详情</a>"
+			var infoWindow = new BMap.InfoWindow("<a style='color:gray;cursor: pointer;' target='_blank' onclick='openItemDetailPage(&quot;" + anObject.userId + "&quot;)'>点击查看详情</a>"
 			                                     , opts); // 创建信息窗口对象
 			obj.openInfoWindow(infoWindow, map.getCenter());
 		}
