@@ -180,6 +180,7 @@
 								<th>#</th>
 								<th>司机姓名</th>
 								<th>车牌号</th>
+								<th>司机类型</th>
 								<th>联系电话</th>
 								<th>车辆类型</th>
 								<th>所属站点</th>
@@ -196,6 +197,7 @@
 							<td>{{item.id}}</td>
 							<td>{{item.nickname}}</td>
 							<td>{{item.plateNumber}}</td>
+							<td>{{item.driverType == '1' ? "车主司机" : "司机"}}</td>
 							<td>{{item.phoneNumber}}</td>
 							<td>{{item.vehicleTypeName}}</td>
 							<td>
