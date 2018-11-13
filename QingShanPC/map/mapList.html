@@ -70,9 +70,9 @@
 					window.location.replace('../withdrawal/withdrawalChildList.html');
 				} else if(index == '9') {
 					window.location.replace('../withdrawal/finishWithdrawaledList.html');
-				}else if(index == '10') {
+				} else if(index == '10') {
 					window.location.replace('../site/siteFinishedOrderList.html');
-				}else if(index == '11') {
+				} else if(index == '11') {
 					window.location.replace('../withdrawal/driverWithdrawalList.html');
 				} else if(index == '12') {
 					window.location.replace('../complain/complainList.html');
@@ -118,7 +118,7 @@
 				<li id="finishWithdrawaledListNav">
 					<a id="navBar9" href="javascript:selectNav('9')">打款记录</a>
 				</li>
-				
+
 				<li id="siteFinishedOrderListNav">
 					<a id="navBar10" href="javascript:selectNav('10')">已完成订单</a>
 				</li>
@@ -128,27 +128,77 @@
 				<li id="complainListNav">
 					<a id="navBar12" href="javascript:selectNav('12')">投诉列表</a>
 				</li>
-				
+
 				<li id="invoiceListNav">
 					<a id="navBar13" href="javascript:selectNav('13')">发票列表</a>
 				</li>
 
 			</ul>
 		</div>
-		<div id="mapContent" style="width: 100%;height: 100%;">
+
+		<div id="app" class="content" hidden>
+			<div class="oprationToolBar">
+				<div class="filterDiv">
+					<div v-if="sessionStorage.userType == '0'" class="nameFilterDiv">
+						<div class="filterKeyDiv">选择站点</div>
+						<select class="citySelect" style="width: 130px;" id="selectSite">
+							<option value="">所有站点</option>
+							<option v-for="item in siteDatalist" :value="item.siteId">{{item.siteName}}</option>
+						</select>
+
+					</div>
+
+					<div class="nameFilterDiv">
+						<div class="filterKeyDiv">车牌号</div>
+						<div class="filterValueDiv">
+							<input v-model="filterPlateNumber" class="filterValueInput" type="text" placeholder="" title="车牌号">
+						</div>
+					</div>
+
+					<div class="nameFilterDiv">
+						<div class="filterKeyDiv">司机电话</div>
+						<div class="filterValueDiv">
+							<input v-model="filterPhoneNumber" class="filterValueInput" type="text" placeholder="" title="司机电话">
+						</div>
+					</div>
+
+					<div class="filterOperateBtnDiv">
+						<div id="query_btn" class="filterOperateDiv">
+							<input type="button" class="filterOperateBtn" value="查询" />
+							<i class="iconfont" style="font-size: 20px; margin-top: 15px;">&#xe60e;</i>
+						</div>
+						<div id="clear_btn" class="filterOperateDiv">
+							<input type="button" class="filterOperateBtn" value="清空" />
+							<i class="iconfont">&#xe630;</i>
+						</div>
+
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+		<div style="width: 100%;height: 0.7px;background: rgba(0.5,0.5,0.5,0.1);"></div>
+		<div id="mapContent" style="width: 100%;">
 
 		</div>
 
 	</body>
 
 	<script>
+		var h = $(document).height();
+		var div_h = h - 50;
+		$("#mapContent").css({
+			"height": div_h + "px"
+		});
+
 		if(sessionStorage.userType == '0') {
 			var removeNav = document.getElementById('childSiteListNav');
 			$(removeNav).remove();
 
 			removeNav = document.getElementById('withdrawalChildListNav');
 			$(removeNav).remove();
-			
+
 			removeNav = document.getElementById('siteFinishedOrderListNav');
 			$(removeNav).remove();
 
@@ -162,7 +212,7 @@
 
 			removeNav = document.getElementById('withdrawalChildListNav');
 			$(removeNav).remove();
-			
+
 			removeNav = document.getElementById('siteFinishedOrderListNav');
 			$(removeNav).remove();
 
@@ -176,13 +226,13 @@
 
 			removeNav = document.getElementById('finishWithdrawaledListNav');
 			$(removeNav).remove();
-			
+
 			removeNav = document.getElementById('driverWithdrawalListNav');
 			$(removeNav).remove();
-			
+
 			removeNav = document.getElementById('complainListNav');
 			$(removeNav).remove();
-			
+
 			removeNav = document.getElementById('invoiceListNav');
 			$(removeNav).remove();
 
@@ -204,16 +254,16 @@
 
 			removeNav = document.getElementById('finishWithdrawaledListNav');
 			$(removeNav).remove();
-			
+
 			removeNav = document.getElementById('driverWithdrawalListNav');
 			$(removeNav).remove();
-			
+
 			removeNav = document.getElementById('complainListNav');
 			$(removeNav).remove();
-			
+
 			removeNav = document.getElementById('invoiceListNav');
 			$(removeNav).remove();
-			
+
 			if(sessionStorage.siteType == '2') {
 				removeNav = document.getElementById('childSiteListNav');
 				$(removeNav).remove();
@@ -222,16 +272,73 @@
 			}
 		}
 		$('#headerDiv').show();
+
+		var vm = new Vue({
+			el: '#app',
+			data: {
+				filterSiteId: '',
+				filterPhoneNumber: '',
+				filterPlateNumber: '',
+				siteDatalist: [],
+			},
+			methods: {
+
+			}
+		})
+
+		vm.filterSiteId = sessionStorage.belongSiteId;
+
+		//筛选确认
+		$('#query_btn').click(function() {
+			if(sessionStorage.userType == '0') {
+				vm.filterSiteId = $("#selectSite").val();
+			}
+			loadData();
+		})
+
+		//筛选清空
+		$('#clear_btn').click(function() {
+			if(sessionStorage.userType == '0') {
+				vm.filterSiteId = sessionStorage.belongSiteId;
+			}
+			vm.filterPhoneNumber = '';
+			vm.filterPlateNumber = '';
+			$("#selectSite").val('');
+			loadData();
+
+		})
+
+		function loadSiteData() {
+			postRegular('getSiteList', {
+				page: '0',
+				rows: '10000',
+				filterSiteName: '',
+				filterLawsManName: '',
+				filterBeginTime: '',
+				filterEndTime: '',
+			}, function(data) {
+				vm.siteDatalist = data.object.siteList;
+			}, function() {
+
+			})
+		}
+		if(sessionStorage.userType == '0') {
+					loadSiteData();
+		}
+
 		var datalist = [];
 
 		function loadData() {
 			postRegular('getVehicleList', {
-				siteId: sessionStorage.belongSiteId
+				siteId: vm.filterSiteId,
+				phoneNumber: vm.filterPhoneNumber,
+				plateNumber: vm.filterPlateNumber
 			}, function(data) {
 				$('#app').show();
 				datalist = data.object;
 				var latArray = [];
 				var lonArray = [];
+				map.clearOverlays();
 				for(var i = 0; i < datalist.length; i++) {
 					latArray.push(datalist[i].nowLatitude);
 					lonArray.push(datalist[i].nowLongitude);
@@ -261,7 +368,6 @@
 					}
 				}
 				if(datalist.length == 1) {
-					console.log("121211121ewwedwe")
 					var point = new BMap.Point(datalist[0].nowLongitude, datalist[0].nowLatitude);
 					map.centerAndZoom(point, 12);
 				} else if(datalist.length > 1) {
@@ -291,8 +397,7 @@
 				height: 0, // 信息窗口高度
 				title: "<div style='color:orange;'>" + anObject.plateNumber + "</div>"
 			}
-			var infoWindow = new BMap.InfoWindow("<a style='color:gray;cursor: pointer;' target='_blank' onclick='openItemDetailPage(&quot;" + anObject.userId + "&quot;)'>点击查看详情</a>"
-			                                     , opts); // 创建信息窗口对象
+			var infoWindow = new BMap.InfoWindow("<a style='color:gray;cursor: pointer;' target='_blank' onclick='openItemDetailPage(&quot;" + anObject.userId + "&quot;)'>点击查看详情</a>", opts); // 创建信息窗口对象
 			obj.openInfoWindow(infoWindow, map.getCenter());
 		}
 
