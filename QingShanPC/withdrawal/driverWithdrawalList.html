@@ -264,7 +264,6 @@
 				toUserName: vm.toUserName,
 				bankCardNumber: vm.bankCardNumber,
 			}, function(data) {
-				console.log(data)
 				$('#app').show();
 				vm.datalist = data.object.driverWithdrawalListModelList;
 				for(var i = 0; i < vm.datalist.length; i++) {

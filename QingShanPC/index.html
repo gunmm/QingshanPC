@@ -90,7 +90,6 @@
 				"plateform": "PC"
 			};
 			postLogin("login", data, function(data) {
-					console.log()
 					sessionStorage.token = data.object.accessToken;
 					sessionStorage.userId = data.object.userId;
 					sessionStorage.userType = data.object.type;

@@ -169,7 +169,6 @@
 			postRegular('getBigOrderInfo', {
 				orderId: orderId,
 			}, function(data) {
-				console.log(data);
 				$('#app').show();
 				vm.status = data.object.status;
 				vm.type = data.object.type;

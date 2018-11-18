@@ -194,7 +194,6 @@
 			$("#Pagination").empty();
 			postRegular(url, data,
 				function(data) {
-					console.log(data)
 					for(var i = 0; i < data.object.orderList.length; i++) {
 						var obj = data.object.orderList[i];
 						obj.id = i + 1;

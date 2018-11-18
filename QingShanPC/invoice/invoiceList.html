@@ -357,7 +357,6 @@
 				invoiceType: $("#selectType").val(),
 				receiverName: vm.receiverName,
 			}, function(data) {
-				console.log(data)
 				vm.datalist = data.object.invoiceResModelList;
 				for(var i = 0; i < vm.datalist.length; i++) {
 					var obj = vm.datalist[i];

@@ -1,5 +1,5 @@
-var ip = 'http://127.0.0.1:8080/QingShansProject/';
-//var ip = 'http://39.107.113.157:8080/';
+//var ip = 'http://127.0.0.1:8080/QingShansProject/';
+var ip = 'http://39.107.113.157:8080/';
 
 //var ip = 'http://21i5632e17.51mypc.cn/QingShansProject/';
 //var ip = 'http://mzandsyl.info:10196/';
@@ -22,7 +22,6 @@ function postLogin(url, data, callback, callback1) {
 		"body": data,
 		"head": head
 	};
-	console.log(param);
 	addLoading();
 	$.ajax({
 		type: "post",
@@ -31,7 +30,6 @@ function postLogin(url, data, callback, callback1) {
 		traditional: true,
 		data: JSON.stringify(param),
 		success: function(data) {
-			console.log("---->" + JSON.stringify(data))
 			removeLoading();
 			if(data.result_code != 1) {
 				myAlert(data.result);
@@ -44,7 +42,6 @@ function postLogin(url, data, callback, callback1) {
 		},
 		error: function(data) {
 			removeLoading();
-			console.log(data);
 			myAlert('服务器连接失败');
 		}
 	});
@@ -69,12 +66,10 @@ function postRegular(url, data, callback, callback1) {
 		traditional: true,
 		data: JSON.stringify(param),
 		success: function(data) {
-			console.log(data)
 			if((typeof data == 'string') && data.constructor == String) {
 				data = JSON.parse(data);
 			}
 
-			//			console.log("---->" + JSON.stringify(data))
 			removeLoading();
 			if(data.result_code == 0) {
 				myAlert(data.result);
@@ -95,6 +90,51 @@ function postRegular(url, data, callback, callback1) {
 		},
 		error: function(data) {
 			removeLoading();
+			myAlert('服务器连接失败');
+		}
+	});
+}
+
+function bgPostRegular(url, data, callback, callback1) {
+	var param;
+	var head = {
+		"token": sessionStorage.token,
+		"userId": sessionStorage.userId,
+	};
+	var param = {
+		"body": data,
+		"head": head
+	};
+
+	$.ajax({
+		type: "post",
+		url: getRegularIp() + url,
+		async: true,
+		traditional: true,
+		data: JSON.stringify(param),
+		success: function(data) {
+			if((typeof data == 'string') && data.constructor == String) {
+				data = JSON.parse(data);
+			}
+
+			if(data.result_code == 0) {
+				myAlert(data.result);
+				if(callback1 != null) {
+					callback1();
+				}
+				return;
+			} else if(data.result_code == -9) {
+				var urlStr = window.location.href;
+				if(urlStr.indexOf('bankNumberDetail.html') > 0) {
+					window.location.replace('index.html');
+				}else {
+					window.location.replace('../index.html');
+				}
+				return;
+			}
+			callback(data);
+		},
+		error: function(data) {
 			myAlert('服务器连接失败');
 		}
 	});
@@ -517,8 +557,6 @@ function BMapSetPointCenterWithPoint(lat1, lng1, lat2, lng2) {
 	}
 	var pointLng = (lng1 + lng2) / 2;
 	var pointLat = (lat1 + lat2) / 2;
-	console.log(pointLng)
-	console.log(pointLat)
 	var pointCenter = new BMap.Point(pointLng, pointLat);
 	map.centerAndZoom(pointCenter, zoom + 0.3);
 }

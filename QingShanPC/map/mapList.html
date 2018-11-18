@@ -323,19 +323,21 @@
 			})
 		}
 		if(sessionStorage.userType == '0') {
-					loadSiteData();
+			loadSiteData();
 		}
 
 		var datalist = [];
 
 		function loadData() {
-			postRegular('getVehicleList', {
+			console.log("loadData")
+			bgPostRegular('getVehicleList', {
 				siteId: vm.filterSiteId,
 				phoneNumber: vm.filterPhoneNumber,
 				plateNumber: vm.filterPlateNumber
 			}, function(data) {
 				$('#app').show();
 				datalist = data.object;
+				console.log(data)
 				var latArray = [];
 				var lonArray = [];
 				map.clearOverlays();
@@ -386,10 +388,11 @@
 		map.addControl(new BMap.ScaleControl());
 		map.addControl(new BMap.OverviewMapControl());
 		map.addControl(new BMap.MapTypeControl());
-
+		
 		loadData();
-		var myCity = new BMap.LocalCity();
-		myCity.get(locFun);
+		var t1 = window.setInterval(loadData, 60000);
+//		var myCity = new BMap.LocalCity();
+//		myCity.get(locFun);
 
 		function message(obj, anObject) {
 			var opts = {
@@ -397,7 +400,12 @@
 				height: 0, // 信息窗口高度
 				title: "<div style='color:orange;'>" + anObject.plateNumber + "</div>"
 			}
-			var infoWindow = new BMap.InfoWindow("<a style='color:gray;cursor: pointer;' target='_blank' onclick='openItemDetailPage(&quot;" + anObject.userId + "&quot;)'>点击查看详情</a>", opts); // 创建信息窗口对象
+//			var infoWindow = new BMap.InfoWindow("<a style='color:gray;cursor: pointer;' target='_blank' onclick='openItemDetailPage(&quot;" + anObject.userId + "&quot;)'>点击查看详情</a>", opts); // 创建信息窗口对象
+			
+			
+			var infoWindow = new BMap.InfoWindow("<div style='color:gray;'>经度：" + anObject.nowLongitude + "</div>" +
+				"<div style='color:gray;'>纬度：" + anObject.nowLatitude + "</div>"+
+				"<br><a style='color:black;text-decoration:blink;cursor: pointer;' target='_blank' onclick='openItemDetailPage(&quot;" + anObject.userId + "&quot;)'>点击查看详情</a>", opts); // 创建信息窗口对象
 			obj.openInfoWindow(infoWindow, map.getCenter());
 		}
 
@@ -411,6 +419,7 @@
 		function openItemDetailPage(driverId) {
 			window.open("../driver/driverDetail.html?driverId=" + driverId);
 		}
+		
 	</script>
 
 </html>

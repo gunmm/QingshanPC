@@ -498,7 +498,6 @@
 					"mainGoodsName": vm.mainGoodsName,
 					"belongSiteId": vm.siteId
 				};
-				console.log(data);
 				postRegular('addMaster', data, function(data) {
 					closeAddPage();
 					window.location.reload();
@@ -516,7 +515,6 @@
 					"mainGoodsName": vm.mainGoodsName,
 					"belongSiteId": vm.siteId
 				};
-				console.log(data);
 				postRegular('editMaster', data, function(data) {
 					closeAddPage();
 					window.location.reload();

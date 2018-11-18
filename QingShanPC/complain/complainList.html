@@ -340,7 +340,6 @@
 				type: $("#selectType").val() == '0' ? '' : $("#selectType").val(),
 				manageStatus: $("#selectStatus").val(),
 			}, function(data) {
-				console.log(data)
 				$('#app').show();
 				vm.datalist = data.object.complainResModelList;
 				for(var i = 0; i < vm.datalist.length; i++) {
@@ -358,7 +357,6 @@
 				$('.allPage').html(Math.ceil(data.object.complainCount / vm.pageSize));
 				$("#Pagination").pagination(data.object.complainCount / vm.pageSize, {
 					callback: function(page) { // 回调函数
-						console.log(page)
 						vm.page = page;
 						loadPageData();
 					}
@@ -375,7 +373,6 @@
 				type: $("#selectType").val() == '0' ? '' : $("#selectType").val(),
 				manageStatus: $("#selectStatus").val(),
 			}, function(data) {
-				console.log(data)
 				vm.datalist = data.object.complainResModelList;
 				for(var i = 0; i < vm.datalist.length; i++) {
 					var obj = vm.datalist[i];

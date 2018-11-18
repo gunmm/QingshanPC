@@ -633,7 +633,6 @@
 		function deleteItem(itemIndex, $event) {
 			$event.stopPropagation();
 			var obj = vm.datalist[itemIndex - 1];
-			console.log(obj.siteName);
 			if(window.confirm('你确定要删除 ' + obj.siteName + ' 吗？')) {
 				postRegular('deleteSite', {
 					siteId: obj.siteId,

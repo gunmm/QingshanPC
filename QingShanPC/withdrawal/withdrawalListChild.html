@@ -121,7 +121,6 @@
 				type: type,
 				queryTime: currentMonth,
 			}, function(data) {
-				console.log(data)
 				$('#app').show();
 				vm.datalist = data.object.withdrawalList;
 				for(var i = 0; i < vm.datalist.length; i++) {

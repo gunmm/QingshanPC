@@ -253,7 +253,6 @@
 				rows: vm.pageSize,
 				bankcardNumber: vm.bankcardNumber,
 			}, function(data) {
-				console.log(data)
 				$('#app').show();
 				vm.datalist = data.object.withdrawalFinishedList;
 				for(var i = 0; i < vm.datalist.length; i++) {
