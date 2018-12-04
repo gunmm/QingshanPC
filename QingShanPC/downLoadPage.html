@@ -7,6 +7,7 @@
 		<link rel="icon" href="img/logo2.ico" type="img/x-ico" />
 		<link rel="stylesheet" href="css/download.css">
 		<link rel="stylesheet" href="css/iconfont.css">
+		<script charset="UTF-8" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.js"></script>
 
 	</head>
 
@@ -22,11 +23,20 @@
 					<a href="https://www.pgyer.com/QingShan"><i class="iconfont" style="font-size: 25px;margin-right: 30px;">&#xe631;</i>iPhone版下载</a>
 				</div>
 				<div class="iosDownDiv">
-					<a href="#" style="background:#0099ff;"><i class="iconfont" style="font-size: 25px;margin-right: 30px;">&#xe603;</i>安卓版下载</a>
+					<a href="http://39.107.113.157:8080/QingshanPackage/android/qingshan.apk" style="background:#0099ff;"><i class="iconfont" style="font-size: 25px;margin-right: 30px;">&#xe603;</i>安卓版下载</a>
 				</div>
 			</div>
 		</div>
 
 	</body>
+
+	<script>
+	
+		var h = $(document).height() * 0.3;
+		var div_h = h - 50;
+		$(".logoDiv").css({
+			"padding-top": div_h + "px"
+		});
+	</script>
 
 </html>
