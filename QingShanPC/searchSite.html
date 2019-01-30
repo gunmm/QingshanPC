@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>查找站点</title>
+		<link rel="icon" href="img/logo2.ico" type="img/x-ico" />
+
+		<link rel="stylesheet" href="css/iconfont.css">
+		<link rel="stylesheet" href="css/loading.css">
+		<link rel="stylesheet" href="css/navHead.css">
+
+		<link rel="stylesheet" href="css/pagination.css" />
+
+		<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.js"></script>
+		<script type="text/javascript" src="js/jquery.easing.1.3.js"></script>
+		<script type="text/javascript" src="js/jquery.kwicks-1.5.1.pack.js"></script>
+
+		<script type="text/javascript" src="js/exif.js"></script>
+		<script type="text/javascript" src="js/config.js"></script>
+		<script type="text/javascript" src="js/vue.min.js"></script>
+
+		<script type="text/javascript" src="js/jquery.pagination.js"></script>
+	</head>
+
+	<body>
+		<div id="app" class="content">
+			<div class="oprationToolBar">
+				<div class="filterDiv">
+					<div class="nameFilterDiv">
+						<div class="filterKeyDiv">省</div>
+						<div class="filterValueDiv">
+							<select class="filterValueInput" onchange="selectprovince(this)" id="selectprovince">
+								<option v-for="item in province" :value="item.id">{{item.name}}</option>
+							</select>
+						</div>
+					</div>
+
+					<div class="nameFilterDiv">
+						<div class="filterKeyDiv">市</div>
+						<div class="filterValueDiv">
+
+							<select class="filterValueInput" id="selectcity">
+								<option value="">请选择</option>
+								<option v-for="item in nowcity" :value="item.id">{{item.name}}</option>
+							</select>
+						</div>
+					</div>
+
+					<div class="filterOperateBtnDiv">
+						<div id="query_btn" class="filterOperateDiv">
+							<input type="button" class="filterOperateBtn" value="查询" />
+							<i class="iconfont" style="font-size: 20px; margin-top: 15px;">&#xe60e;</i>
+						</div>
+						<div id="clear_btn" class="filterOperateDiv">
+							<input type="button" class="filterOperateBtn" value="清空" />
+							<i class="iconfont">&#xe630;</i>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<div class="bigContent">
+				<div class="listContent">
+
+					<table class="hovertable" title="">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>站点名称</th>
+								<th>站点类型</th>
+								<th>地址</th>
+								<th>联系电话</th>
+							</tr>
+
+						</thead>
+
+						<tr v-for="item in datalist">
+							<td>{{item.id}}</td>
+							<td>{{item.siteName}}</td>
+							<td v-if="item.siteType == 1" style="color: orange;">{{item.siteType == 1 ? "一级站点" : "子站点"}}</td>
+							<td v-else style="color: orangered">{{item.siteType == 1 ? "一级站点" : "子站点"}}</td>
+							<td>{{item.siteProvinceName}}{{item.siteCityName}}{{item.address}}</td>
+							<td>
+								<a style="color: blue;cursor:pointer" :href="'tel:'+item.lawsManPhone">{{item.lawsManPhone}}</a>
+							</td>
+						</tr>
+
+					</table>
+
+				</div>
+			</div>
+			<div class="hrDiv"></div>
+			<div class="countDiv">
+				<div class="f-l hejiDiv">合计</div>
+				<div class="f-l julushuDiv">记录数：</div>
+				<div class="f-l jiluCountDiv">{{itemCount}}</div>
+			</div>
+			<div class="pages">
+				<div id="Pagination"></div>
+				<div class="searchPage">
+					<span class="page-sum">共<strong class="allPage">1</strong>页</span>
+					<span class="page-go">跳转<input type="text">页</span>
+					<a href="javascript:;" class="page-btn">GO</a>
+				</div>
+			</div>
+		</div>
+
+	</body>
+
+	<script>
+		var province;
+		var city;
+		var nowcity;
+		getCity(function(p, c) {
+			province = p;
+			city = c;
+			nowcity = city['1'];
+		});
+
+		var vm = new Vue({
+			el: '#app',
+			data: {
+				province: province,
+				city: city,
+				nowcity: nowcity,
+				page: 0,
+				pageSize: 15,
+				itemCount: 0,
+				datalist: [{
+					"siteId": "54326082-3e80-4a88-9dba-d50d4945840e",
+					"superSiteId": null,
+					"superSiteName": null,
+					"childToSuperRate": 0.0,
+					"siteType": "1",
+					"siteCheckStatus": "1",
+					"siteName": "上海松江站",
+					"businessLicenseNumber": "shsj-yyzz-3242343423",
+					"businessLicensePhoto": "static/image/2018-11-17/18-57-190276976e-f7d4-4037-bd1c-daf2324a6573.jpg",
+					"lawsManName": "周欢",
+					"lawsManIdCardNumber": "2197392178397291739721",
+					"lawsManPhone": "17621238085",
+					"lawsManIdCardFront": null,
+					"lawsManIdCardBehind": null,
+					"leaseContractPhoto": "static/image/2018-11-17/18-57-486c11bd4f-6cb9-4f7e-85b3-def1a81f5b80.jpg",
+					"siteProvince": "9",
+					"siteCity": "157",
+					"siteProvinceName": "上海市",
+					"siteCityName": "松江区",
+					"siteArea": null,
+					"address": "泗泾镇泗陈公路1888弄山语原墅130号",
+					"createTime": 1542452269000,
+					"updateTime": 1542452269000,
+					"childCount": "0"
+				}],
+
+			},
+			methods: {
+
+			}
+		})
+
+		//		function loadData() {
+		//			$("#Pagination").empty();
+		//			postRegular('getSiteList', {
+		//				page: vm.page,
+		//				rows: vm.pageSize,
+		//				filterProvince: $("#selectprovince").val(),
+		//				filterCity: $("#selectcity").val(),
+		//			}, function(data) {
+		//				$('#app').show();
+		//				vm.datalist = data.object.siteList;
+		//				for(var i = 0; i < vm.datalist.length; i++) {
+		//					var obj = vm.datalist[i];
+		//					obj.id = vm.page * 15 + i + 1;
+		//				}
+		//				vm.itemCount = data.object.siteCount;
+		//				$('.allPage').html(Math.ceil(data.object.siteCount / vm.pageSize));
+		//				$("#Pagination").pagination(data.object.siteCount / vm.pageSize, {
+		//					callback: function(page) { // 回调函数
+		//						vm.page = page;
+		//						loadPageData();
+		//					}
+		//				});
+		//				setTimeout(function() {
+		//					$('tr:even:gt(0)').addClass('tr_even'); //默认偶数行背景色，无视标题行用:gt(0)
+		//					$('tr:odd').addClass('tr_odd'); //默认奇数数行背景色
+		//
+		//				}, 50);
+		//			}, function() {
+		//
+		//			})
+		//		}
+		//		loadData();
+		//
+		//		function loadPageData() {
+		//			postRegular('getSiteList', {
+		//				page: vm.page,
+		//				rows: vm.pageSize,
+//						filterProvince: $("#selectprovince").val(),
+//						filterCity: $("#selectcity").val(),
+		//			}, function(data) {
+		//				vm.datalist = data.object.siteList;
+		//				for(var i = 0; i < vm.datalist.length; i++) {
+		//					var obj = vm.datalist[i];
+		//					obj.id = vm.page * 15 + i + 1;
+		//				}
+		//				setTimeout(function() {
+		//					$('tr:even:gt(0)').addClass('tr_even'); //默认偶数行背景色，无视标题行用:gt(0)
+		//					$('tr:odd').addClass('tr_odd'); //默认奇数数行背景色
+		//
+		//				}, 50);
+		//			})
+		//		}
+
+		//筛选确认
+		$('#query_btn').click(function() {
+			vm.page = 0;
+			loadData();
+		})
+
+		//筛选清空
+		$('#clear_btn').click(function() {
+			$('#selectprovince').val('');
+			$('#selectcity').val('');
+			loadData();
+
+		})
+
+		function selectprovince(obj) {
+			vm.nowcity = vm.city[obj.value];
+			console.log(vm.nowcity)
+			$('#selectcity').val('');
+		}
+	</script>
+
+</html>
