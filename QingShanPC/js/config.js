@@ -1,5 +1,5 @@
-//var ip = 'http://127.0.0.1:8080/QingShansProject/';
-var ip = 'http://39.107.113.157:8080/';
+var ip = 'http://192.168.100.4:8080/QingShansProject/';
+//var ip = 'http://39.107.113.157:8080/QingShansProject/';
 
 //var ip = 'http://21i5632e17.51mypc.cn/QingShansProject/';
 //var ip = 'http://mzandsyl.info:10196/';
@@ -35,6 +35,55 @@ function postLogin(url, data, callback, callback1) {
 				myAlert(data.result);
 				if(callback1 != null) {
 					callback1();
+				}
+				return;
+			}
+			callback(data);
+		},
+		error: function(data) {
+			removeLoading();
+			myAlert('服务器连接失败');
+		}
+	});
+}
+
+function postNoCheckRegular(url, data, callback, callback1) {
+	var param;
+	var head = {
+		"token": sessionStorage.token,
+		"userId": sessionStorage.userId,
+	};
+	var param = {
+		"body": data,
+		"head": head
+	};
+
+	addLoading();
+	$.ajax({
+		type: "post",
+		url: getloginIp() + url,
+		async: true,
+		traditional: true,
+		data: JSON.stringify(param),
+		success: function(data) {
+			if((typeof data == 'string') && data.constructor == String) {
+				data = JSON.parse(data);
+			}
+			console.log(data);
+
+			removeLoading();
+			if(data.result_code == 0) {
+				myAlert(data.result);
+				if(callback1 != null) {
+					callback1();
+				}
+				return;
+			} else if(data.result_code == -9) {
+				var urlStr = window.location.href;
+				if(urlStr.indexOf('bankNumberDetail.html') > 0) {
+					window.location.replace('index.html');
+				}else {
+					window.location.replace('../index.html');
 				}
 				return;
 			}
@@ -146,15 +195,15 @@ function addLoading() {
 	}
 
 	$('body').append('<div id="loading11111" style="width: 100%;height: 100%;position: fixed;top: 0;z-index: 10001;display: flex;">' +
-		'<div style="margin: auto;padding: 20px; text-align: center;background: rgba(0, 0, 0, 0.5);border-radius: 10px;">' +
-		'<div class="load-1" style="height: 55px;">' +
+		'<div style="margin: auto;padding: 0.8rem; text-align: center;background: rgba(0, 0, 0, 0.5);border-radius: 10px;">' +
+		'<div class="load-1" style="height: 1.1rem;">' +
 		'<div class="k-line k-line3-1"></div>' +
 		'<div class="k-line k-line3-2"></div>' +
 		'<div class="k-line k-line3-3"></div>' +
 		'<div class="k-line k-line3-4"></div>' +
 		'<div class="k-line k-line3-5"></div>' +
 		'</div>' +
-		'<span style="color: white;text-align: center;">正在加载</span>' +
+		'<span style="color: white;text-align: center;font-size: 0.84rem;">正在加载</span>' +
 		'</div>' +
 		'</div>');
 }
@@ -171,10 +220,10 @@ function myAlert(str) {
 		return;
 	}
 	$('body').append('<div id="alert11111" style="width: 100%;height: 100%;position: fixed;top: 0;z-index: 100000;display: flex;">' +
-		'<div style="margin: auto;padding: 20px; text-align: center;background: rgba(0, 0, 0, 0.8);border-radius: 10px;color: white;">' +
-		'<div style="max-width: 500px;min-width: 200px;font-size:16px; word-wrap: break-word;overflow: auto;max-height: 500px;">' + str + '</div>' +
-		'<div style="height: 1px;background: white;margin-top: 20px;"></div>' +
-		'<div style="cursor: pointer;padding-top: 20px;font-weight: bold;font-size: 16px;" onclick="$(this).parent().parent().remove()">确&nbsp;&nbsp;&nbsp;&nbsp;定</div>' +
+		'<div style="margin: auto;padding: 1rem; text-align: center;background: rgba(0, 0, 0, 0.8);border-radius: 10px;color: white;">' +
+		'<div style="max-width: 10rem;min-width: 4rem;font-size:1rem; word-wrap: break-word;overflow: auto;max-height: 10rem;">' + str + '</div>' +
+		'<div style="height: 1px;background: white;margin-top: 0.8rem;"></div>' +
+		'<div style="cursor: pointer;padding-top: 0.8rem;font-weight: bold;font-size:1rem;" onclick="$(this).parent().parent().remove()">确&nbsp;&nbsp;&nbsp;&nbsp;定</div>' +
 		'</div>' +
 		'</div>');
 }

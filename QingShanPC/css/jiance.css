@@ -1,0 +1,133 @@
+html {
+	font-family: "Helvetica Neue", Helvetica, sans-serif;
+	font-size: 50px;
+}
+
+.jianceBg {
+	width: 100%;
+	height: 100%;
+}
+
+.jianceContent {
+	margin-left: 0.8rem;
+	margin-right: 0.8rem;
+	margin-top: 0.8rem;
+	background: white;
+	padding-top: 0.8rem;
+	border: 1px solid #ccc;
+	border-radius: 0.1rem;
+}
+
+.jianceNameFilterDiv {
+	margin-right: 0.8rem;
+	height: 2rem;
+}
+
+.jianceFilterKeyDiv {
+	float: left;
+	text-align: left;
+	line-height: 2rem;
+	color: #202D33;
+	font-size: 0.9rem;
+	margin-left: 0.8rem;
+	margin-right: 0.6rem;
+	width: 4rem;
+}
+
+.jianceCitySelectSuperDiv {
+	overflow: hidden;
+}
+
+.jianceCitySelect {
+	width: 100%;
+	font-size: 0.84rem;
+	height: 2rem;
+	color: #555;
+	background-color: #fff;
+	background-image: none;
+	border: 2px solid #ccc;
+	border-radius: 0.1rem;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	-webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+	transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+	-webkit-appearance: none;
+	outline: none;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+	padding-right: 0.8rem;
+	padding-left: 0.8rem;
+		box-sizing: border-box;
+
+}
+
+.jianceFilterValueInput {
+	line-height: 1.2rem;
+	font-size: 0.84rem;
+	width: 100%;
+	height: 2rem;
+	color: #555;
+	background-color: #fff;
+	background-image: none;
+	border: 2px solid #ccc;
+	border-radius: 0.1rem;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	-webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+	transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+	box-sizing: border-box;
+	padding-right: 0.8rem;
+	padding-left: 0.8rem;
+	outline: none;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.margin-top-08 {
+	margin-top: 0.8rem;
+}
+
+.margin-bottom-08 {
+	margin-bottom: 0.8rem;
+}
+
+.jianceCitySelectSuperDiv input:focus {
+	border-style: solid;
+	border-color: blue;
+	box-shadow: 0 0 15px blue;
+}
+
+.jianceCitySelectSuperDiv select:focus {
+	border-style: solid;
+	border-color: blue;
+	box-shadow: 0 0 15px blue;
+}
+
+.jianceOperateDiv {
+	background: yellow;
+	height: 3rem;
+	bottom: 0;
+	position: fixed;
+	width: 100%;
+	padding-bottom: ;
+}
+
+.jianceColorBtn {
+	font-size: 1rem;
+	background-color: #27303f;
+	width: 100%;
+	height: 100%;
+	color: #ffffff;
+	-webkit-appearance: none !important;
+	border-radius: 0 !important;
+}
+
+.jianceClearBtn {
+	font-size: 0.5rem;
+	color: red;
+	outline: none;
+	-webkit-appearance: none !important;
+	border-radius: 0 !important;
+	float:  right;
+	margin-right: 1rem;
+	margin-top: 0.6rem;
+	border:none; outline:none;
+}

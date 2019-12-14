@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>车辆预约</title>
+		<link rel="stylesheet" href="../css/navHead.css">
+		<link rel="stylesheet" href="../css/jiance.css">
+
+		<link rel="stylesheet" href="../css/loading.css">
+		<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.js"></script>
+		<script type="text/javascript" src="../js/vue.min.js"></script>
+		<script type="text/javascript" src="../js/config.js"></script>
+	</head>
+
+	<body>
+		<div class="jianceBg" id="app">
+			<div class="jianceContent">
+
+				<div class="jianceNameFilterDiv">
+					<div class="jianceFilterKeyDiv">号牌种类</div>
+					<div class="jianceCitySelectSuperDiv">
+						<select class="jianceCitySelect" id="selectType">
+							<option value="">--请选择号牌种类--</option>
+							<option v-for="item in plateNumberTypes" :value="item.keyText">{{item.valueText}}</option>
+						</select>
+
+					</div>
+				</div>
+
+				<div class="jianceNameFilterDiv margin-top-08">
+					<div class="jianceFilterKeyDiv">车牌号码</div>
+					<div class="jianceCitySelectSuperDiv">
+						<input v-model="plateNumber" class="jianceFilterValueInput" type="text" placeholder="请输入车牌号码">
+					</div>
+				</div>
+
+				<div class="jianceNameFilterDiv margin-top-08">
+					<div class="jianceFilterKeyDiv">车主姓名</div>
+					<div class="jianceCitySelectSuperDiv">
+						<input v-model="masterName" class="jianceFilterValueInput" type="text" placeholder="请输入车主姓名">
+					</div>
+				</div>
+
+				<div class="jianceNameFilterDiv margin-top-08">
+					<div class="jianceFilterKeyDiv">联系电话</div>
+					<div class="jianceCitySelectSuperDiv">
+						<input v-model="masterPhone" class="jianceFilterValueInput" type="number" placeholder="请输入联系电话">
+					</div>
+				</div>
+
+				<div class="jianceNameFilterDiv margin-top-08">
+					<div class="jianceFilterKeyDiv">检测时间</div>
+					<div class="jianceCitySelectSuperDiv">
+						<input v-model="checkTime" class="jianceCitySelect" type="datetime-local" placeholder="检测时间">
+					</div>
+				</div>
+
+				<div class="jianceNameFilterDiv margin-top-08">
+					<div class="jianceFilterKeyDiv">车架号</div>
+					<div class="jianceCitySelectSuperDiv">
+						<input v-model="carSkeletonNumber" class="jianceFilterValueInput" type="text" placeholder="请输入车架号后四位">
+					</div>
+				</div>
+
+				<div class="jianceNameFilterDiv margin-top-08">
+					<div class="jianceFilterKeyDiv">公里数</div>
+					<div class="jianceCitySelectSuperDiv">
+						<input v-model="carDistance" class="jianceFilterValueInput" type="number" placeholder="请精确到百分位">
+					</div>
+				</div>
+
+				<div class="jianceNameFilterDiv margin-top-08 margin-bottom-08">
+					<div class="jianceFilterKeyDiv">住所地址</div>
+					<div class="jianceCitySelectSuperDiv">
+						<input v-model="masterAddress" class="jianceFilterValueInput" type="text" placeholder="请输入住所地址">
+					</div>
+				</div>
+
+			</div>
+			<input id="clear_btn" type="button" class="jianceClearBtn" value="清空当前信息" />
+
+			<div id="save_btn" class="jianceOperateDiv">
+				<input type="button" class="jianceColorBtn" value="确认预约" />
+			</div>
+
+		</div>
+		</div>
+	</body>
+
+	<script>
+		var vm = new Vue({
+			el: '#app',
+			data: {
+				plateNumberType: '',
+				plateNumber: '',
+				masterName: '',
+				masterPhone: '',
+				checkTime: '',
+				carSkeletonNumber: '',
+				carDistance: '',
+				masterAddress: '',
+				plateNumberTypes: [],
+			},
+			methods: {}
+		})
+
+		//确认
+		$('#save_btn').click(function() {
+			if($("#selectType").val().length == 0) {
+				myAlert("请选择号牌种类！");
+				return;
+			}
+
+			if(vm.plateNumber.length == 0) {
+				myAlert("车牌号码不能为空！");
+				return;
+			}
+
+			if(vm.masterName.length == 0) {
+				myAlert("车主姓名不能为空！");
+				return;
+			}
+
+			if(vm.masterPhone.length == 0) {
+				myAlert("联系电话不能为空！");
+				return;
+			}
+
+			if(checkTel(vm.masterPhone) == 0) {
+				myAlert("联系电话格式错误！");
+				return;
+			}
+
+			if(vm.checkTime.length == 0) {
+				myAlert("检测时间不能为空！");
+				return;
+			}
+
+			postNoCheckRegular('addCheck', {
+				plateNumberType: $("#selectType").val(),
+				plateNumber: vm.plateNumber,
+				masterName: vm.masterName,
+				masterPhone: vm.masterPhone,
+				checkTime: vm.checkTime,
+				carSkeletonNumber: vm.carSkeletonNumber,
+				carDistance: vm.carDistance,
+				masterAddress: vm.masterAddress,
+			}, function(data) {
+				myAlert("预约成功！请重试");
+				window.close();
+			}, function() {
+				myAlert("预约失败！请重试");
+				return;
+			});
+		})
+
+		//筛选清空
+		$('#clear_btn').click(function() {
+			$("#selectType").val('');
+			vm.plateNumberType = '';
+			vm.plateNumber = '';
+			vm.masterName = '';
+			vm.masterPhone = '';
+			vm.checkTime = '';
+			vm.carSkeletonNumber = '';
+			vm.carDistance = '';
+			vm.masterAddress = '';
+		})
+		
+		function loadTypeData() {
+			postNoCheckRegular('getJianceType', {
+			}, function(data) {
+				vm.plateNumberTypes = data.object;
+			}, function() {
+			})
+		}
+		loadTypeData();
+	</script>
+
+</html>
