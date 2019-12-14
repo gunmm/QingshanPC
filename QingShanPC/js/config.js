@@ -1,5 +1,5 @@
-var ip = 'http://192.168.100.4:8080/QingShansProject/';
-//var ip = 'http://39.107.113.157:8080/QingShansProject/';
+//var ip = 'http://192.168.100.4:8080/QingShansProject/';
+var ip = 'http://39.107.113.157:8080/QingShansProject/';
 
 //var ip = 'http://21i5632e17.51mypc.cn/QingShansProject/';
 //var ip = 'http://mzandsyl.info:10196/';
