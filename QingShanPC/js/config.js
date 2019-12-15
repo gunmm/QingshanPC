@@ -118,6 +118,8 @@ function postRegular(url, data, callback, callback1) {
 			if((typeof data == 'string') && data.constructor == String) {
 				data = JSON.parse(data);
 			}
+						console.log(data);
+
 
 			removeLoading();
 			if(data.result_code == 0) {

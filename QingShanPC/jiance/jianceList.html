@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>检测单列表</title>
+		<link rel="icon" href="../img/logo2.ico" type="img/x-ico" />
+		<link rel="stylesheet" href="../css/iconfont.css">
+		<link rel="stylesheet" href="../css/loading.css">
+		<link rel="stylesheet" href="../css/navHead.css">
+
+		<link rel="stylesheet" href="../css/pagination.css" />
+
+		<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.js"></script>
+		<script type="text/javascript" src="../js/jquery.easing.1.3.js"></script>
+		<script type="text/javascript" src="../js/jquery.kwicks-1.5.1.pack.js"></script>
+
+		<script type="text/javascript" src="../js/exif.js"></script>
+		<script type="text/javascript" src="../js/config.js"></script>
+		<script type="text/javascript" src="../js/vue.min.js"></script>
+		<script type="text/javascript" src="../js/jquery.pagination.js"></script>
+	</head>
+
+	<script type="text/javascript">
+		$(function() {
+			$('.nav').kwicks({
+				max: 120,
+				isVertical: false,
+				sticky: false,
+				defaultKwick: 0,
+				event: 'mouseover',
+				spacing: 0,
+				duration: 500
+			});
+		});
+
+		function selectNav(index) {
+			$("#navBar1").removeClass("on");
+			var idStr = "#navBar" + index;
+			$(idStr).addClass("on");
+			if(index == '1') {
+				window.location.replace('jianceList.html');
+			} else if(index == '2') {}
+		}
+	</script>
+
+	<body>
+		<div class="header" id="headerDiv">
+			<div class="logoDiv">
+			</div>
+			<ul class="nav">
+				<li id="jianceListNav">
+					<a id="navBar1" class="on" href="javascript:selectNav('1')">检测单列表</a>
+				</li>
+				<!--<li id="userListNav">
+					<a id="navBar2" href="javascript:selectNav('2')">人员列表</a>
+				</li>-->
+			</ul>
+		</div>
+
+		<div id="app" class="content">
+			<div class="oprationToolBar">
+				<div class="filterDiv">
+					<div class="nameFilterDiv">
+						<div class="filterKeyDiv">预约电话</div>
+						<div class="filterValueDiv">
+							<input v-model="masterPhone" class="filterValueInput" type="text" placeholder="预约电话" title="预约电话">
+						</div>
+					</div>
+					<div class="nameFilterDiv">
+						<div class="filterKeyDiv">车牌号码</div>
+						<div class="filterValueDiv">
+							<input v-model="carPlateNumber" class="filterValueInput" type="text" placeholder="车牌号码" title="车牌号码">
+						</div>
+					</div>
+
+					<div class="nameFilterDiv">
+						<div class="filterKeyDiv">查询时间</div>
+						<div class="filterValueDiv">
+							<input v-model="queryTime" class="filterValueInput" type="date" placeholder="查询时间" title="查询时间">
+						</div>
+					</div>
+
+					<div class="filterOperateBtnDiv" style="width: 285px;">
+						<div id="query_btn" class="filterOperateDiv">
+							<input type="button" class="filterOperateBtn" value="待办" />
+							<i class="iconfont" style="font-size: 20px; margin-top: 15px;">&#xe60e;</i>
+						</div>
+
+						<div id="query_all_btn" class="filterOperateDiv">
+							<input type="button" class="filterOperateBtn" value="全部" />
+							<i class="iconfont" style="font-size: 20px; margin-top: 15px;">&#xe60e;</i>
+						</div>
+
+						<div id="clear_btn" class="filterOperateDiv">
+							<input type="button" class="filterOperateBtn" value="清空" />
+							<i class="iconfont">&#xe630;</i>
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+
+			<div class="bigContent">
+				<div class="listContent">
+
+					<table class="hovertable" title="">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>车牌号码</th>
+								<th>号牌类型</th>
+								<th>检测状态</th>
+								<th>车主姓名</th>
+								<th>联系电话</th>
+								<th>车架号</th>
+								<th>预约时间</th>
+								<th>操作</th>
+							</tr>
+
+						</thead>
+
+						<tr v-for="item in datalist">
+							<td>{{item.id}}</td>
+							<td>{{item.plateNumber}}</td>
+							<td>{{item.plateNumberString}}</td>
+							<td v-if="item.status == 0" style="color: red;">待检测</td>
+							<td v-else style="color: gray">已完成</td>
+							<td>{{item.masterName}}</td>
+							<td>{{item.masterPhone}}</td>
+							<td>{{item.carSkeletonNumber}}</td>
+							<td>{{datetransform(item.checkTime)}}</td>
+							<td>
+								<div class="oprateDiv">
+									<a v-if="item.status == 0" @click="finish(item.recordId,item.plateNumber,$event)">完成</a>
+								</div>
+							</td>
+
+						</tr>
+
+					</table>
+
+				</div>
+				<div class="hrDiv"></div>
+				<div class="countDiv">
+					<div class="f-l hejiDiv">合计</div>
+					<div class="f-l julushuDiv">记录数：</div>
+					<div class="f-l jiluCountDiv">{{itemCount}}</div>
+				</div>
+				<div class="pages">
+					<div id="Pagination"></div>
+					<div class="searchPage">
+						<span class="page-sum">共<strong class="allPage">1</strong>页</span>
+						<span class="page-go">跳转<input type="text">页</span>
+						<a href="javascript:;" class="page-btn">GO</a>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</body>
+
+	<script>
+		var vm = new Vue({
+			el: '#app',
+			data: {
+				datalist: [],
+				page: 0,
+				pageSize: 15,
+				itemCount: 0,
+				masterPhone: '',
+				carPlateNumber: '',
+				isDaiBan: '1',
+				queryTime: '',
+			},
+			methods: {
+
+			}
+		})
+
+		if(sessionStorage.userType == '8') {
+			var removeNav = document.getElementById('userListNav');
+			$(removeNav).remove();
+		}
+
+		$('#headerDiv').show();
+
+		function loadData() {
+			$("#Pagination").empty();
+			postRegular('getJianceList', {
+				page: vm.page,
+				rows: vm.pageSize,
+				masterPhone: vm.masterPhone,
+				carPlateNumber: vm.carPlateNumber,
+				isDaiBan: vm.isDaiBan,
+				queryTime: vm.queryTime
+			}, function(data) {
+				$('#app').show();
+				vm.datalist = data.object.JianceCheckList;
+				for(var i = 0; i < vm.datalist.length; i++) {
+					var obj = vm.datalist[i];
+					obj.id = vm.page * 15 + i + 1;
+				}
+				vm.itemCount = data.object.JianceCheckCount;
+				$('.allPage').html(Math.ceil(data.object.JianceCheckCount / vm.pageSize));
+				$("#Pagination").pagination(data.object.JianceCheckCount / vm.pageSize, {
+					callback: function(page) { // 回调函数
+						vm.page = page;
+						loadPageData();
+					}
+				});
+				setTimeout(function() {
+					$('tr:even:gt(0)').addClass('tr_even'); //默认偶数行背景色，无视标题行用:gt(0)
+					$('tr:odd').addClass('tr_odd'); //默认奇数数行背景色
+
+				}, 50);
+			}, function() {
+
+			})
+		}
+		loadData();
+
+		function loadPageData() {
+			postRegular('getJianceList', {
+				page: vm.page,
+				rows: vm.pageSize,
+				masterPhone: vm.masterPhone,
+				carPlateNumber: vm.carPlateNumber,
+				isDaiBan: vm.isDaiBan,
+				queryTime: vm.queryTime
+			}, function(data) {
+				vm.datalist = data.object.JianceCheckList;
+				for(var i = 0; i < vm.datalist.length; i++) {
+					var obj = vm.datalist[i];
+					obj.id = vm.page * 15 + i + 1;
+				}
+				setTimeout(function() {
+					$('tr:even:gt(0)').addClass('tr_even'); //默认偶数行背景色，无视标题行用:gt(0)
+					$('tr:odd').addClass('tr_odd'); //默认奇数数行背景色
+
+				}, 50);
+			})
+		}
+
+		//筛选确认
+		$('#query_btn').click(function() {
+			vm.isDaiBan = "1";
+			vm.page = 0;
+			loadData();
+		})
+
+		$('#query_all_btn').click(function() {
+			vm.isDaiBan = "";
+			vm.page = 0;
+			loadData();
+		})
+
+		//筛选清空
+		$('#clear_btn').click(function() {
+			vm.masterPhone = '';
+			vm.carPlateNumber = '';
+			vm.queryTime = '';
+			loadData();
+		})
+
+		//删除
+		function finish(recordId, plateNumber, $event) {
+			$event.stopPropagation();
+			if(window.confirm('确定车牌： ' + plateNumber + ' 已检测完成')) {
+				postRegular('finishCheck', {
+					recordId: recordId,
+				}, function(data) {
+					loadData();
+				}, function() {
+
+				});
+			} else {
+
+			}
+		}
+	</script>
+
+</html>
