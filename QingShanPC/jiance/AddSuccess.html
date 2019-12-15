@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>预约成功</title>
+		<link rel="stylesheet" href="../css/jiance.css">
+	</head>
+	<body>
+		<div class="successContent">
+			<div class="topIconDiv">
+				<img src="../img/success_icon.png"  style="width: 4rem;height: 4rem;"/>
+			</div>
+			<div class="topTextDiv">
+				预约成功，已向您推送预约信息，到达监测站后向工作人员出示预约信息即可。
+			</div>
+			
+			<div id="close_btn" class="successOperateDiv">
+				<input type="button" class="successColorBtn" value="关闭" />
+			</div>
+		</div>
+	</body>
+	
+	<script>
+		//确认
+		$('#close_btn').click(function() {
+			WeixinJSBridge.call('closeWindow');
+		})
+	</script>
+</html>
