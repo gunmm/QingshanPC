@@ -158,3 +158,10 @@ html {
 	-webkit-appearance: none !important;
 	border-radius: 0.2rem !important;
 }
+
+.xugeTitle {
+	text-align: center;
+	line-height: 2rem;
+	color: #202D33;
+	font-size: 0.9rem;
+}

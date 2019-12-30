@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>张振鹏的计算器</title>
+		<link rel="stylesheet" href="css/navHead.css">
+		<link rel="stylesheet" href="css/jiance.css">
+		<link rel="stylesheet" href="css/loading.css">
+		<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.js"></script>
+		<script type="text/javascript" src="js/vue.min.js"></script>
+		<script type="text/javascript" src="js/config.js"></script>
+	</head>
+
+	<body>
+		<div id="app">
+
+			<div class="xugeTitle">每组四个数，用斜杠 / 隔开</div>
+
+			<div class="jianceNameFilterDiv margin-top-08">
+				<div class="jianceFilterKeyDiv">第一组</div>
+				<div class="jianceCitySelectSuperDiv">
+					<input v-model="section1" class="jianceFilterValueInput" type="text" placeholder="四个数，用 / 隔开">
+				</div>
+			</div>
+			<div class="jianceNameFilterDiv margin-top-08">
+				<div class="jianceFilterKeyDiv">第二组</div>
+				<div class="jianceCitySelectSuperDiv">
+					<input v-model="section2" class="jianceFilterValueInput" type="text" placeholder="四个数，用 / 隔开">
+				</div>
+			</div>
+			<div class="jianceNameFilterDiv margin-top-08">
+				<div class="jianceFilterKeyDiv">第三组</div>
+				<div class="jianceCitySelectSuperDiv">
+					<input v-model="section3" class="jianceFilterValueInput" type="text" placeholder="四个数，用 / 隔开">
+				</div>
+			</div>
+			<div class="jianceNameFilterDiv margin-top-08">
+				<div class="jianceFilterKeyDiv">第四组</div>
+				<div class="jianceCitySelectSuperDiv">
+					<input v-model="section4" class="jianceFilterValueInput" type="text" placeholder="四个数，用 / 隔开">
+				</div>
+			</div>
+			<input id="clear_btn" type="button" class="jianceClearBtn" value="清空当前信息" />
+			<br><br><br><br>
+			<div class="xugeTitle">{{result}}</div>
+
+			<div id="save_btn1" class="jianceOperateDiv">
+				<input type="button" class="jianceColorBtn" value="计算" />
+			</div>
+		</div>
+	</body>
+
+	<script>
+		var vm = new Vue({
+			el: '#app',
+			data: {
+				section1: '',
+				section2: '',
+				section3: '',
+				section4: '',
+				result: '0',
+			},
+			methods: {}
+		})
+
+		$('#save_btn1').click(function() {
+			if(vm.section1.length == 0 || vm.section2.length == 0 || vm.section3.length == 0 || vm.section4.length == 0) {
+				myAlert("请输入数字！");
+				return;
+			}
+			var dataArray1 = vm.section1.split("/");
+			var dataArray2 = vm.section2.split("/");
+			var dataArray3 = vm.section3.split("/");
+			var dataArray4 = vm.section4.split("/");
+			if(dataArray1.length != 4 || dataArray2.length != 4 || dataArray3.length != 4 || dataArray4.length != 4) {
+				myAlert("输入格式不正确！");
+				return;
+			}
+
+			var dataArray = dataArray1.concat(dataArray2).concat(dataArray3).concat(dataArray4);
+
+			console.log(dataArray)
+
+			for(var i = 0; i < dataArray.length - 1; i++) {
+				for(var j = 0; j < dataArray.length - i; j++) {
+					if(dataArray[j] > dataArray[j + 1]) {
+						var temp = dataArray[j];
+						dataArray[j] = dataArray[j + 1];
+						dataArray[j + 1] = temp;
+					}
+				}
+			}
+			console.log(dataArray)
+			dataArray.splice(15, 1);
+			dataArray.splice(14, 1);
+			dataArray.splice(13, 1);
+			dataArray.splice(2, 1);
+			dataArray.splice(1, 1);
+			dataArray.splice(0, 1);
+			console.log(dataArray);
+			var totalNumber = 0;
+			for(var i = 0; i < dataArray.length; i++) {
+				totalNumber += parseFloat(dataArray[i]);
+			}
+			vm.result = (totalNumber / dataArray.length).toString();
+		})
+		
+			//筛选清空
+		$('#clear_btn').click(function() {
+			vm.section1 = '';
+			vm.section2 = '';
+			vm.section3 = '';
+			vm.section4 = '';
+		})
+	</script>
+
+</html>
