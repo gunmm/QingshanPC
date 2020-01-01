@@ -17,13 +17,15 @@
 		if(isWx()) {
 			var code = getQueryString("code");
 			if(code == null || code == "") {
-				var redirect_uri = escape(window.location.href);
-				var authorUrl = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxefda176107cb06b8&redirect_uri=" + redirect_uri + "&response_type=code&scope=snsapi_base&state=123#wechat_redirect";
-				window.location.replace(authorUrl);
+				postNoCheckRegular('getWXPara', {}, function(data) {
+					var redirect_uri = data.object;
+					window.location.replace(redirect_uri);
+				}, function() {
+
+				});
 			} else {
 				alert(window.location.href);
 			}
-
 		}
 
 		function isWx() {
