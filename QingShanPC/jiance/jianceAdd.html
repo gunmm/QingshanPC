@@ -23,6 +23,10 @@
 				}, function() {});
 			} else {
 				alert(window.location.href);
+				postNoCheckRegular('getWXPara', {
+					code: code,
+				}, function(data) {
+				}, function() {});
 			}
 		}
 
