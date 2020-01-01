@@ -13,6 +13,28 @@
 		<script type="text/javascript" src="../js/config.js"></script>
 	</head>
 
+	<script>
+		if(isWx()) {
+			var code = getQueryString("code");
+			if(code == null || code == "") {
+				var redirect_uri = escape(window.location.href);
+				var authorUrl = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxefda176107cb06b8&redirect_uri=" + redirect_uri + "&response_type=code&scope=snsapi_base&state=123#wechat_redirect";
+				window.location.replace(authorUrl);
+			} else {
+				alert(window.location.href);
+			}
+
+		}
+
+		function isWx() {
+			var u = navigator.userAgent;
+			if(u.indexOf('MicroMessenger') > -1) {
+				return true;
+			}
+			return false;
+		}
+	</script>
+
 	<body>
 		<div class="jianceBg" id="app">
 			<div class="jianceContent">
