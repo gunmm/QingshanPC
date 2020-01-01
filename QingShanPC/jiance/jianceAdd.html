@@ -17,12 +17,10 @@
 		if(isWx()) {
 			var code = getQueryString("code");
 			if(code == null || code == "") {
-				postNoCheckRegular('getWXPara', {}, function(data) {
+				postNoCheckRegular('getWXUrl', {}, function(data) {
 					var redirect_uri = data.object;
 					window.location.replace(redirect_uri);
-				}, function() {
-
-				});
+				}, function() {});
 			} else {
 				alert(window.location.href);
 			}
