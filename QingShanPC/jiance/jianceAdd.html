@@ -13,33 +13,6 @@
 		<script type="text/javascript" src="../js/config.js"></script>
 	</head>
 
-	<script>
-		var openId = "openId";
-		if(isWx()) {
-			var code = getQueryString("code");
-			if(code == null || code == "") {
-				postNoCheckRegular('getWXUrl', {}, function(data) {
-					var redirect_uri = data.object;
-					window.location.replace(redirect_uri);
-				}, function() {});
-			} else {
-				postNoCheckRegular('getWXPara', {
-					code: code,
-				}, function(data) {
-					openId = data.openid;
-				}, function() {});
-			}
-		}
-
-		function isWx() {
-			var u = navigator.userAgent;
-			if(u.indexOf('MicroMessenger') > -1) {
-				return true;
-			}
-			return false;
-		}
-	</script>
-
 	<body>
 		<div class="jianceBg" id="app">
 			<div class="jianceContent">
@@ -128,9 +101,34 @@
 				carDistance: '',
 				masterAddress: '',
 				plateNumberTypes: [],
+				openId: '',
 			},
 			methods: {}
 		})
+
+		if(isWx()) {
+			var code = getQueryString("code");
+			if(code == null || code == "") {
+				postNoCheckRegular('getWXUrl', {}, function(data) {
+					var redirect_uri = data.object;
+					window.location.replace(redirect_uri);
+				}, function() {});
+			} else {
+				postNoCheckRegular('getWXPara', {
+					code: code,
+				}, function(data) {
+					vm.openId = data.object.openid;
+				}, function() {});
+			}
+		}
+
+		function isWx() {
+			var u = navigator.userAgent;
+			if(u.indexOf('MicroMessenger') > -1) {
+				return true;
+			}
+			return false;
+		}
 
 		//确认
 		$('#save_btn').click(function() {
@@ -173,7 +171,7 @@
 				carSkeletonNumber: vm.carSkeletonNumber,
 				carDistance: vm.carDistance,
 				masterAddress: vm.masterAddress,
-				openId : openId,
+				openId: vm.openId,
 			}, function(data) {
 				window.location.replace('AddSuccess.html');
 			}, function() {
